@@ -18,5 +18,33 @@ chrome.extension.onMessage.addListener(function(
     img.style.width = "100%";
     document.body.appendChild(ringTitle);
     document.body.appendChild(img);
+
+    // chrome.storage.sync.get & chrome.storage.sync.set are asynchronous
+
+    chrome.storage.sync.get("rings", function(result) {
+      console.log("Value currently is " + result.rings);
+
+      if (result.rings && result.rings.length) {
+        if (!result.rings.includes(message.ringTitle)) {
+          const newArray = [...result.rings, message.ringTitle];
+          chrome.storage.sync.set({ rings: newArray }, function() {
+            console.log("Value is set to " + newArray);
+          });
+        }
+      } else {
+        chrome.storage.sync.set({ rings: [message.ringTitle] }, function() {
+          console.log("Value is set to " + message.ringTitle);
+        });
+      }
+      // chrome.storage.sync.clear();
+    });
+
+    chrome.storage.sync.get("rings", function(result) {
+      therings = result.rings;
+      console.log("THRINGS: ", therings);
+      const ringp = document.createElement("p");
+      ringp.innerText = result.rings;
+      document.body.appendChild(ringp);
+    });
   }
 });
