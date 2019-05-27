@@ -27,11 +27,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
 });
 
-// chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-//   if (request.message === "clicked_browser_action") {
-//     const firstHref = document.querySelector("a[href^='http']").href;
+// For collection.html page...
+
+// const clearButton = document.getElementById("clear");
 //
-//     // console.log(firstHref);
-//     chrome.runtime.sendMessage({ message: "open_new_tab", url: firstHref });
-//   }
+// clearButton.addEventListener("click", event => {
+//   alert("clear button clicked");
+//   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+//     var activeTab = tabs[0];
+//     chrome.tabs.sendMessage(activeTab.id, {
+//       message: "clear_collection"
+//     });
+//   });
+//   location.reload();
 // });

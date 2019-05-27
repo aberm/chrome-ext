@@ -35,4 +35,19 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       // chrome.storage.sync.clear();
     });
   }
+  if (request.message === "clear_collection") {
+    alert("cleared!");
+    chrome.storage.sync.clear();
+  }
+});
+
+window.addEventListener("message", function(event) {
+  // We only accept messages from ourselves
+  // if (event.source != window) {
+  //   return;
+  // }
+
+  if (event.data.message && event.data.message == "clear_collection") {
+    console.log("Content script received message: " + event.data.message);
+  }
 });

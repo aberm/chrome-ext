@@ -1,5 +1,5 @@
-storage API
+- parse saved links to display items on collection page
 
-open new tab to view all saved feed
+- create webpage on edj for how-to guide and link it
 
-- link for this
+- export collection
