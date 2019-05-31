@@ -9,6 +9,8 @@ chrome.storage.sync.get("ringUrls", function(result) {
       li.innerHTML = `<p>${url}</p>`;
       const remove = document.createElement("button");
       remove.innerText = "remove";
+      const newImg = document.createElement("img");
+      li.appendChild(newImg);
       li.appendChild(remove);
       ul.appendChild(li);
 
@@ -22,25 +24,21 @@ chrome.storage.sync.get("ringUrls", function(result) {
       }
       addClickHandler(remove);
 
-      // fetch(url)
-      //   .then(res => res.text())
-      //   .then(site => {
-      //     const parser = new DOMParser();
-      //     const htmlDocument = parser.parseFromString(site, "text/html");
-      // parseAndGetInfo(htmlDocument, li);
-      // });
+      const proxyurl = "https://cors-anywhere.herokuapp.com/";
+      fetch(proxyurl + url)
+        .then(res => res.text())
+        .then(site => {
+          const parser = new DOMParser();
+          const htmlDocument = parser.parseFromString(site, "text/html");
+          parseAndGetInfo(htmlDocument, newImg);
+        });
     });
 });
 
-const parseAndGetInfo = (site, li) => {
-  console.log("site: ", site);
-  console.log(site.getElementsByTagName("img"));
+const parseAndGetInfo = (site, newImg) => {
   const img = site.querySelectorAll("img.wp-post-image.lazyload")[0];
-  console.log("IMG: ", img);
-  console.log(img.src);
-  const newImg = document.createElement("img");
-  newImg.src = img.src;
-  li.appendChild(newImg);
+  newImg.src = img.dataset.src;
+  newImg.width = 150;
 };
 const clearButton = document.getElementById("clear");
 
