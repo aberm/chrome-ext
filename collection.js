@@ -9,6 +9,8 @@ chrome.storage.sync.get("ringUrls", function(result) {
       li.innerHTML = `<p>${url}</p>`;
       const remove = document.createElement("button");
       remove.innerText = "remove";
+      const title = document.createElement("h4");
+      li.appendChild(title);
       const newImg = document.createElement("img");
       li.appendChild(newImg);
       li.appendChild(remove);
@@ -30,15 +32,21 @@ chrome.storage.sync.get("ringUrls", function(result) {
         .then(site => {
           const parser = new DOMParser();
           const htmlDocument = parser.parseFromString(site, "text/html");
-          parseAndGetInfo(htmlDocument, newImg);
+          parseAndGetInfo(htmlDocument, newImg, title);
         });
     });
 });
 
-const parseAndGetInfo = (site, newImg) => {
+const parseAndGetInfo = (site, newImg, title) => {
   const img = site.querySelectorAll("img.wp-post-image.lazyload")[0];
   newImg.src = img.dataset.src;
   newImg.width = 150;
+
+  const urlTitle = site
+    .getElementsByClassName("product_title entry-title")[0]
+    .innerText.trim();
+  console.log(urlTitle);
+  title.innerText = urlTitle;
 };
 const clearButton = document.getElementById("clear");
 
