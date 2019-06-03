@@ -6,16 +6,28 @@ chrome.storage.sync.get("ringUrls", function(result) {
     .forEach(url => {
       console.log(url);
       const li = document.createElement("li");
-      li.innerHTML = `<p>${url}</p>`;
-      const remove = document.createElement("button");
-      remove.innerText = "remove";
+      li.style.width = "22%";
+      li.style.display = "inline-block";
+      li.style.verticalAlign = "top";
+      li.style.padding = "10px";
       const link = document.createElement("a");
       link.href = url;
       li.appendChild(link);
       const title = document.createElement("h4");
       link.appendChild(title);
       const newImg = document.createElement("img");
+      // newImg.width = 175;
+      newImg.style =
+        "display: block; margin-left: auto; margin-right: auto; width: 50%;";
       li.appendChild(newImg);
+      const description = document.createElement("p");
+      li.appendChild(description);
+      const price = document.createElement("h4");
+      price.innerText = "Price: $";
+      li.appendChild(price);
+      const remove = document.createElement("button");
+      remove.innerText = "remove";
+      remove.style.float = "right";
       li.appendChild(remove);
       ul.appendChild(li);
 
@@ -35,21 +47,20 @@ chrome.storage.sync.get("ringUrls", function(result) {
         .then(site => {
           const parser = new DOMParser();
           const htmlDocument = parser.parseFromString(site, "text/html");
-          parseAndGetInfo(htmlDocument, newImg, title);
+          parseAndGetInfo(htmlDocument, newImg, title, description, price);
         });
     });
 });
 
-const parseAndGetInfo = (site, newImg, title) => {
-  const img = site.querySelectorAll("img.wp-post-image.lazyload")[0];
-  newImg.src = img.dataset.src;
-  newImg.width = 150;
+const parseAndGetInfo = (site, newImg, title, description, price) => {
+  const ldjson = JSON.parse(
+    site.querySelectorAll("[type='application/ld+json']")[1].innerText
+  );
 
-  const urlTitle = site
-    .getElementsByClassName("product_title entry-title")[0]
-    .innerText.trim();
-  console.log(urlTitle);
-  title.innerText = urlTitle;
+  newImg.src = ldjson["@graph"][1].image;
+  description.innerText = ldjson["@graph"][1].description;
+  price.innerText += ldjson["@graph"][1].offers[0].price;
+  title.innerText = ldjson["@graph"][1].name;
 };
 const clearButton = document.getElementById("clear");
 
