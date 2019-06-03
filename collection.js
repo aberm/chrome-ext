@@ -9,8 +9,11 @@ chrome.storage.sync.get("ringUrls", function(result) {
       li.innerHTML = `<p>${url}</p>`;
       const remove = document.createElement("button");
       remove.innerText = "remove";
+      const link = document.createElement("a");
+      link.href = url;
+      li.appendChild(link);
       const title = document.createElement("h4");
-      li.appendChild(title);
+      link.appendChild(title);
       const newImg = document.createElement("img");
       li.appendChild(newImg);
       li.appendChild(remove);
