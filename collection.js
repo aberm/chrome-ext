@@ -35,7 +35,7 @@ chrome.storage.sync.get("ringUrls", function(result) {
       function addClickHandler(elem) {
         elem.addEventListener("click", function(e) {
           // console.log(e);
-          removeItemFromList(e.target.parentElement.children[0].innerText);
+          removeItemFromList(e.target.parentElement.children[0].href);
           location.reload();
         });
       }
