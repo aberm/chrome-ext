@@ -1,13 +1,5 @@
 console.log("EXTENSION WORKING");
 
-const firstLink = document.querySelector("a[href^='http']").href;
-console.log(firstLink);
-
-const pic = document.querySelector("img.zoomImg");
-const ringTitle = document.querySelector("h1.product_title.entry-title")
-  .innerText;
-console.log("RING: ", ringTitle);
-
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.message === "clicked_browser_action") {
     console.log("action clicked!");

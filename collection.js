@@ -53,14 +53,22 @@ chrome.storage.sync.get("ringUrls", function(result) {
 });
 
 const parseAndGetInfo = (site, newImg, title, description, price) => {
-  const ldjson = JSON.parse(
-    site.querySelectorAll("[type='application/ld+json']")[1].innerText
-  );
+  const ldjsons = site.querySelectorAll("[type='application/ld+json']");
+  if (!!ldjsons.length) {
+    const ldjson = JSON.parse(ldjsons[1].innerText);
 
-  newImg.src = ldjson["@graph"][1].image;
-  description.innerText = ldjson["@graph"][1].description;
-  price.innerText += ldjson["@graph"][1].offers[0].price;
-  title.innerText = ldjson["@graph"][1].name;
+    const product = [...ldjsons]
+      .map(json => JSON.parse(json.innerText))
+      .filter(json => json["@type"] === "Product")[0];
+
+    // console.log(product);
+
+    newImg.src = ldjson["@graph"][1].image;
+    description.innerText = ldjson["@graph"][1].description;
+    price.innerText += ldjson["@graph"][1].offers[0].price;
+    title.innerText = ldjson["@graph"][1].name;
+  }
+  // document.querySelectorAll("[itemprop]").forEach(e => console.log(e.attributes[0].value))
 };
 const clearButton = document.getElementById("clear");
 
