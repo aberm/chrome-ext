@@ -4,7 +4,11 @@
   "version": "0.1",
   "content_scripts": [
     {
-      "matches": ["https://www.estatediamondjewelry.com/product/*"],
+      "matches": [
+        "https://www.estatediamondjewelry.com/product/*",
+        "https://www.bluenile.com/*",
+        "https://www.jamesallen.com/*"
+      ],
       "js": ["content.js"]
     }
   ],

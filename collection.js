@@ -54,21 +54,26 @@ chrome.storage.sync.get("ringUrls", function(result) {
 
 const parseAndGetInfo = (site, newImg, title, description, price) => {
   const ldjsons = site.querySelectorAll("[type='application/ld+json']");
-  if (!!ldjsons.length) {
-    const ldjson = JSON.parse(ldjsons[1].innerText);
+  // if (ldjsons.length) {
+  //   const ldjson = JSON.parse(ldjsons[1].innerText);
+  //
+  //   const product = [...ldjsons]
+  //     .map(json => JSON.parse(json.innerText))
+  //     .filter(json => json["@type"] === "Product")[0];
+  //
+  //   // console.log(product);
+  //
+  //   newImg.src = ldjson["@graph"][1].image;
+  //   title.innerText = ldjson["@graph"][1].name;
+  //   description.innerText = ldjson["@graph"][1].description;
+  //   price.innerText += ldjson["@graph"][1].offers[0].price;
+  // } else {
 
-    const product = [...ldjsons]
-      .map(json => JSON.parse(json.innerText))
-      .filter(json => json["@type"] === "Product")[0];
-
-    // console.log(product);
-
-    newImg.src = ldjson["@graph"][1].image;
-    description.innerText = ldjson["@graph"][1].description;
-    price.innerText += ldjson["@graph"][1].offers[0].price;
-    title.innerText = ldjson["@graph"][1].name;
-  }
-  // document.querySelectorAll("[itemprop]").forEach(e => console.log(e.attributes[0].value))
+  // needs url (take from storage) + product title
+  newImg.src = scrapeField("image", site)[0];
+  description.innerText = scrapeField("description", site)[0];
+  price.innerText += scrapeField("price", site)[0];
+  // }
 };
 const clearButton = document.getElementById("clear");
 
@@ -85,4 +90,65 @@ const removeItemFromList = remove => {
     console.log(newArray);
     chrome.storage.sync.set({ ringUrls: newArray });
   });
+};
+
+const scrapeField = (field, doc) => {
+  const rules = [
+    function() {
+      if (doc.querySelectorAll('meta[property="og:' + field + '"]').length) {
+        return doc.querySelectorAll('meta[property="og:' + field + '"]')[0]
+          .content;
+      }
+    },
+    function() {
+      if (
+        doc.querySelectorAll('meta[property="twitter:' + field + '"]').length
+      ) {
+        return doc.querySelectorAll('meta[property="twitter:' + field + '"]')[0]
+          .content;
+      }
+    },
+    function() {
+      if (doc.querySelectorAll('meta[itemprop="' + field + '"]').length) {
+        return doc.querySelectorAll('meta[itemprop="' + field + '"]')[0]
+          .content;
+      }
+    },
+    function() {
+      if (doc.querySelectorAll('meta[name="' + field + '"]').length) {
+        return doc.querySelectorAll('meta[name="' + field + '"]')[0].content;
+      }
+    },
+    function() {
+      if (doc.querySelectorAll('script[type="application/ld+json"]').length) {
+        const arr = [];
+        doc
+          .querySelectorAll('script[type="application/ld+json"]')
+          .forEach(json => {
+            const a = [];
+            jsonFieldFinder(JSON.parse(json.innerText), field, a);
+            arr.push(a);
+          });
+        return arr.filter(item => item.length);
+      }
+    }
+  ];
+
+  return rules.map(rule => rule()).filter(rule => rule);
+};
+
+const jsonFieldFinder = (json, field, array) => {
+  if (array.length < 1) {
+    // comment this line to get multiple results
+    if (field in json && typeof json[field] == "string") {
+      // success
+      array.push(json[field]);
+    } else {
+      for (let i = 0; i < Object.keys(json).length; i++) {
+        if (typeof json[Object.keys(json)[i]] == "object") {
+          jsonFieldFinder(json[Object.keys(json)[i]], field, array);
+        }
+      }
+    }
+  }
 };
