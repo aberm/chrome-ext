@@ -70,6 +70,8 @@ const parseAndGetInfo = (site, newImg, title, description, price) => {
   // } else {
 
   // needs url (take from storage) + product title
+  // title.innerText = console.log(scrapeField("name", site));
+  title.innerText = site.title;
   newImg.src = scrapeField("image", site)[0];
   description.innerText = scrapeField("description", site)[0];
   price.innerText += scrapeField("price", site)[0];
@@ -134,21 +136,28 @@ const scrapeField = (field, doc) => {
     }
   ];
 
-  return rules.map(rule => rule()).filter(rule => rule);
+  return rules
+    .map(rule => rule())
+    .filter(rule => rule)
+    .flat();
 };
 
 const jsonFieldFinder = (json, field, array) => {
-  if (array.length < 1) {
-    // comment this line to get multiple results
-    if (field in json && typeof json[field] == "string") {
-      // success
-      array.push(json[field]);
-    } else {
-      for (let i = 0; i < Object.keys(json).length; i++) {
-        if (typeof json[Object.keys(json)[i]] == "object") {
-          jsonFieldFinder(json[Object.keys(json)[i]], field, array);
-        }
+  // if (array.length < 1) {
+  // comment this line to get multiple results
+  if (
+    field in json &&
+    // json["@type"] === "Product" &&
+    typeof json[field] == "string"
+  ) {
+    // success
+    array.push(json[field]);
+  } else {
+    for (let i = 0; i < Object.keys(json).length; i++) {
+      if (typeof json[Object.keys(json)[i]] == "object") {
+        jsonFieldFinder(json[Object.keys(json)[i]], field, array);
       }
     }
   }
+  // }
 };
