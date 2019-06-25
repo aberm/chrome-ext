@@ -31,15 +31,10 @@ chrome.storage.sync.get("ringUrls", function(result) {
       li.appendChild(remove);
       ul.appendChild(li);
 
-      // remove.addEventListener("click", removeItem);
-      function addClickHandler(elem) {
-        elem.addEventListener("click", function(e) {
-          // console.log(e);
-          removeItemFromList(e.target.parentElement.children[0].href);
-          location.reload();
-        });
-      }
-      addClickHandler(remove);
+      remove.onclick = e => {
+        removeItemFromList(url);
+        location.reload();
+      };
 
       fetchUrl(url).then(htmlDocument => {
         // console.log(htmlDocument);
@@ -47,6 +42,15 @@ chrome.storage.sync.get("ringUrls", function(result) {
       });
     });
 });
+
+const removeItemFromList = remove => {
+  console.log("REMOVE HERE: ", remove);
+  chrome.storage.sync.get("ringUrls", function(result) {
+    const newArray = result.ringUrls.filter(url => url !== remove);
+    console.log(newArray);
+    chrome.storage.sync.set({ ringUrls: newArray });
+  });
+};
 
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
@@ -84,15 +88,6 @@ clearButton.addEventListener("click", event => {
   chrome.storage.sync.clear(); // Geeez why didn't I think of this...
   location.reload();
 });
-
-const removeItemFromList = remove => {
-  console.log("REMOVE HERE: ", remove);
-  chrome.storage.sync.get("ringUrls", function(result) {
-    const newArray = result.ringUrls.filter(url => url !== remove);
-    console.log(newArray);
-    chrome.storage.sync.set({ ringUrls: newArray });
-  });
-};
 
 const scrapeField = (field, doc) => {
   const rules = [
