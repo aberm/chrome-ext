@@ -4,7 +4,7 @@ chrome.storage.sync.get("ringUrls", function(result) {
   result.ringUrls
     .filter(n => n)
     .forEach(url => {
-      console.log(url);
+      // console.log(url);
       const li = document.createElement("li");
       li.style.width = "22%";
       li.style.display = "inline-block";
@@ -41,41 +41,41 @@ chrome.storage.sync.get("ringUrls", function(result) {
       }
       addClickHandler(remove);
 
-      const proxyurl = "https://cors-anywhere.herokuapp.com/";
-      fetch(proxyurl + url)
-        .then(res => res.text())
-        .then(site => {
-          const parser = new DOMParser();
-          const htmlDocument = parser.parseFromString(site, "text/html");
-          parseAndGetInfo(htmlDocument, newImg, title, description, price);
-        });
+      fetchUrl(url).then(htmlDocument => {
+        // console.log(htmlDocument);
+        parseAndGetInfo(htmlDocument, newImg, title, description, price);
+      });
     });
 });
 
+const proxyurl = "https://cors-anywhere.herokuapp.com/";
+
+const fetchUrl = thisUrl => {
+  return fetch(thisUrl).then(res => {
+    if (res.ok) {
+      return res.text().then(site => {
+        const parser = new DOMParser();
+        const htmlDocument = parser.parseFromString(site, "text/html");
+        return htmlDocument;
+      });
+    } else {
+      return thisUrl === proxyurl + url ? null : fetchUrl(proxyurl + url);
+    }
+  });
+};
+
 const parseAndGetInfo = (site, newImg, title, description, price) => {
   const ldjsons = site.querySelectorAll("[type='application/ld+json']");
-  // if (ldjsons.length) {
-  //   const ldjson = JSON.parse(ldjsons[1].innerText);
-  //
-  //   const product = [...ldjsons]
-  //     .map(json => JSON.parse(json.innerText))
-  //     .filter(json => json["@type"] === "Product")[0];
-  //
-  //   // console.log(product);
-  //
-  //   newImg.src = ldjson["@graph"][1].image;
-  //   title.innerText = ldjson["@graph"][1].name;
-  //   description.innerText = ldjson["@graph"][1].description;
-  //   price.innerText += ldjson["@graph"][1].offers[0].price;
-  // } else {
 
-  // needs url (take from storage) + product title
-  // title.innerText = console.log(scrapeField("name", site));
-  title.innerText = site.title;
+  title.innerText = scrapeField("name", site).length
+    ? scrapeField("name", site)[0]
+    : site.title;
+
   newImg.src = scrapeField("image", site)[0];
   description.innerText = scrapeField("description", site)[0];
   price.innerText += scrapeField("price", site)[0];
-  // }
+
+  // console.log(scrapeField("description", site));
 };
 const clearButton = document.getElementById("clear");
 
@@ -96,6 +96,11 @@ const removeItemFromList = remove => {
 
 const scrapeField = (field, doc) => {
   const rules = [
+    function() {
+      if (doc.querySelectorAll('[itemprop="' + field + '"]').length) {
+        return doc.querySelectorAll('[itemprop="' + field + '"]')[0].content;
+      }
+    },
     function() {
       if (doc.querySelectorAll('meta[property="og:' + field + '"]').length) {
         return doc.querySelectorAll('meta[property="og:' + field + '"]')[0]
@@ -122,12 +127,20 @@ const scrapeField = (field, doc) => {
       }
     },
     function() {
+      if (doc.querySelectorAll('span[itemprop="' + field + '"]').length) {
+        return doc
+          .querySelectorAll('span[itemprop="' + field + '"]')[0]
+          .getAttribute("content");
+      }
+    },
+    function() {
       if (doc.querySelectorAll('script[type="application/ld+json"]').length) {
         const arr = [];
         doc
           .querySelectorAll('script[type="application/ld+json"]')
           .forEach(json => {
             const a = [];
+
             jsonFieldFinder(JSON.parse(json.innerText), field, a);
             arr.push(a);
           });
@@ -136,9 +149,25 @@ const scrapeField = (field, doc) => {
     }
   ];
 
+  if (field === "image") {
+    rules.push(function() {
+      if (doc.querySelectorAll('img[itemprop="' + field + '"]').length) {
+        return doc.querySelectorAll('img[itemprop="' + field + '"]')[0].src;
+      }
+    });
+  }
+  if (field === "name") {
+    rules.push(function() {
+      if (doc.querySelectorAll("h1").length) {
+        return doc.querySelectorAll("h1")[0].innerText;
+      }
+    });
+  }
+
   return rules
     .map(rule => rule())
     .filter(rule => rule)
+    .flat()
     .flat();
 };
 
