@@ -1,60 +1,63 @@
 const ul = document.getElementById("ringsList");
-chrome.storage.sync.get("ringUrls", function(result) {
-  console.log("THE URLS: ", result.ringUrls);
-  result.ringUrls
-    .filter(n => n)
-    .forEach(url => {
-      // console.log(url);
-      const li = document.createElement("li");
-      li.style.width = "22%";
-      li.style.display = "inline-block";
-      li.style.verticalAlign = "top";
-      li.style.padding = "10px";
-      const link = document.createElement("a");
-      link.href = url;
-      li.appendChild(link);
-      const title = document.createElement("h4");
-      link.appendChild(title);
-      const newImg = document.createElement("img");
-      // newImg.width = 175;
-      newImg.style =
-        "display: block; margin-left: auto; margin-right: auto; width: 50%;";
-      li.appendChild(newImg);
-      const description = document.createElement("p");
-      li.appendChild(description);
-      const price = document.createElement("h4");
-      price.innerText = "Price: $";
-      li.appendChild(price);
-      const remove = document.createElement("button");
-      remove.innerText = "remove";
-      remove.style.float = "right";
-      li.appendChild(remove);
-      ul.appendChild(li);
+const radios = document.querySelectorAll('input[type="radio"]');
 
-      remove.onclick = e => {
-        removeItemFromList(url);
-        location.reload();
-      };
+const dynamicSort = property => {
+  if (property === "price") {
+    return function(a, b) {
+      const result =
+        parseFloat(a[property]) < parseFloat(b[property])
+          ? -1
+          : parseFloat(a[property]) > parseFloat(b[property])
+          ? 1
+          : 0;
+      return result;
+    };
+  }
 
-      fetchUrl(url).then(htmlDocument => {
-        // console.log(htmlDocument);
-        parseAndGetInfo(htmlDocument, newImg, title, description, price);
-      });
-    });
+  return function(a, b) {
+    const result =
+      a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
+    return result;
+  };
+};
+
+radios.forEach(radio => {
+  radio.onclick = e => {
+    ul.innerHTML = "";
+    setup(e.target.value);
+  };
 });
 
-const removeItemFromList = remove => {
-  console.log("REMOVE HERE: ", remove);
+const setup = (property = null) => {
   chrome.storage.sync.get("ringUrls", function(result) {
-    const newArray = result.ringUrls.filter(url => url !== remove);
-    console.log(newArray);
-    chrome.storage.sync.set({ ringUrls: newArray });
+    console.log("THE URLS: ", result.ringUrls);
+    if (Object.keys(result).length === 0 || !!result.ringUrls.length === 0)
+      return;
+
+    const allData = result.ringUrls
+      .filter(n => n)
+      .map(async url => {
+        return await unpackUrl(url);
+      });
+    Promise.all(allData).then(allData => {
+      allData.sort(dynamicSort(property)).forEach(data => {
+        ul.appendChild(turnDataIntoHtml(data));
+      });
+    });
+  });
+};
+
+setup();
+
+const unpackUrl = async url => {
+  return await fetchAndParseUrl(url).then(htmlDocument => {
+    return scrapeInfo(htmlDocument, url);
   });
 };
 
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
-const fetchUrl = thisUrl => {
+const fetchAndParseUrl = thisUrl => {
   return fetch(thisUrl).then(res => {
     if (res.ok) {
       return res.text().then(site => {
@@ -63,24 +66,66 @@ const fetchUrl = thisUrl => {
         return htmlDocument;
       });
     } else {
-      return thisUrl === proxyurl + url ? null : fetchUrl(proxyurl + url);
+      return thisUrl === proxyurl + url
+        ? null
+        : fetchAndParseUrl(proxyurl + url);
     }
   });
 };
 
-const parseAndGetInfo = (site, newImg, title, description, price) => {
-  const ldjsons = site.querySelectorAll("[type='application/ld+json']");
+const scrapeInfo = (site, url) => {
+  const data = {
+    url: url,
+    title: scrapeField("name", site).length
+      ? scrapeField("name", site)[0]
+      : site.title,
+    image: scrapeField("image", site)[0],
+    description: scrapeField("description", site)[0],
+    price: scrapeField("price", site)[0]
+  };
 
-  title.innerText = scrapeField("name", site).length
-    ? scrapeField("name", site)[0]
-    : site.title;
+  console.log(data);
 
-  newImg.src = scrapeField("image", site)[0];
-  description.innerText = scrapeField("description", site)[0];
-  price.innerText += scrapeField("price", site)[0];
-
-  // console.log(scrapeField("description", site));
+  return data;
 };
+
+const turnDataIntoHtml = data => {
+  console.log(data);
+  const li = document.createElement("li");
+  li.style.width = "22%";
+  li.style.display = "inline-block";
+  li.style.verticalAlign = "top";
+  li.style.padding = "10px";
+  const link = document.createElement("a");
+  link.href = data.url;
+  li.appendChild(link);
+  const title = document.createElement("h4");
+  title.innerText = data.title;
+  link.appendChild(title);
+  const newImg = document.createElement("img");
+  newImg.src = data.image;
+  newImg.style =
+    "display: block; margin-left: auto; margin-right: auto; width: 50%;";
+  li.appendChild(newImg);
+  const description = document.createElement("p");
+  description.innerText = data.description;
+  li.appendChild(description);
+  const price = document.createElement("h4");
+  price.innerText = `Price: $${data.price}`;
+  li.appendChild(price);
+  const remove = document.createElement("button");
+  remove.innerText = "remove";
+  remove.style.float = "right";
+  li.appendChild(remove);
+
+  remove.onclick = e => {
+    removeItemFromList(url);
+    location.reload();
+  };
+
+  return li;
+};
+
 const clearButton = document.getElementById("clear");
 
 clearButton.addEventListener("click", event => {
@@ -89,8 +134,17 @@ clearButton.addEventListener("click", event => {
   location.reload();
 });
 
+const removeItemFromList = removeUrl => {
+  console.log("REMOVE HERE: ", removeUrl);
+  chrome.storage.sync.get("ringUrls", function(result) {
+    const newArray = result.ringUrls.filter(url => url !== removeUrl);
+    console.log(newArray);
+    chrome.storage.sync.set({ ringUrls: newArray });
+  });
+};
+
 const scrapeField = (field, doc) => {
-  const rules = [
+  let rules = [
     function() {
       if (doc.querySelectorAll('[itemprop="' + field + '"]').length) {
         return doc.querySelectorAll('[itemprop="' + field + '"]')[0].content;
@@ -154,7 +208,7 @@ const scrapeField = (field, doc) => {
   if (field === "name") {
     rules.push(function() {
       if (doc.querySelectorAll("h1").length) {
-        return doc.querySelectorAll("h1")[0].innerText;
+        return doc.querySelectorAll("h1")[0].innerText.trim();
       }
     });
   }

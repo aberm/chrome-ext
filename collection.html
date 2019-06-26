@@ -17,6 +17,17 @@
   <body>
     <h1>Welcome to your jewellery collection!</h1>
     <button id="clear" class="clearbutton">Clear List</button>
+    <div id="sort" style="text-align: center; display: block">
+      <strong>Sort by: </strong>
+      <input type="radio" name="sort-by" value="title" /> Title
+      <input type="radio" name="sort-by" value="desccription" /> Description
+      <input type="radio" name="sort-by" value="price" /> Price
+    </div>
+    <!--
+      <div id="search-container" style="float: right; display: inline;">
+        <input type="text" id="search" placeholder="search" />
+      </div>
+    -->
     <ul id="ringsList"></ul>
     <script src="collection.js"></script>
   </body>
