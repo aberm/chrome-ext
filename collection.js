@@ -24,30 +24,31 @@ const dynamicSort = property => {
 radios.forEach(radio => {
   radio.onclick = e => {
     ul.innerHTML = "";
-    setup(e.target.value);
+    setup(allData, e.target.value);
   };
 });
 
-const setup = (property = null) => {
-  chrome.storage.sync.get("ringUrls", function(result) {
-    console.log("THE URLS: ", result.ringUrls);
-    if (Object.keys(result).length === 0 || !!result.ringUrls.length === 0)
-      return;
+let allData;
 
-    const allData = result.ringUrls
-      .filter(n => n)
-      .map(async url => {
-        return await unpackUrl(url);
-      });
-    Promise.all(allData).then(allData => {
-      allData.sort(dynamicSort(property)).forEach(data => {
-        ul.appendChild(turnDataIntoHtml(data));
-      });
+chrome.storage.sync.get("ringUrls", function(result) {
+  console.log("THE URLS: ", result.ringUrls);
+  const urlData = result.ringUrls
+    .filter(n => n)
+    .map(async url => {
+      return await unpackUrl(url);
     });
+  Promise.all(urlData).then(urlData => {
+    allData = urlData;
+    setup(allData);
+  });
+});
+
+const setup = (allData, property = null) => {
+  console.log(allData);
+  allData.sort(dynamicSort(property)).forEach(data => {
+    ul.appendChild(turnDataIntoHtml(data));
   });
 };
-
-setup();
 
 const unpackUrl = async url => {
   return await fetchAndParseUrl(url).then(htmlDocument => {
@@ -84,13 +85,10 @@ const scrapeInfo = (site, url) => {
     price: scrapeField("price", site)[0]
   };
 
-  console.log(data);
-
   return data;
 };
 
 const turnDataIntoHtml = data => {
-  console.log(data);
   const li = document.createElement("li");
   li.style.width = "22%";
   li.style.display = "inline-block";
@@ -98,6 +96,7 @@ const turnDataIntoHtml = data => {
   li.style.padding = "10px";
   const link = document.createElement("a");
   link.href = data.url;
+  link.target = "_blank";
   li.appendChild(link);
   const title = document.createElement("h4");
   title.innerText = data.title;
