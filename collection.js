@@ -1,5 +1,6 @@
 const ul = document.getElementById("ringsList");
 const radios = document.querySelectorAll('input[type="radio"]');
+const search = document.getElementById("search");
 
 const dynamicSort = property => {
   if (property === "price") {
@@ -28,8 +29,14 @@ radios.forEach(radio => {
   };
 });
 
+search.oninput = e => {
+  ul.innerHTML = "";
+  setup(allData, null, (searchValue = e.target.value));
+};
+
 let allData;
 
+// initial setup, fetching, and saving data to variables
 chrome.storage.sync.get("ringUrls", function(result) {
   console.log("THE URLS: ", result.ringUrls);
   const urlData = result.ringUrls
@@ -43,11 +50,14 @@ chrome.storage.sync.get("ringUrls", function(result) {
   });
 });
 
-const setup = (allData, property = null) => {
+const setup = (allData, property = null, searchValue = "") => {
   console.log(allData);
-  allData.sort(dynamicSort(property)).forEach(data => {
-    ul.appendChild(turnDataIntoHtml(data));
-  });
+  allData
+    .sort(dynamicSort(property))
+    .filter(data => data.title.toLowerCase().includes(searchValue))
+    .forEach(data => {
+      ul.appendChild(turnDataIntoHtml(data));
+    });
 };
 
 const unpackUrl = async url => {
