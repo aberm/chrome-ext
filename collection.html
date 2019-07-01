@@ -19,14 +19,18 @@
     <button id="clear" class="clearbutton">Clear List</button>
     <div id="sort" style="text-align: center; display: block">
       <strong>Sort by: </strong>
-      <input type="radio" name="sort-by" value="title" /> Title
-      <input type="radio" name="sort-by" value="description" /> Description
-      <input type="radio" name="sort-by" value="price" /> Price
+      <input id="title" type="radio" name="sort-by" value="title" />
+      <label for="title">Title</label>
+      <input id="description" type="radio" name="sort-by" value="description" />
+      <label for="description">Description</label>
+      <input id="price" type="radio" name="sort-by" value="price" />
+      <label for="price">Price</label>
     </div>
 
     <div id="search-container" style="float: right; display: inline;">
       <input type="text" id="search" placeholder="search" />
     </div>
+    <br />
 
     <ul id="ringsList"></ul>
     <script src="collection.js"></script>

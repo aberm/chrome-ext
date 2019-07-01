@@ -106,6 +106,7 @@ const turnDataIntoHtml = data => {
   li.style.padding = "10px";
   const link = document.createElement("a");
   link.href = data.url;
+  link.rel = "nofollow";
   link.target = "_blank";
   li.appendChild(link);
   const title = document.createElement("h4");
