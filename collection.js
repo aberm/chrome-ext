@@ -2,13 +2,16 @@ const ul = document.getElementById("ringsList");
 const radios = document.querySelectorAll('input[type="radio"]');
 const search = document.getElementById("search");
 
-const dynamicSort = property => {
-  if (property === "price") {
+/**
+ * Pretty much a sort function for when the sort buttons are clicked
+ */
+const dynamicSort = sortProperty => {
+  if (sortProperty === "price") {
     return function(a, b) {
       const result =
-        parseFloat(a[property]) < parseFloat(b[property])
+        parseFloat(a[sortProperty]) < parseFloat(b[sortProperty])
           ? -1
-          : parseFloat(a[property]) > parseFloat(b[property])
+          : parseFloat(a[sortProperty]) > parseFloat(b[sortProperty])
           ? 1
           : 0;
       return result;
@@ -17,11 +20,18 @@ const dynamicSort = property => {
 
   return function(a, b) {
     const result =
-      a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
+      a[sortProperty] < b[sortProperty]
+        ? -1
+        : a[sortProperty] > b[sortProperty]
+        ? 1
+        : 0;
     return result;
   };
 };
 
+/**
+ * Add event listener to radio inputs, reloading data when clicked
+ */
 radios.forEach(radio => {
   radio.onclick = e => {
     ul.innerHTML = "";
@@ -29,6 +39,9 @@ radios.forEach(radio => {
   };
 });
 
+/**
+ * Add event listener to search input, filtering and reloading data when changed
+ */
 search.oninput = e => {
   ul.innerHTML = "";
   setup(allData, null, (searchValue = e.target.value));
@@ -50,16 +63,23 @@ chrome.storage.sync.get("ringUrls", function(result) {
   });
 });
 
-const setup = (allData, property = null, searchValue = "") => {
+/**
+ * Main setup function. Called after every filter / sorting. Not called initially.
+ * Appends HTML item cards to ul element.
+ */
+const setup = (allData, sortProperty = null, searchValue = "") => {
   console.log(allData);
   allData
-    .sort(dynamicSort(property))
+    .sort(dynamicSort(sortProperty))
     .filter(data => data.title.toLowerCase().includes(searchValue))
     .forEach(data => {
       ul.appendChild(turnDataIntoHtml(data));
     });
 };
 
+/**
+ * Pure function that returns JS Object with scraped metadata values.
+ */
 const unpackUrl = async url => {
   return await fetchAndParseUrl(url).then(htmlDocument => {
     return scrapeInfo(htmlDocument, url);
@@ -68,6 +88,9 @@ const unpackUrl = async url => {
 
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
+/**
+ * fetch and parse a given url and return HTML Document
+ */
 const fetchAndParseUrl = thisUrl => {
   return fetch(thisUrl).then(res => {
     if (res.ok) {
@@ -84,6 +107,9 @@ const fetchAndParseUrl = thisUrl => {
   });
 };
 
+/**
+ * Scrape metadata from given HTML Document and return JS Object of data
+ */
 const scrapeInfo = (site, url) => {
   const data = {
     url: url,
@@ -98,6 +124,9 @@ const scrapeInfo = (site, url) => {
   return data;
 };
 
+/**
+ * Takes JS Object of data and creates item card and remove button
+ */
 const turnDataIntoHtml = data => {
   const div = `<div>
     <a href="${data.url}" rel="nofollow" target="_blank">
@@ -147,6 +176,9 @@ const removeItemFromList = removeUrl => {
   });
 };
 
+/**
+ * Rules for scraping HTML Document to find metadata. Returns array of found data.
+ */
 const scrapeField = (field, doc) => {
   let rules = [
     function() {
@@ -235,6 +267,10 @@ const scrapeField = (field, doc) => {
     .flat();
 };
 
+/**
+ * Function for scraping HTML Document to find LD-JSON metadata.
+ * Returns array of found data.
+ */
 const jsonFieldFinder = (json, field, array) => {
   // if (array.length < 1) {
   // comment this line to get multiple results
