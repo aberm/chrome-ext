@@ -99,38 +99,31 @@ const scrapeInfo = (site, url) => {
 };
 
 const turnDataIntoHtml = data => {
-  // make this innerHTML string
+  const div = `<div>
+    <a href="${data.url}" rel="nofollow" target="_blank">
+    <h4>${data.title}</h4>
+    </a>
+    <img src="${imagePrependHttp(
+      data.image
+    )}" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+    <p>${decodeHtmlEntities(data.description)}</p>
+    <h4>Price: $${data.price}</h4>
+    </div>`;
+
   const li = document.createElement("li");
   li.style.width = "22%";
   li.style.display = "inline-block";
   li.style.verticalAlign = "top";
   li.style.padding = "10px";
-  const link = document.createElement("a");
-  link.href = data.url;
-  link.rel = "nofollow";
-  link.target = "_blank";
-  li.appendChild(link);
-  const title = document.createElement("h4");
-  title.innerText = data.title;
-  link.appendChild(title);
-  const newImg = document.createElement("img");
-  newImg.src = imagePrependHttp(data.image);
-  newImg.style =
-    "display: block; margin-left: auto; margin-right: auto; width: 50%;";
-  li.appendChild(newImg);
-  const description = document.createElement("p");
-  description.innerText = decodeHtmlEntities(data.description);
-  li.appendChild(description);
-  const price = document.createElement("h4");
-  price.innerText = `Price: $${data.price}`;
-  li.appendChild(price);
+
+  li.innerHTML = div;
   const remove = document.createElement("button");
   remove.innerText = "remove";
   remove.style.float = "right";
   li.appendChild(remove);
 
   remove.onclick = e => {
-    removeItemFromList(url);
+    removeItemFromList(data.url);
     location.reload();
   };
 
