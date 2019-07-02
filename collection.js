@@ -92,13 +92,14 @@ const scrapeInfo = (site, url) => {
       : site.title,
     image: scrapeField("image", site)[0],
     description: scrapeField("description", site)[0],
-    price: scrapeField("price", site)[0]
+    price: scrapeField("price", site)[0] || scrapeField("price:amount", site)[0]
   };
 
   return data;
 };
 
 const turnDataIntoHtml = data => {
+  // make this innerHTML string
   const li = document.createElement("li");
   li.style.width = "22%";
   li.style.display = "inline-block";
@@ -113,12 +114,12 @@ const turnDataIntoHtml = data => {
   title.innerText = data.title;
   link.appendChild(title);
   const newImg = document.createElement("img");
-  newImg.src = data.image;
+  newImg.src = imagePrependHttp(data.image);
   newImg.style =
     "display: block; margin-left: auto; margin-right: auto; width: 50%;";
   li.appendChild(newImg);
   const description = document.createElement("p");
-  description.innerText = data.description;
+  description.innerText = decodeHtmlEntities(data.description);
   li.appendChild(description);
   const price = document.createElement("h4");
   price.innerText = `Price: $${data.price}`;
@@ -175,6 +176,17 @@ const scrapeField = (field, doc) => {
       }
     },
     function() {
+      if (doc.querySelectorAll('meta[name="og:' + field + '"]').length) {
+        return doc.querySelectorAll('meta[name="og:' + field + '"]')[0].content;
+      }
+    },
+    function() {
+      if (doc.querySelectorAll('meta[name="twitter:' + field + '"]').length) {
+        return doc.querySelectorAll('meta[name="twitter:' + field + '"]')[0]
+          .content;
+      }
+    },
+    function() {
       if (doc.querySelectorAll('meta[itemprop="' + field + '"]').length) {
         return doc.querySelectorAll('meta[itemprop="' + field + '"]')[0]
           .content;
@@ -210,8 +222,8 @@ const scrapeField = (field, doc) => {
 
   if (field === "image") {
     rules.push(function() {
-      if (doc.querySelectorAll('img[itemprop="' + field + '"]').length) {
-        return doc.querySelectorAll('img[itemprop="' + field + '"]')[0].src;
+      if (doc.querySelectorAll('img[itemprop="image"]').length) {
+        return doc.querySelectorAll('img[itemprop="image"]')[0].src;
       }
     });
   }
@@ -248,4 +260,17 @@ const jsonFieldFinder = (json, field, array) => {
     }
   }
   // }
+};
+
+const decodeHtmlEntities = str => {
+  const txt = document.createElement("textarea");
+  txt.innerHTML = str;
+  return txt.value;
+};
+
+const imagePrependHttp = src => {
+  if (src.startsWith("//")) {
+    return "http:" + src;
+  }
+  return src;
 };
