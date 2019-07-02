@@ -14,11 +14,14 @@ openNewTab(
 document.getElementById("add").addEventListener("click", function(e) {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     var activeTab = tabs[0];
-    chrome.tabs.sendMessage(activeTab.id, {
-      message: "add_page_to_collection"
-    });
+    chrome.tabs.sendMessage(
+      activeTab.id,
+      {
+        message: "add_page_to_collection"
+      },
+      chrome.tabs.create({ url: "collection.html" })
+    );
   });
-  chrome.tabs.create({ url: "collection.html" });
 });
 
 // chrome.storage.sync.get & chrome.storage.sync.set are asynchronous
