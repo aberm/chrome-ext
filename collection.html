@@ -10,14 +10,15 @@
   </head>
   <body>
 		<nav>
-			<h1>Welcome to your jewellery collection!</h1>
+			<div class="title">
+				<h1>Welcome to your jewellery collection!</h1>
+			</div>
 			<div id="search-container" style="float: right; display: inline;">
 	      <input type="text" id="search" placeholder="search" />
 	    </div>
 		</nav>
-
+		<div class="color-bar"></div>
 		<div class="sub-nav">
-			<button id="clear" class="clearbutton">Clear List</button>
 	    <div id="sort" style="text-align: center; display: block">
 	      <strong>Sort by: </strong>
 	      <input id="title" type="radio" name="sort-by" value="title" />
@@ -26,7 +27,8 @@
 	      <label for="description">Description</label>
 	      <input id="price" type="radio" name="sort-by" value="price" />
 	      <label for="price">Price</label>
-	    </div>	
+	    </div>
+			<button id="clear" class="clearbutton">Clear List</button>
 		</div>
 
 

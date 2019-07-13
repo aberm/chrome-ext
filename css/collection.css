@@ -7,6 +7,9 @@ Light Green: #68828C
 Dark Green: #4D6873
 */
 
+/***** Font *****/
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700&display=swap');
+
 * {
 	margin: 0;
 	padding: 0;
@@ -14,21 +17,45 @@ Dark Green: #4D6873
 }
 
 body {
+	font-family: 'Nunito Sans', sans-serif;
 	background-color: #F2F0EB;
 }
 
 nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	width: 100vw;
-	height: 60px;
+	height: 70px;
+	padding: 0px 30px;
 	color: rgba(250,255,255,1);
 	background-color: #0D0D0D;
 }
 
-
+.title {
+	display: flex;
+	align-items:center;
+	height: 100%;
+	border-right: 1px solid rgba(192,211,216,.2);
+}
 
 h1 {
-	display: inline;
+	font-weight: normal;
+	padding-right: 30px;
 }
-.clearbutton {
-	float: right;
+
+.color-bar {
+	background-color: #C1D4D9;
+	width: 100vw;
+	height: 4px;
+}
+
+.sub-nav {
+	width: 80vw;
+	height: 30px;
+	/* background-color: #C1D4D9; */
+	display: flex;
+	justify-content: space-between;
+	margin: 20px auto;
+	border-bottom: 1px solid #68828C;
 }
