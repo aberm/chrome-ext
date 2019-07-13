@@ -18,9 +18,12 @@ Dark Green: #4D6873
 
 body {
 	font-family: 'Nunito Sans', sans-serif;
+	font-size: 62.5%;
 	background-color: #F2F0EB;
 }
 
+
+/***** START: Navigation Bar *****/
 nav {
 	display: flex;
 	justify-content: space-between;
@@ -32,16 +35,33 @@ nav {
 	background-color: #0D0D0D;
 }
 
-.title {
+.title-container {
 	display: flex;
 	align-items:center;
 	height: 100%;
 	border-right: 1px solid rgba(192,211,216,.2);
 }
 
-h1 {
+.title {
+	font-size: 1.35rem;
 	font-weight: normal;
-	padding-right: 30px;
+	line-height: 1.5rem;
+	padding: 15px 30px 15px 0px;
+}
+
+#search-container {
+	flex-basis: 60%;
+	margin: 0 auto;
+	padding-left: 30px;
+}
+
+#search {
+	width: 100%;
+	border-radius: 30px;
+	padding: .5rem;
+	color: rgba(192,211,216,1);
+	border: 2px solid rgba(192,211,216,.35);
+	background-color: rgba(192,211,216,.2);
 }
 
 .color-bar {
@@ -59,3 +79,4 @@ h1 {
 	margin: 20px auto;
 	border-bottom: 1px solid #68828C;
 }
+/***** END: Navigation Bar *****/
