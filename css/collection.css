@@ -31,7 +31,6 @@ nav {
 	width: 100vw;
 	height: 70px;
 	padding: 0px 30px;
-	color: rgba(250,255,255,1);
 	background-color: #0D0D0D;
 }
 
@@ -44,6 +43,7 @@ nav {
 
 .title {
 	font-size: 1.35rem;
+	color: rgba(250,255,255,.95);
 	font-weight: normal;
 	line-height: 1.5rem;
 	padding: 15px 30px 15px 0px;
@@ -53,15 +53,32 @@ nav {
 	flex-basis: 60%;
 	margin: 0 auto;
 	padding-left: 30px;
+	position: relative;
+}
+
+.search-icon {
+	position: absolute;
+	top: 50%;
+}
+
+.search-icon img {
+	transform: translateY(-50%);
+	padding-left: 10px;
 }
 
 #search {
 	width: 100%;
 	border-radius: 30px;
-	padding: .5rem;
-	color: rgba(192,211,216,1);
+	padding: .5rem 36px;
+	color: #636C6E;
+	font-size: 1rem;
 	border: 2px solid rgba(192,211,216,.35);
 	background-color: rgba(192,211,216,.2);
+	transition-duration: .5s;
+}
+
+#search:focus {
+	background-color: rgba(255,255,255,1);
 }
 
 .color-bar {
