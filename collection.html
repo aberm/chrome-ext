@@ -4,32 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link rel="stylesheet" href="css/collection.css">
     <title>Collection</title>
-    <style>
-      h1 {
-        display: inline;
-      }
-      .clearbutton {
-        float: right;
-      }
-    </style>
+
   </head>
   <body>
-    <h1>Welcome to your jewellery collection!</h1>
-    <button id="clear" class="clearbutton">Clear List</button>
-    <div id="sort" style="text-align: center; display: block">
-      <strong>Sort by: </strong>
-      <input id="title" type="radio" name="sort-by" value="title" />
-      <label for="title">Title</label>
-      <input id="description" type="radio" name="sort-by" value="description" />
-      <label for="description">Description</label>
-      <input id="price" type="radio" name="sort-by" value="price" />
-      <label for="price">Price</label>
-    </div>
+		<nav>
+			<h1>Welcome to your jewellery collection!</h1>
+			<div id="search-container" style="float: right; display: inline;">
+	      <input type="text" id="search" placeholder="search" />
+	    </div>
+		</nav>
 
-    <div id="search-container" style="float: right; display: inline;">
-      <input type="text" id="search" placeholder="search" />
-    </div>
+		<div class="sub-nav">
+			<button id="clear" class="clearbutton">Clear List</button>
+	    <div id="sort" style="text-align: center; display: block">
+	      <strong>Sort by: </strong>
+	      <input id="title" type="radio" name="sort-by" value="title" />
+	      <label for="title">Title</label>
+	      <input id="description" type="radio" name="sort-by" value="description" />
+	      <label for="description">Description</label>
+	      <input id="price" type="radio" name="sort-by" value="price" />
+	      <label for="price">Price</label>
+	    </div>	
+		</div>
+
+
+
     <br />
 
     <ul id="ringsList"></ul>

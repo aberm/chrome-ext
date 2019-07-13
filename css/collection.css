@@ -1,0 +1,34 @@
+/***** Colors *****/
+/*
+Dark: #0D0D0D
+Light: #F2F0EB
+Baby Blue: #C1D4D9
+Light Green: #68828C
+Dark Green: #4D6873
+*/
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #F2F0EB;
+}
+
+nav {
+	width: 100vw;
+	height: 60px;
+	color: rgba(250,255,255,1);
+	background-color: #0D0D0D;
+}
+
+
+
+h1 {
+	display: inline;
+}
+.clearbutton {
+	float: right;
+}
