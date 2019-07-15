@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Collection</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
     <style>
       h1 {
         display: inline;
@@ -19,6 +20,8 @@
     <button id="clear" class="clearbutton">Clear List</button>
     <div id="sort" style="text-align: center; display: block">
       <strong>Sort by: </strong>
+      <input id="price" type="radio" name="sort-by" value="date" checked />
+      <label for="price">Date Added</label>
       <input id="title" type="radio" name="sort-by" value="title" />
       <label for="title">Title</label>
       <input id="description" type="radio" name="sort-by" value="description" />
@@ -31,8 +34,9 @@
       <input type="text" id="search" placeholder="search" />
     </div>
     <br />
-
+    <p id="total"></p>
     <ul id="ringsList"></ul>
-    <script src="collection.js"></script>
+    <script type="module" src="scraper.js"></script>
+    <script type="module" src="collection.js"></script>
   </body>
 </html>

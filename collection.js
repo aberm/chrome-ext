@@ -1,67 +1,68 @@
+import Scraper from "./scraper.js";
+
 const ul = document.getElementById("ringsList");
 const radios = document.querySelectorAll('input[type="radio"]');
 const search = document.getElementById("search");
-
-/**
- * Pretty much a sort function for when the sort buttons are clicked
- */
-const dynamicSort = sortProperty => {
-  if (sortProperty === "price") {
-    return function(a, b) {
-      const result =
-        parseFloat(a[sortProperty]) < parseFloat(b[sortProperty])
-          ? -1
-          : parseFloat(a[sortProperty]) > parseFloat(b[sortProperty])
-          ? 1
-          : 0;
-      return result;
-    };
-  }
-
-  return function(a, b) {
-    const result =
-      a[sortProperty] < b[sortProperty]
-        ? -1
-        : a[sortProperty] > b[sortProperty]
-        ? 1
-        : 0;
-    return result;
-  };
-};
-
-/**
- * Add event listener to radio inputs, reloading data when clicked
- */
-radios.forEach(radio => {
-  radio.onclick = e => {
-    ul.innerHTML = "";
-    setup(allData, e.target.value);
-  };
-});
-
-/**
- * Add event listener to search input, filtering and reloading data when changed
- */
-search.oninput = e => {
-  ul.innerHTML = "";
-  setup(allData, null, (searchValue = e.target.value));
-};
+const total = document.getElementById("total");
 
 let allData;
 
+// url added
+// url received, check storage of objects for matching object.url
+
+// scrape url
+// add to storage
+// HTML-setup all objects
+// add editable functions for objects
+
 // initial setup, fetching, and saving data to variables
-chrome.storage.sync.get("ringUrls", function(result) {
-  console.log("THE URLS: ", result.ringUrls);
-  const urlData = result.ringUrls
-    .filter(n => n)
-    .map(async url => {
-      return await unpackUrl(url);
-    });
-  Promise.all(urlData).then(urlData => {
-    allData = urlData;
-    setup(allData);
+
+chrome.storage.sync.get("rings", result => {
+  chrome.storage.sync.get("newUrl", res => {
+    console.log("collection.js -> last ringUrl: ", res.newUrl);
+    console.log("collection.js -> current rings: ", result.rings);
+    if (result.rings && result.rings.length) {
+      // rings data array exists
+      if (result.rings.map(ring => ring.url).includes(res.newUrl)) {
+        // newUrl already added
+        console.log("hi");
+        b4setup();
+      } else if (!!res.newUrl) {
+        // newUrl new
+        console.log("heyhey--");
+        const x = new Scraper(res.newUrl);
+        x.scrape().then(res => {
+          chrome.storage.sync.set({ rings: [...result.rings, res] }, () => {
+            b4setup();
+          });
+        });
+      } else {
+        // newUrl is null
+        b4setup();
+      }
+    } else if (!!res.newUrl) {
+      // rings data array empty
+      console.log("heyhey");
+      const x = new Scraper(res.newUrl);
+      x.scrape().then(res => {
+        chrome.storage.sync.set({ rings: [res] }, () => {
+          b4setup();
+        });
+      });
+    }
+    chrome.storage.sync.set({ newUrl: null });
   });
 });
+
+const b4setup = () => {
+  chrome.storage.sync.get("rings", result => {
+    result.rings.length
+      ? (total.innerText = result.rings.length + " items")
+      : null;
+    allData = result.rings;
+    setup(allData);
+  });
+};
 
 /**
  * Main setup function. Called after every filter / sorting. Not called initially.
@@ -69,59 +70,14 @@ chrome.storage.sync.get("ringUrls", function(result) {
  */
 const setup = (allData, sortProperty = null, searchValue = "") => {
   console.log(allData);
-  allData
+  [...allData]
+    /* ^ this doesn't destructively manipulate the original list,
+  and the products can later be sorted by date */
     .sort(dynamicSort(sortProperty))
     .filter(data => data.title.toLowerCase().includes(searchValue))
     .forEach(data => {
       ul.appendChild(turnDataIntoHtml(data));
     });
-};
-
-/**
- * Pure function that returns JS Object with scraped metadata values.
- */
-const unpackUrl = async url => {
-  return await fetchAndParseUrl(url).then(htmlDocument => {
-    return scrapeInfo(htmlDocument, url);
-  });
-};
-
-const proxyurl = "https://cors-anywhere.herokuapp.com/";
-
-/**
- * fetch and parse a given url and return HTML Document
- */
-const fetchAndParseUrl = thisUrl => {
-  return fetch(thisUrl).then(res => {
-    if (res.ok) {
-      return res.text().then(site => {
-        const parser = new DOMParser();
-        const htmlDocument = parser.parseFromString(site, "text/html");
-        return htmlDocument;
-      });
-    } else {
-      return thisUrl === proxyurl + url
-        ? null
-        : fetchAndParseUrl(proxyurl + url);
-    }
-  });
-};
-
-/**
- * Scrape metadata from given HTML Document and return JS Object of data
- */
-const scrapeInfo = (site, url) => {
-  const data = {
-    url: url,
-    title: scrapeField("name", site).length
-      ? scrapeField("name", site)[0]
-      : site.title,
-    image: scrapeField("image", site)[0],
-    description: scrapeField("description", site)[0],
-    price: scrapeField("price", site)[0] || scrapeField("price:amount", site)[0]
-  };
-
-  return data;
 };
 
 /**
@@ -135,8 +91,13 @@ const turnDataIntoHtml = data => {
     <img src="${imagePrependHttp(
       data.image
     )}" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
-    <p>${decodeHtmlEntities(data.description)}</p>
-    <h4>Price: $${data.price}</h4>
+    <p>${decodeHtmlEntities(data.description).trim()}</p>
+    ${/*<h4>Price: $${data.price}</h4>*/ ""}
+    ${
+      data.price === undefined
+        ? "<h4>Price unavailable. Visit product link for more details.</h4>"
+        : `<h4>Price: $${data.price}</h4>`
+    }
     </div>`;
 
   const li = document.createElement("li");
@@ -169,126 +130,58 @@ clearButton.addEventListener("click", event => {
 
 const removeItemFromList = removeUrl => {
   console.log("REMOVE HERE: ", removeUrl);
-  chrome.storage.sync.get("ringUrls", function(result) {
-    const newArray = result.ringUrls.filter(url => url !== removeUrl);
+  chrome.storage.sync.get("rings", result => {
+    const newArray = result.rings.filter(ring => ring.url !== removeUrl);
     console.log(newArray);
-    chrome.storage.sync.set({ ringUrls: newArray });
+    chrome.storage.sync.set({ rings: newArray });
   });
 };
 
 /**
- * Rules for scraping HTML Document to find metadata. Returns array of found data.
+ * Pretty much a sort function for when the sort buttons are clicked
  */
-const scrapeField = (field, doc) => {
-  let rules = [
-    function() {
-      if (doc.querySelectorAll('[itemprop="' + field + '"]').length) {
-        return doc.querySelectorAll('[itemprop="' + field + '"]')[0].content;
-      }
-    },
-    function() {
-      if (doc.querySelectorAll('meta[property="og:' + field + '"]').length) {
-        return doc.querySelectorAll('meta[property="og:' + field + '"]')[0]
-          .content;
-      }
-    },
-    function() {
-      if (
-        doc.querySelectorAll('meta[property="twitter:' + field + '"]').length
-      ) {
-        return doc.querySelectorAll('meta[property="twitter:' + field + '"]')[0]
-          .content;
-      }
-    },
-    function() {
-      if (doc.querySelectorAll('meta[name="og:' + field + '"]').length) {
-        return doc.querySelectorAll('meta[name="og:' + field + '"]')[0].content;
-      }
-    },
-    function() {
-      if (doc.querySelectorAll('meta[name="twitter:' + field + '"]').length) {
-        return doc.querySelectorAll('meta[name="twitter:' + field + '"]')[0]
-          .content;
-      }
-    },
-    function() {
-      if (doc.querySelectorAll('meta[itemprop="' + field + '"]').length) {
-        return doc.querySelectorAll('meta[itemprop="' + field + '"]')[0]
-          .content;
-      }
-    },
-    function() {
-      if (doc.querySelectorAll('meta[name="' + field + '"]').length) {
-        return doc.querySelectorAll('meta[name="' + field + '"]')[0].content;
-      }
-    },
-    function() {
-      if (doc.querySelectorAll('span[itemprop="' + field + '"]').length) {
-        return doc
-          .querySelectorAll('span[itemprop="' + field + '"]')[0]
-          .getAttribute("content");
-      }
-    },
-    function() {
-      if (doc.querySelectorAll('script[type="application/ld+json"]').length) {
-        const arr = [];
-        doc
-          .querySelectorAll('script[type="application/ld+json"]')
-          .forEach(json => {
-            const a = [];
-
-            jsonFieldFinder(JSON.parse(json.innerText), field, a);
-            arr.push(a);
-          });
-        return arr.filter(item => item.length);
-      }
-    }
-  ];
-
-  if (field === "image") {
-    rules.push(function() {
-      if (doc.querySelectorAll('img[itemprop="image"]').length) {
-        return doc.querySelectorAll('img[itemprop="image"]')[0].src;
-      }
-    });
-  }
-  if (field === "name") {
-    rules.push(function() {
-      if (doc.querySelectorAll("h1").length) {
-        return doc.querySelectorAll("h1")[0].innerText.trim();
-      }
-    });
+const dynamicSort = sortProperty => {
+  if (sortProperty === "price") {
+    return function(a, b) {
+      const result =
+        parseFloat(a["price"]) < parseFloat(b["price"])
+          ? -1
+          : parseFloat(a["price"]) > parseFloat(b["price"])
+          ? 1
+          : 0;
+      return result;
+    };
   }
 
-  return rules
-    .map(rule => rule())
-    .filter(rule => rule)
-    .flat()
-    .flat();
+  return function(a, b) {
+    const result =
+      a[sortProperty] < b[sortProperty]
+        ? -1
+        : a[sortProperty] > b[sortProperty]
+        ? 1
+        : 0;
+    return result;
+  };
 };
 
 /**
- * Function for scraping HTML Document to find LD-JSON metadata.
- * Returns array of found data.
+ * Add event listener to radio inputs, reloading data when clicked
  */
-const jsonFieldFinder = (json, field, array) => {
-  // if (array.length < 1) {
-  // comment this line to get multiple results
-  if (
-    field in json &&
-    // json["@type"] === "Product" &&
-    typeof json[field] == "string"
-  ) {
-    // success
-    array.push(json[field]);
-  } else {
-    for (let i = 0; i < Object.keys(json).length; i++) {
-      if (typeof json[Object.keys(json)[i]] == "object") {
-        jsonFieldFinder(json[Object.keys(json)[i]], field, array);
-      }
-    }
-  }
-  // }
+radios.forEach(radio => {
+  radio.onclick = e => {
+    ul.innerHTML = "";
+    e.target.value === "date"
+      ? setup(allData, null)
+      : setup(allData, e.target.value);
+  };
+});
+
+/**
+ * Add event listener to search input, filtering and reloading data when changed
+ */
+search.oninput = e => {
+  ul.innerHTML = "";
+  setup(allData, null, e.target.value);
 };
 
 const decodeHtmlEntities = str => {
@@ -298,7 +191,7 @@ const decodeHtmlEntities = str => {
 };
 
 const imagePrependHttp = src => {
-  if (src.startsWith("//")) {
+  if (!!src && src.startsWith("//")) {
     return "http:" + src;
   }
   return src;
