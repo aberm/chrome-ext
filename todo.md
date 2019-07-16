@@ -5,4 +5,4 @@
 
 - create webpage on edj for how-to guide and link it
 
-- export collection
+- export/import (as JSON?)
