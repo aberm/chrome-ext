@@ -38,7 +38,7 @@ nav {
 	display: flex;
 	align-items:center;
 	height: 100%;
-	border-right: 1px solid rgba(192,211,216,.2);
+	border-right: 1px solid rgba(192,211,216,.3);
 }
 
 .title {
@@ -91,11 +91,11 @@ nav {
 /***** START: Sorting Bar *****/
 .sort-bar {
 	width: 80vw;
-	height: 30px;
+	height: 40px;
 	/* background-color: #C1D4D9; */
 	display: flex;
 	justify-content: space-between;
-	margin: 20px auto;
+	margin: 40px auto;
 	padding-bottom: 10px;
 	border-bottom: 1px solid #68828C;
 }
@@ -117,8 +117,9 @@ nav {
 
 #clear {
 	display: flex;
+	justify-content: center;
 	align-items: center;
-	padding: 12px;
+	padding: 8px;
 	margin-top: -3px;
 	background-color: #fa8379;
 	border: none;
@@ -127,13 +128,65 @@ nav {
 	color: rgba(250,255,255,.95);
 	box-shadow: 2px 2px 1px rgba(0,0,0,.2);
 	transition-duration: .2s;
+	outline: none;
 }
 
-#clear:hover {
-	background-color: #ff7365;
+#clear:hover, .card-remove:hover {
+	cursor: pointer;
+	background-color: #fe6656;
 }
 
-#clear:active {
+#clear:active, .card-remove:active {
 	box-shadow: none;
+	outline: none;
+	transform: translateY(1px);
 }
+
 /***** END: Sorting Bar *****/
+
+/***** START: Items *****/
+#ringsList {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-gap: 1rem;
+	margin: 0 auto;
+	width: 80vw;
+
+}
+
+.card {
+	position: relative;
+	/* display: block; */
+	margin: 0 auto;
+	padding: 30px;
+	list-style: none;
+	border-radius: 4px;
+	background-color: #fff;
+	box-shadow: 2px 2px 6px rgba(0,0,0,.1);
+}
+
+.card-img img {
+	max-width: 360px;
+	min-width: 100px;
+}
+
+.card-remove {
+	text-align: right;
+	width: 20px;
+	height: 20px;
+	color: #fff;
+	font-weight: bold;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 8px;
+	border-radius: 4px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	background-color: #fa8379;
+	box-shadow: 2px 2px 1px rgba(0,0,0,.1);
+}
+
+
+/***** END: Items *****/
