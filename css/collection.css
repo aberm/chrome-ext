@@ -8,7 +8,7 @@ Dark Green: #4D6873
 */
 
 /***** Font *****/
-@import url('https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700&display=swap');
 
 * {
 	margin: 0;
@@ -20,6 +20,7 @@ body {
 	font-family: 'Nunito Sans', sans-serif;
 	font-size: 62.5%;
 	background-color: #F2F0EB;
+	padding-bottom: 40px;
 }
 
 
@@ -144,30 +145,44 @@ nav {
 
 /***** END: Sorting Bar *****/
 
-/***** START: Items *****/
+/***** START: Content *****/
 #ringsList {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
-	grid-gap: 1rem;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	grid-gap: 1.2rem;
 	margin: 0 auto;
 	width: 80vw;
-
 }
 
+/***** START: Card *****/
 .card {
 	position: relative;
-	/* display: block; */
 	margin: 0 auto;
-	padding: 30px;
+	/* padding: 30px; */
 	list-style: none;
 	border-radius: 4px;
 	background-color: #fff;
-	box-shadow: 2px 2px 6px rgba(0,0,0,.1);
+	border: 2px solid #fff;
+	box-shadow: 2px 2px 6px rgba(0,0,0,.05);
+	transition: .25s ease;
+}
+
+.card:hover {
+	transform: translateY(-3px);
+	/* transform: scale(1.005); */
+	box-shadow: 2px 8px 14px rgba(0,0,0,.15);
+	/* background-color: #C1D4D9; */
+	border: 2px solid #68828C;
+}
+
+.card-img {
+	padding: 30px;
 }
 
 .card-img img {
-	max-width: 360px;
-	min-width: 100px;
+	width: 100%;
+	/* min-width: 200px; */
+	/* min-width: 100px; */
 }
 
 .card-remove {
@@ -184,9 +199,74 @@ nav {
 	position: absolute;
 	top: 0px;
 	right: 0px;
+	z-index: 20;
 	background-color: #fa8379;
 	box-shadow: 2px 2px 1px rgba(0,0,0,.1);
 }
 
+.card-title {
+	display: flex;
+	margin: 0 30px;
+	padding-bottom: 20px;
+	justify-content: center;
 
-/***** END: Items *****/
+	border-bottom: 1px solid rgba(100,125,135,.25);
+	/* margin: 0 0 10px 0; */
+}
+
+.card-title h3 {
+	text-align: center;
+	font-size: 1.2rem;
+	font-weight: 700;
+}
+
+.card-desc {
+	display: flex;
+	flex-direction: column;
+	opacity: 0;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(to bottom, rgba(100,125,135,.75), rgba(100,125,135,1) 50%);
+	transition: .2s ease;
+}
+
+.card-desc p {
+	font-size: 1.1rem;
+	font-weight: 200;
+	color: #f7f7f7;
+	line-height: 1.25rem;
+	/* border-top: 1px solid #68828C; */
+	/* padding: 12px 0 12px 0; */
+	padding: 30px;
+
+
+}
+
+.card-desc:hover {
+	opacity: 1;
+}
+
+
+
+.card-cost {
+	width: 100%;
+	padding: 1.5rem;
+	text-align: center;
+	font-size: 1.05rem;
+	font-weight: 300;
+	color: #68828C;
+	/* border-top: 1px solid #68828C; */
+}
+
+.card-cost p span {
+	opacity: .7;
+}
+/***** END: Card *****/
+
+/***** END: Content *****/
