@@ -10,16 +10,17 @@
   </head>
   <body>
 		<nav>
-			<div class="title-container">
-				<h1 class="title">Welcome to your Jewelry Collection!</h1>
+			<div class="nav__title-container">
+				<h1 class="nav__title">Welcome to your Jewelry Collection!</h1>
 			</div>
-			<div id="search-container">
-				<div class="search-icon">
-					<img src="img/magnify_glass.svg" alt="" class="magnify">
+			<div id="nav__search-container">
+				<div class="nav__search-icon">
+					<img src="img/magnify_glass.svg" alt="">
 				</div>
 	      <input type="text" id="search" />
 	    </div>
 		</nav>
+
 		<div class="color-bar"></div>
 		<div class="sort-bar">
 	    <div id="sort">
@@ -31,7 +32,12 @@
 	      <input id="price" type="radio" name="sort-by" value="price" />
 	      <label for="price">Price</label>
 	    </div>
-			<button id="clear" class="clearbutton">Clear List</button>
+
+			<div class="items-container">
+				<p class="item-amt">3 items</p>
+				<button id="clear" class="clearbutton">Clear List</button>
+			</div>
+
 		</div>
 
 
@@ -47,7 +53,7 @@
 
 				<!-- Image -->
 				<div class="card-img">
-					<img src="img/bike.jpeg">
+					<img src="https://i5.walmartimages.com/asr/744401a2-02e4-485c-898f-4866db1f8015_1.11f08b518fc11d68621a2c0ba9c2367e.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF">
 				</div>
 
 				<!-- Title -->
@@ -57,12 +63,12 @@
 
 				<!-- Description -->
 				<div class="card-desc">
-					<h3>Description:</h3>
 					<p>
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. Ut enim ad minim veniam, quis nostrud exercitation ullamco. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
+						Free Shipping. Buy 700C Mongoose Hotshot Men's Bike, Black / Orange at Walmart.com.
 					</p>
 				</div>
 
+				<!-- Price -->
 				<div class="card-cost">
 					<p><span>Price:</span>  &nbsp; $129.99</p>
 				</div>
@@ -76,7 +82,7 @@
 
 				<!-- Image -->
 				<div class="card-img">
-					<img src="img/bike.jpeg">
+					<img src="https://i5.walmartimages.com/asr/744401a2-02e4-485c-898f-4866db1f8015_1.11f08b518fc11d68621a2c0ba9c2367e.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF">
 				</div>
 
 				<!-- Title -->
@@ -87,13 +93,15 @@
 				<!-- Description -->
 				<div class="card-desc">
 					<p>
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
+						Free Shipping. Buy 700C Mongoose Hotshot Men's Bike, Black / Orange at Walmart.com.
 					</p>
 				</div>
 
-				<div class="card-bar">
-					<p>$99.99</p>
+				<!-- Price -->
+				<div class="card-cost">
+					<p><span>Price:</span>  &nbsp; $129.99</p>
 				</div>
+
 			</li>
 
 			<!-- Card Template -->
@@ -103,51 +111,26 @@
 
 				<!-- Image -->
 				<div class="card-img">
-					<img src="img/bike.jpeg">
+					<img src="https://i5.walmartimages.com/asr/744401a2-02e4-485c-898f-4866db1f8015_1.11f08b518fc11d68621a2c0ba9c2367e.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF">
 				</div>
 
 				<!-- Title -->
 				<div class="card-title">
-					<h3>Estate Diamond Jewelry</h3>
+					<h3>700C Mongoose Hotshot Men's Bike, Black / Orange</h3>
 				</div>
 
 				<!-- Description -->
 				<div class="card-desc">
 					<p>
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
+						Free Shipping. Buy 700C Mongoose Hotshot Men's Bike, Black / Orange at Walmart.com.
 					</p>
 				</div>
 
-				<div class="card-bar">
-					<p>$99.99</p>
-				</div>
-			</li>
-
-			<!-- Card Template -->
-			<li class="card">
-				<!-- Remove button -->
-				<div class="card-remove">X</div>
-
-				<!-- Image -->
-				<div class="card-img">
-					<img src="img/bike.jpeg">
+				<!-- Price -->
+				<div class="card-cost">
+					<p><span>Price:</span>  &nbsp; $129.99</p>
 				</div>
 
-				<!-- Title -->
-				<div class="card-title">
-					<h3>Estate Diamond Jewelry</h3>
-				</div>
-
-				<!-- Description -->
-				<div class="card-desc">
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
-					</p>
-				</div>
-
-				<div class="card-bar">
-					<p>$99.99</p>
-				</div>
 			</li>
 
     </ul>
