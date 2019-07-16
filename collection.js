@@ -32,9 +32,7 @@ chrome.storage.sync.get("rings", result => {
         console.log("heyhey--");
         const x = new Scraper(res.newUrl);
         x.scrape().then(res => {
-          chrome.storage.sync.set({ rings: [...result.rings, res] }, () => {
-            b4setup();
-          });
+          chrome.storage.sync.set({ rings: [...result.rings, res] }, b4setup);
         });
       } else {
         // newUrl is null
@@ -45,9 +43,7 @@ chrome.storage.sync.get("rings", result => {
       console.log("heyhey");
       const x = new Scraper(res.newUrl);
       x.scrape().then(res => {
-        chrome.storage.sync.set({ rings: [res] }, () => {
-          b4setup();
-        });
+        chrome.storage.sync.set({ rings: [res] }, b4setup);
       });
     }
     chrome.storage.sync.set({ newUrl: null });
@@ -55,6 +51,7 @@ chrome.storage.sync.get("rings", result => {
 });
 
 const b4setup = () => {
+  ul.innerHTML = "";
   chrome.storage.sync.get("rings", result => {
     result.rings.length
       ? (total.innerText = result.rings.length + " items")
@@ -92,7 +89,6 @@ const turnDataIntoHtml = data => {
       data.image
     )}" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
     <p>${decodeHtmlEntities(data.description).trim()}</p>
-    ${/*<h4>Price: $${data.price}</h4>*/ ""}
     ${
       data.price === undefined
         ? "<h4>Price unavailable. Visit product link for more details.</h4>"
@@ -107,6 +103,17 @@ const turnDataIntoHtml = data => {
   li.style.padding = "10px";
 
   li.innerHTML = div;
+
+  const edit = document.createElement("button");
+  edit.innerText = "edit";
+  edit.style.float = "left";
+  li.appendChild(edit);
+
+  edit.onclick = e => {
+    editData(data);
+    // location.reload();
+  };
+
   const remove = document.createElement("button");
   remove.innerText = "remove";
   remove.style.float = "right";
@@ -138,6 +145,65 @@ const removeItemFromList = removeUrl => {
 };
 
 /**
+ * Appends edit form and fills it with editable data that can be saved or reset
+ */
+const editData = data => {
+  // Eventually, I want to make this a modal
+
+  console.log("loosh");
+  const form = document.getElementById("edit-form");
+
+  form.style.display = "block";
+
+  form.elements["url"].value = data.url;
+  form.elements["title"].value = data.title;
+  form.elements["image"].value = data.image;
+  form.elements["description"].value = data.description;
+  form.elements["price"].value = data.price;
+
+  document.getElementById("closeEditForm").onclick = () => {
+    form.style.display = "none";
+  };
+
+  document.getElementById("reset").onclick = e => {
+    e.preventDefault(); // otherwise form submits
+    const x = new Scraper(data.url);
+    x.scrape().then(res => {
+      form.elements["url"].value = res.url;
+      form.elements["title"].value = res.title;
+      form.elements["image"].value = res.image;
+      form.elements["description"].value = res.description;
+      form.elements["price"].value = res.price;
+    });
+  };
+
+  const submitHandler = e => {
+    e.preventDefault();
+    console.log("loosharoo");
+    const newTitle = document.getElementById("title-edit").value;
+    const newImage = document.getElementById("image-edit").value;
+    const newDescription = document.getElementById("description-edit").value;
+    const newPrice = parseFloat(document.getElementById("price-edit").value);
+
+    // brilliant!
+    const newArray = [...allData].map(ring => {
+      return ring.url === data.url
+        ? {
+            ...ring,
+            title: newTitle,
+            image: newImage,
+            description: newDescription,
+            price: newPrice
+          }
+        : ring;
+    });
+    chrome.storage.sync.set({ rings: newArray }, b4setup);
+  };
+
+  form.onsubmit = e => submitHandler(e);
+};
+
+/**
  * Pretty much a sort function for when the sort buttons are clicked
  */
 const dynamicSort = sortProperty => {
@@ -151,22 +217,24 @@ const dynamicSort = sortProperty => {
           : 0;
       return result;
     };
+  } else {
+    return function(a, b) {
+      const result =
+        a[sortProperty] < b[sortProperty]
+          ? -1
+          : a[sortProperty] > b[sortProperty]
+          ? 1
+          : 0;
+      return result;
+    };
   }
-
-  return function(a, b) {
-    const result =
-      a[sortProperty] < b[sortProperty]
-        ? -1
-        : a[sortProperty] > b[sortProperty]
-        ? 1
-        : 0;
-    return result;
-  };
 };
 
 /**
  * Add event listener to radio inputs, reloading data when clicked
  */
+
+// TODO: need to change this to behave like state...
 radios.forEach(radio => {
   radio.onclick = e => {
     ul.innerHTML = "";

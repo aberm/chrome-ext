@@ -36,6 +36,38 @@
     <br />
     <p id="total"></p>
     <ul id="ringsList"></ul>
+
+    <form id="edit-form">
+      <button id="reset">Reset fields</button>
+      <span
+        id="closeEditForm"
+        class="close"
+        style="font-size: 20px; font-weight: bold;"
+        >&times;</span
+      >
+      <p>
+        <label for="url-edit">Link</label>
+        <input id="url-edit" name="url" type="text" value="" disabled />
+      </p>
+      <p>
+        <label for="title-edit">Title</label>
+        <textarea id="title-edit" name="title"></textarea>
+      </p>
+      <p>
+        <label for="image-edit">Image</label>
+        <input id="image-edit" name="image" type="text" value="" />
+      </p>
+      <p>
+        <label for="description-edit">Description</label>
+        <textarea id="description-edit" name="description"></textarea>
+      </p>
+      <p>
+        <label for="price-edit">Price</label>
+        <input id="price-edit" name="price" type="number" value="" />
+      </p>
+      <button id="submit-edit">Submit</button>
+    </form>
+
     <script type="module" src="scraper.js"></script>
     <script type="module" src="collection.js"></script>
   </body>

@@ -4,3 +4,14 @@
   /* text-align: center; */
   padding-left: 15px;
 }
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#edit-form {
+  display: none;
+}
