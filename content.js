@@ -1,5 +1,3 @@
-console.log("EXTENSION WORKING");
-
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.message === "add_page_to_collection") {
     console.log("content here: you've asked me to grab this page's url!");
