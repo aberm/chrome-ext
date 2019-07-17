@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="css/collection.css" />
     <title>Collection</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <style>
@@ -16,25 +17,44 @@
     </style>
   </head>
   <body>
-    <h1>Welcome to your jewellery collection!</h1>
-    <button id="clear" class="clearbutton">Clear List</button>
-    <div id="sort" style="text-align: center; display: block">
-      <strong>Sort by: </strong>
-      <input id="price" type="radio" name="sort-by" value="date" checked />
-      <label for="price">Date Added</label>
-      <input id="title" type="radio" name="sort-by" value="title" />
-      <label for="title">Title</label>
-      <input id="description" type="radio" name="sort-by" value="description" />
-      <label for="description">Description</label>
-      <input id="price" type="radio" name="sort-by" value="price" />
-      <label for="price">Price</label>
-    </div>
+    <nav>
+      <div class="nav__title-container">
+        <h1 class="nav__title">Welcome to your Jewelry Collection!</h1>
+      </div>
+      <div id="nav__search-container">
+        <div class="nav__search-icon">
+          <img src="img/magnify_glass.svg" alt="" />
+        </div>
+        <input type="text" id="search" />
+      </div>
+    </nav>
 
-    <div id="search-container" style="float: right; display: inline;">
-      <input type="text" id="search" placeholder="search" />
+    <div class="color-bar"></div>
+    <div class="sort-bar">
+      <div id="sort">
+        <h2 class="sort-title">Sort by:</h2>
+        <input id="price" type="radio" name="sort-by" value="date" checked />
+        <label for="price">Date Added</label>
+        <input id="title" type="radio" name="sort-by" value="title" />
+        <label for="title">Title</label>
+        <input
+          id="description"
+          type="radio"
+          name="sort-by"
+          value="description"
+        />
+        <label for="description">Description</label>
+        <input id="price" type="radio" name="sort-by" value="price" />
+        <label for="price">Price</label>
+      </div>
+
+      <div class="items-container">
+        <p id="total" class="item-amt"></p>
+        <button id="clear" class="clearbutton">Clear List</button>
+      </div>
     </div>
     <br />
-    <p id="total"></p>
+
     <ul id="ringsList"></ul>
 
     <form id="edit-form">

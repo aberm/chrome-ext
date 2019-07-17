@@ -81,26 +81,29 @@ const setup = (allData, sortProperty = null, searchValue = "") => {
  * Takes JS Object of data and creates item card and remove button
  */
 const turnDataIntoHtml = data => {
-  const div = `<div>
-    <a href="${data.url}" rel="nofollow" target="_blank">
-    <h4>${data.title}</h4>
-    </a>
-    <img src="${imagePrependHttp(
-      data.image
-    )}" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
-    <p>${decodeHtmlEntities(data.description).trim()}</p>
+  const div = `
+    <div class="card-img">
+      <img src="${imagePrependHttp(data.image)}">
+    </div>
+    <div class="card-title">
+      <a href="${data.url}" rel="nofollow" target="_blank">
+        <h3>${data.title}</h3>
+      </a>
+    </div>
+    <div class="card-desc">
+      <p>${decodeHtmlEntities(data.description).trim()}</p>
+    </div>
+    <div class="card-cost">
     ${
       data.price === undefined
-        ? "<h4>Price unavailable. Visit product link for more details.</h4>"
-        : `<h4>Price: $${data.price}</h4>`
+        ? `<p><span>Price unavailable. Visit product link for more details.</span></p>`
+        : `<p><span>Price:</span>  &nbsp; $${data.price}</p>`
     }
+
     </div>`;
 
   const li = document.createElement("li");
-  li.style.width = "22%";
-  li.style.display = "inline-block";
-  li.style.verticalAlign = "top";
-  li.style.padding = "10px";
+  li.className = "card";
 
   li.innerHTML = div;
 
@@ -114,10 +117,10 @@ const turnDataIntoHtml = data => {
     // location.reload();
   };
 
-  const remove = document.createElement("button");
-  remove.innerText = "remove";
-  remove.style.float = "right";
-  li.appendChild(remove);
+  const remove = document.createElement("div");
+  remove.className = "card-remove";
+  remove.innerText = "X";
+  li.prepend(remove);
 
   remove.onclick = e => {
     removeItemFromList(data.url);
@@ -129,11 +132,11 @@ const turnDataIntoHtml = data => {
 
 const clearButton = document.getElementById("clear");
 
-clearButton.addEventListener("click", event => {
+clearButton.onclick = event => {
   console.log("clear button clicked");
   chrome.storage.sync.clear(); // Geeez why didn't I think of this...
   location.reload();
-});
+};
 
 const removeItemFromList = removeUrl => {
   console.log("REMOVE HERE: ", removeUrl);
