@@ -1,14 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "My Cool Extension",
+  "name": "Wishlist Extension",
   "version": "0.1",
   "content_scripts": [
     {
-      "matches": [
-        "https://www.estatediamondjewelry.com/product/*",
-        "https://www.bluenile.com/*",
-        "https://www.jamesallen.com/*"
-      ],
+      "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
   ],
