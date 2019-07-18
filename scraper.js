@@ -45,11 +45,13 @@ class Scraper {
       title: this.scrapeField("name", site).length
         ? this.scrapeField("name", site)[0]
         : site.title,
-      image: this.scrapeField("image", site)[0],
-      description: this.scrapeField("description", site)[0],
+      image: this.imagePrependHttp(this.scrapeField("image", site)[0]),
+      description: this.decodeHtmlEntities(
+        this.scrapeField("description", site)[0]
+      ).trim(),
       price:
-        this.scrapeField("price", site)[0] ||
-        this.scrapeField("price:amount", site)[0]
+        this.priceRemoveCommas(this.scrapeField("price", site)[0]) ||
+        this.priceRemoveCommas(this.scrapeField("price:amount", site)[0])
     };
     if (
       url.includes(
@@ -270,6 +272,22 @@ class Scraper {
         }
       }
     }
+  };
+
+  decodeHtmlEntities = str => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = str;
+    return txt.value;
+  };
+
+  imagePrependHttp = src => {
+    return !!src && src.startsWith("//") ? "http:" + src : src;
+  };
+
+  priceRemoveCommas = price => {
+    return typeof price === "string" || price instanceof String
+      ? price.replace(/,/g, "")
+      : price;
   };
 }
 

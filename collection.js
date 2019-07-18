@@ -32,7 +32,19 @@ chrome.storage.sync.get("rings", result => {
         console.log("heyhey--");
         const x = new Scraper(res.newUrl);
         x.scrape().then(res => {
-          chrome.storage.sync.set({ rings: [...result.rings, res] }, b4setup);
+          chrome.storage.sync.set(
+            {
+              rings: [
+                ...result.rings,
+                {
+                  ...res,
+                  description: capDescriptionLength(res.description),
+                  notes: ""
+                }
+              ]
+            },
+            b4setup
+          );
         });
       } else {
         // newUrl is null
@@ -43,7 +55,18 @@ chrome.storage.sync.get("rings", result => {
       console.log("heyhey");
       const x = new Scraper(res.newUrl);
       x.scrape().then(res => {
-        chrome.storage.sync.set({ rings: [res] }, b4setup);
+        chrome.storage.sync.set(
+          {
+            rings: [
+              {
+                ...res,
+                description: capDescriptionLength(res.description),
+                notes: ""
+              }
+            ]
+          },
+          b4setup
+        );
       });
     }
     chrome.storage.sync.set({ newUrl: null });
@@ -53,16 +76,19 @@ chrome.storage.sync.get("rings", result => {
 const b4setup = () => {
   ul.innerHTML = "";
   chrome.storage.sync.get("rings", result => {
-    result.rings.length
-      ? (total.innerText = result.rings.length + " items")
+    total.innerText = result.rings.length
+      ? result.rings.length > 1
+        ? result.rings.length + " items"
+        : "1 item"
       : null;
+
     allData = result.rings;
     setup(allData);
   });
 };
 
 /**
- * Main setup function. Called after every filter / sorting. Not called initially.
+ * Main setup function. Called after every filter / sorting.
  * Appends HTML item cards to ul element.
  */
 const setup = (allData, sortProperty = null, searchValue = "") => {
@@ -83,7 +109,7 @@ const setup = (allData, sortProperty = null, searchValue = "") => {
 const turnDataIntoHtml = data => {
   const div = `
     <div class="card-img">
-      <img src="${imagePrependHttp(data.image)}">
+      <img src="${data.image}">
     </div>
     <div class="card-title">
       <a href="${data.url}" rel="nofollow" target="_blank">
@@ -91,7 +117,10 @@ const turnDataIntoHtml = data => {
       </a>
     </div>
     <div class="card-desc">
-      <p>${decodeHtmlEntities(data.description).trim()}</p>
+      <p>${data.description}</p>
+    </div>
+    <div>
+    ${data.notes.trim() === "" ? "" : `<h4>Notes: </h4><p>${data.notes}</p>`}
     </div>
     <div class="card-cost">
     ${
@@ -99,8 +128,8 @@ const turnDataIntoHtml = data => {
         ? `<p><span>Price unavailable. Visit product link for more details.</span></p>`
         : `<p><span>Price:</span>  &nbsp; $${data.price}</p>`
     }
-
-    </div>`;
+    </div>
+    `;
 
   const li = document.createElement("li");
   li.className = "card";
@@ -124,6 +153,8 @@ const turnDataIntoHtml = data => {
 
   remove.onclick = e => {
     removeItemFromList(data.url);
+
+    // remove div, don't reload
     location.reload();
   };
 
@@ -163,6 +194,7 @@ const editData = data => {
   form.elements["image"].value = data.image;
   form.elements["description"].value = data.description;
   form.elements["price"].value = data.price;
+  form.elements["notes"].value = data.notes;
 
   document.getElementById("closeEditForm").onclick = () => {
     form.style.display = "none";
@@ -175,7 +207,9 @@ const editData = data => {
       form.elements["url"].value = res.url;
       form.elements["title"].value = res.title;
       form.elements["image"].value = res.image;
-      form.elements["description"].value = res.description;
+      form.elements["description"].value = capDescriptionLength(
+        res.description
+      );
       form.elements["price"].value = res.price;
     });
   };
@@ -187,6 +221,7 @@ const editData = data => {
     const newImage = document.getElementById("image-edit").value;
     const newDescription = document.getElementById("description-edit").value;
     const newPrice = parseFloat(document.getElementById("price-edit").value);
+    const newNotes = document.getElementById("notes-edit").value;
 
     // brilliant!
     const newArray = [...allData].map(ring => {
@@ -196,11 +231,15 @@ const editData = data => {
             title: newTitle,
             image: newImage,
             description: newDescription,
-            price: newPrice
+            price: newPrice,
+            notes: newNotes
           }
         : ring;
     });
-    chrome.storage.sync.set({ rings: newArray }, b4setup);
+    chrome.storage.sync.set({ rings: newArray }, () => {
+      b4setup();
+      form.style.display = "none";
+    });
   };
 
   form.onsubmit = e => submitHandler(e);
@@ -242,7 +281,7 @@ radios.forEach(radio => {
   radio.onclick = e => {
     ul.innerHTML = "";
     e.target.value === "date"
-      ? setup(allData, null)
+      ? setup(allData.slice().reverse(), null)
       : setup(allData, e.target.value);
   };
 });
@@ -255,15 +294,8 @@ search.oninput = e => {
   setup(allData, null, e.target.value);
 };
 
-const decodeHtmlEntities = str => {
-  const txt = document.createElement("textarea");
-  txt.innerHTML = str;
-  return txt.value;
-};
-
-const imagePrependHttp = src => {
-  if (!!src && src.startsWith("//")) {
-    return "http:" + src;
-  }
-  return src;
+const capDescriptionLength = description => {
+  return description.length > 400
+    ? description.slice(0, 397) + "..."
+    : description;
 };
