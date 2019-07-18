@@ -50,8 +50,8 @@ class Scraper {
         this.scrapeField("description", site)[0]
       ).trim(),
       price:
-        this.scrapeField("price", site)[0] ||
-        this.scrapeField("price:amount", site)[0]
+        this.priceRemoveCommas(this.scrapeField("price", site)[0]) ||
+        this.priceRemoveCommas(this.scrapeField("price:amount", site)[0])
     };
     if (
       url.includes(
@@ -281,10 +281,13 @@ class Scraper {
   };
 
   imagePrependHttp = src => {
-    if (!!src && src.startsWith("//")) {
-      return "http:" + src;
-    }
-    return src;
+    return !!src && src.startsWith("//") ? "http:" + src : src;
+  };
+
+  priceRemoveCommas = price => {
+    return typeof price === "string" || price instanceof String
+      ? price.replace(/,/g, "")
+      : price;
   };
 }
 
