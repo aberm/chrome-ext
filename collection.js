@@ -276,7 +276,7 @@ radios.forEach(radio => {
   radio.onclick = e => {
     ul.innerHTML = "";
     e.target.value === "date"
-      ? setup(allData, null)
+      ? setup(allData.slice().reverse(), null)
       : setup(allData, e.target.value);
   };
 });
