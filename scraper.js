@@ -1,6 +1,7 @@
 class Scraper {
-  constructor(url) {
+  constructor(url, debugMode = false) {
     this.url = url;
+    this.debugMode = debugMode;
     this.proxyurl = "https://cors-anywhere.herokuapp.com/";
   }
 
@@ -53,21 +54,18 @@ class Scraper {
         this.priceRemoveCommas(this.scrapeField("price", site)[0]) ||
         this.priceRemoveCommas(this.scrapeField("price:amount", site)[0])
     };
-    if (
-      url.includes(
-        "https://www.amazon.com/Affresh-W10282479-Dishwasher-Cleaner-Tablets/dp/B002R0DXQE/ref=br_msw_pdt-3?_encoding=UTF8&smid=ATVPDKIKX0DER&pf_rd_m=ATVPDKIKX0DER&pf_rd_s=&pf_rd_r=V2RCQKT314CQXDBJHVMT&pf_rd_t=36701&pf_rd_p=d2a49fbe-aee9-4771-b273-2156741447d1&pf_rd_i=desktop"
-      )
-    ) {
-      this.scrapeField("image", site, true);
-    }
+
     return data;
   };
 
   /**
    * Rules for scraping HTML Document to find metadata. Returns array of found data.
    */
-  scrapeField = (field, doc, debugMode = false) => {
+  scrapeField = (field, doc) => {
+    // for the weird Javascript nested scope variable bindings:
     const jsonFieldFinder = this.jsonFieldFinder;
+    const debugMode = this.debugMode;
+
     let rules = [
       function() {
         const results = doc.querySelectorAll('[itemprop="' + field + '"]');
