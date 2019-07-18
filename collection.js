@@ -33,7 +33,16 @@ chrome.storage.sync.get("rings", result => {
         const x = new Scraper(res.newUrl);
         x.scrape().then(res => {
           chrome.storage.sync.set(
-            { rings: [...result.rings, { ...res, notes: "" }] },
+            {
+              rings: [
+                ...result.rings,
+                {
+                  ...res,
+                  description: capDescriptionLength(res.description),
+                  notes: ""
+                }
+              ]
+            },
             b4setup
           );
         });
@@ -46,7 +55,18 @@ chrome.storage.sync.get("rings", result => {
       console.log("heyhey");
       const x = new Scraper(res.newUrl);
       x.scrape().then(res => {
-        chrome.storage.sync.set({ rings: [res] }, b4setup);
+        chrome.storage.sync.set(
+          {
+            rings: [
+              {
+                ...res,
+                description: capDescriptionLength(res.description),
+                notes: ""
+              }
+            ]
+          },
+          b4setup
+        );
       });
     }
     chrome.storage.sync.set({ newUrl: null });
@@ -91,10 +111,10 @@ const turnDataIntoHtml = data => {
     <a href="${data.url}" rel="nofollow" target="_blank">
     <h4>${data.title}</h4>
     </a>
-    <img src="${imagePrependHttp(
+    <img src="${
       data.image
-    )}" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
-    <p>${decodeHtmlEntities(data.description).trim()}</p>
+    }" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+    <p>${data.description}</p>
     ${
       data.price === undefined
         ? "<h4>Price unavailable. Visit product link for more details.</h4>"
@@ -182,7 +202,9 @@ const editData = data => {
       form.elements["url"].value = res.url;
       form.elements["title"].value = res.title;
       form.elements["image"].value = res.image;
-      form.elements["description"].value = res.description;
+      form.elements["description"].value = capDescriptionLength(
+        res.description
+      );
       form.elements["price"].value = res.price;
     });
   };
@@ -210,8 +232,8 @@ const editData = data => {
         : ring;
     });
     chrome.storage.sync.set({ rings: newArray }, () => {
-      form.style.display = "none";
       b4setup();
+      form.style.display = "none";
     });
   };
 
@@ -267,15 +289,8 @@ search.oninput = e => {
   setup(allData, null, e.target.value);
 };
 
-const decodeHtmlEntities = str => {
-  const txt = document.createElement("textarea");
-  txt.innerHTML = str;
-  return txt.value;
-};
-
-const imagePrependHttp = src => {
-  if (!!src && src.startsWith("//")) {
-    return "http:" + src;
-  }
-  return src;
+const capDescriptionLength = description => {
+  return description.length > 400
+    ? description.slice(0, 397) + "..."
+    : description;
 };
