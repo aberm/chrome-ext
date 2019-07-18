@@ -53,16 +53,19 @@ chrome.storage.sync.get("rings", result => {
 const b4setup = () => {
   ul.innerHTML = "";
   chrome.storage.sync.get("rings", result => {
-    result.rings.length
-      ? (total.innerText = result.rings.length + " items")
+    total.innerText = result.rings.length
+      ? result.rings.length > 1
+        ? result.rings.length + " items"
+        : "1 item"
       : null;
+
     allData = result.rings;
     setup(allData);
   });
 };
 
 /**
- * Main setup function. Called after every filter / sorting. Not called initially.
+ * Main setup function. Called after every filter / sorting.
  * Appends HTML item cards to ul element.
  */
 const setup = (allData, sortProperty = null, searchValue = "") => {
@@ -121,6 +124,8 @@ const turnDataIntoHtml = data => {
 
   remove.onclick = e => {
     removeItemFromList(data.url);
+
+    // remove div, don't reload
     location.reload();
   };
 

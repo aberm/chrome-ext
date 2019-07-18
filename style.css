@@ -15,3 +15,8 @@
 #edit-form {
   display: none;
 }
+
+footer {
+  bottom: 10px;
+  position: absolute;
+}
