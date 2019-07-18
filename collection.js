@@ -32,7 +32,10 @@ chrome.storage.sync.get("rings", result => {
         console.log("heyhey--");
         const x = new Scraper(res.newUrl);
         x.scrape().then(res => {
-          chrome.storage.sync.set({ rings: [...result.rings, res] }, b4setup);
+          chrome.storage.sync.set(
+            { rings: [...result.rings, { ...res, notes: "" }] },
+            b4setup
+          );
         });
       } else {
         // newUrl is null
@@ -97,6 +100,7 @@ const turnDataIntoHtml = data => {
         ? "<h4>Price unavailable. Visit product link for more details.</h4>"
         : `<h4>Price: $${data.price}</h4>`
     }
+    ${data.notes.trim() === "" ? "" : `<h4>Notes: </h4><p>${data.notes}</p>`}
     </div>`;
 
   const li = document.createElement("li");
@@ -165,6 +169,7 @@ const editData = data => {
   form.elements["image"].value = data.image;
   form.elements["description"].value = data.description;
   form.elements["price"].value = data.price;
+  form.elements["notes"].value = data.notes;
 
   document.getElementById("closeEditForm").onclick = () => {
     form.style.display = "none";
@@ -189,6 +194,7 @@ const editData = data => {
     const newImage = document.getElementById("image-edit").value;
     const newDescription = document.getElementById("description-edit").value;
     const newPrice = parseFloat(document.getElementById("price-edit").value);
+    const newNotes = document.getElementById("notes-edit").value;
 
     // brilliant!
     const newArray = [...allData].map(ring => {
@@ -198,11 +204,15 @@ const editData = data => {
             title: newTitle,
             image: newImage,
             description: newDescription,
-            price: newPrice
+            price: newPrice,
+            notes: newNotes
           }
         : ring;
     });
-    chrome.storage.sync.set({ rings: newArray }, b4setup);
+    chrome.storage.sync.set({ rings: newArray }, () => {
+      form.style.display = "none";
+      b4setup();
+    });
   };
 
   form.onsubmit = e => submitHandler(e);
