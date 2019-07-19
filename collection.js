@@ -182,29 +182,34 @@ const removeItemFromList = removeUrl => {
  * Appends edit form and fills it with editable data that can be saved or reset
  */
 const editData = data => {
-  // Eventually, I want to make this a modal
-
   console.log("loosh");
   const form = document.getElementById("edit-form");
 
-  form.style.display = "block";
-
-  form.elements["url"].value = data.url;
+  document.getElementById("url-edit").innerText = data.url;
   form.elements["title"].value = data.title;
   form.elements["image"].value = data.image;
   form.elements["description"].value = data.description;
   form.elements["price"].value = data.price;
   form.elements["notes"].value = data.notes;
 
-  document.getElementById("closeEditForm").onclick = () => {
-    form.style.display = "none";
+  const modal = document.getElementById("edit-modal");
+  modal.style.display = "block";
+
+  document.getElementById("closeEditModal").onclick = () => {
+    modal.style.display = "none";
   };
 
-  document.getElementById("reset").onclick = e => {
+  window.onclick = event => {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  document.getElementById("resetFields").onclick = e => {
     e.preventDefault(); // otherwise form submits
     const x = new Scraper(data.url);
     x.scrape().then(res => {
-      form.elements["url"].value = res.url;
+      document.getElementById("url-edit").innerText = res.url;
       form.elements["title"].value = res.title;
       form.elements["image"].value = res.image;
       form.elements["description"].value = capDescriptionLength(
@@ -238,7 +243,7 @@ const editData = data => {
     });
     chrome.storage.sync.set({ rings: newArray }, () => {
       b4setup();
-      form.style.display = "none";
+      modal.style.display = "none";
     });
   };
 
