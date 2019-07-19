@@ -37,46 +37,44 @@
     <p id="total"></p>
     <ul id="ringsList"></ul>
 
-    <form id="edit-form">
-      <button id="reset">Reset fields</button>
-      <span
-        id="closeEditForm"
-        class="close"
-        style="font-size: 20px; font-weight: bold;"
-        >&times;</span
-      >
-      <p>
-        <label for="url-edit">Link</label>
-        <input id="url-edit" name="url" type="text" value="" disabled />
-      </p>
-      <p>
-        <label for="title-edit">Title</label>
-        <textarea id="title-edit" name="title"></textarea>
-      </p>
-      <p>
-        <label for="image-edit">Image</label>
-        <input id="image-edit" name="image" type="text" value="" />
-      </p>
-      <p>
-        <label for="description-edit">Description</label>
-        <textarea
-          id="description-edit"
-          name="description"
-          maxlength="400"
-        ></textarea>
-      </p>
-      <p>
-        <label for="price-edit">Price</label>
-        <input id="price-edit" name="price" type="number" value="" />
-      </p>
-      <p>
-        <label for="notes-edit">Notes</label>
-        <textarea id="notes-edit" name="notes"></textarea>
-      </p>
-      <button id="submit-edit">Submit</button>
-    </form>
-
     <footer><a href="how.html">How To Use</a></footer>
+
+    <!-- The Modal -->
+    <div id="edit-modal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span id="closeEditModal" class="close">&times;</span>
+        <form id="edit-form">
+          <button id="resetFields">Reset fields</button>
+          <p><label for="url-edit">URL</label> <span id="url-edit"></span></p>
+          <p>
+            <label for="title-edit">Title</label>
+            <textarea id="title-edit" name="title"></textarea>
+          </p>
+          <p>
+            <label for="image-edit">Image</label>
+            <input id="image-edit" name="image" type="text" value="" />
+          </p>
+          <p>
+            <label for="description-edit">Description</label>
+            <textarea
+              id="description-edit"
+              name="description"
+              maxlength="400"
+            ></textarea>
+          </p>
+          <p>
+            <label for="price-edit">Price</label>
+            <input id="price-edit" name="price" type="number" value="" />
+          </p>
+          <p>
+            <label for="notes-edit">Notes</label>
+            <textarea id="notes-edit" name="notes"></textarea>
+          </p>
+          <button id="submit-edit">Submit</button>
+        </form>
+      </div>
+    </div>
     <script type="module" src="scraper.js"></script>
     <script type="module" src="collection.js"></script>
   </body>
