@@ -5,6 +5,9 @@ const radios = document.querySelectorAll('input[type="radio"]');
 const search = document.getElementById("search");
 const total = document.getElementById("total");
 
+let searchValue = "";
+let sortProperty = null;
+
 let allData;
 
 // url added
@@ -91,7 +94,7 @@ const b4setup = () => {
  * Main setup function. Called after every filter / sorting.
  * Appends HTML item cards to ul element.
  */
-const setup = (allData, sortProperty = null, searchValue = "") => {
+const setup = allData => {
   console.log(allData);
   [...allData]
     /* ^ this doesn't destructively manipulate the original list,
@@ -148,9 +151,6 @@ const turnDataIntoHtml = data => {
 
   remove.onclick = e => {
     removeItemFromList(data.url);
-
-    // remove div, don't reload
-    location.reload();
   };
 
   return li;
@@ -165,12 +165,8 @@ clearButton.addEventListener("click", event => {
 });
 
 const removeItemFromList = removeUrl => {
-  console.log("REMOVE HERE: ", removeUrl);
-  chrome.storage.sync.get("rings", result => {
-    const newArray = result.rings.filter(ring => ring.url !== removeUrl);
-    console.log(newArray);
-    chrome.storage.sync.set({ rings: newArray });
-  });
+  const newArray = [...allData].filter(ring => ring.url !== removeUrl);
+  chrome.storage.sync.set({ rings: newArray }, b4setup);
 };
 
 /**
@@ -259,6 +255,10 @@ const dynamicSort = sortProperty => {
           : 0;
       return result;
     };
+  } else if (sortProperty === "date") {
+    return function(a, b) {
+      return -1; // reverses array
+    };
   } else {
     return function(a, b) {
       const result =
@@ -279,10 +279,9 @@ const dynamicSort = sortProperty => {
 // TODO: need to change this to behave like state...
 radios.forEach(radio => {
   radio.onclick = e => {
+    sortProperty = e.target.value;
     ul.innerHTML = "";
-    e.target.value === "date"
-      ? setup(allData.slice().reverse(), null)
-      : setup(allData, e.target.value);
+    setup(allData);
   };
 });
 
@@ -290,8 +289,9 @@ radios.forEach(radio => {
  * Add event listener to search input, filtering and reloading data when changed
  */
 search.oninput = e => {
+  searchValue = e.target.value;
   ul.innerHTML = "";
-  setup(allData, null, e.target.value);
+  setup(allData);
 };
 
 const capDescriptionLength = description => {
