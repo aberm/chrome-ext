@@ -33,19 +33,13 @@
     <div class="sort-bar">
       <div id="sort">
         <h2 class="sort-title">Sort by:</h2>
-        <input id="price" type="radio" name="sort-by" value="date" />
-        <label for="price">Date Added</label>
-        <input id="title" type="radio" name="sort-by" value="title" />
-        <label for="title">Title</label>
-        <input
-          id="description"
-          type="radio"
-          name="sort-by"
-          value="description"
-        />
-        <label for="description">Description</label>
-        <input id="price" type="radio" name="sort-by" value="price" />
-        <label for="price">Price</label>
+        <select id="sort-by">
+          <option value="date-first">Date Added (first to last)</option>
+          <option value="date-last">Date Added (last to first)</option>
+          <option value="price-low">Price, Low to High</option>
+          <option value="price-high">Price, High to Low</option>
+          <option value="title">Title, Alphabetically</option>
+        </select>
       </div>
 
       <div class="items-container">
