@@ -1,12 +1,12 @@
 import Scraper from "./scraper.js";
 
 const ul = document.getElementById("ringsList");
-const radios = document.querySelectorAll('input[type="radio"]');
+const dropdown = document.getElementById("sort-by");
 const search = document.getElementById("search");
 const total = document.getElementById("total");
 
 let searchValue = "";
-let sortProperty = null;
+let sortProperty = dropdown.options[dropdown.selectedIndex].value;
 
 let allData;
 
@@ -245,7 +245,7 @@ const editData = data => {
  * Pretty much a sort function for when the sort buttons are clicked
  */
 const dynamicSort = sortProperty => {
-  if (sortProperty === "price") {
+  if (sortProperty === "price-low") {
     return function(a, b) {
       const result =
         parseFloat(a["price"]) < parseFloat(b["price"])
@@ -255,9 +255,23 @@ const dynamicSort = sortProperty => {
           : 0;
       return result;
     };
-  } else if (sortProperty === "date") {
+  } else if (sortProperty === "price-high") {
+    return function(a, b) {
+      const result =
+        parseFloat(a["price"]) < parseFloat(b["price"])
+          ? 1
+          : parseFloat(a["price"]) > parseFloat(b["price"])
+          ? -1
+          : 0;
+      return result;
+    };
+  } else if (sortProperty === "date-last") {
     return function(a, b) {
       return -1; // reverses array
+    };
+  } else if (sortProperty === "date-first") {
+    return function(a, b) {
+      return 1; // reverses array
     };
   } else {
     return function(a, b) {
@@ -273,17 +287,14 @@ const dynamicSort = sortProperty => {
 };
 
 /**
- * Add event listener to radio inputs, reloading data when clicked
+ * Add event listener to dropdown inputs, reloading data when clicked
  */
 
-// TODO: need to change this to behave like state...
-radios.forEach(radio => {
-  radio.onclick = e => {
-    sortProperty = e.target.value;
-    ul.innerHTML = "";
-    setup(allData);
-  };
-});
+dropdown.onchange = e => {
+  sortProperty = e.target.value;
+  ul.innerHTML = "";
+  setup(allData);
+};
 
 /**
  * Add event listener to search input, filtering and reloading data when changed
