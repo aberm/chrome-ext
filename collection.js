@@ -29,7 +29,7 @@ chrome.storage.sync.get("rings", result => {
       if (result.rings.map(ring => ring.url).includes(res.newUrl)) {
         // newUrl already added
         console.log("hi");
-        b4setup();
+        getRingsAndSetup();
       } else if (!!res.newUrl) {
         // newUrl new
         console.log("heyhey--");
@@ -46,12 +46,12 @@ chrome.storage.sync.get("rings", result => {
                 }
               ]
             },
-            b4setup
+            getRingsAndSetup
           );
         });
       } else {
         // newUrl is null
-        b4setup();
+        getRingsAndSetup();
       }
     } else if (!!res.newUrl) {
       // rings data array empty
@@ -68,7 +68,7 @@ chrome.storage.sync.get("rings", result => {
               }
             ]
           },
-          b4setup
+          getRingsAndSetup
         );
       });
     }
@@ -76,17 +76,11 @@ chrome.storage.sync.get("rings", result => {
   });
 });
 
-const b4setup = () => {
+const getRingsAndSetup = () => {
   ul.innerHTML = "";
   chrome.storage.sync.get("rings", result => {
-    total.innerText = result.rings.length
-      ? result.rings.length > 1
-        ? result.rings.length + " items"
-        : "1 item"
-      : null;
-
     allData = result.rings;
-    setup(allData);
+    setup();
   });
 };
 
@@ -94,8 +88,15 @@ const b4setup = () => {
  * Main setup function. Called after every filter / sorting.
  * Appends HTML item cards to ul element.
  */
-const setup = allData => {
+const setup = () => {
   console.log(allData);
+
+  total.innerText = allData.length
+    ? allData.length > 1
+      ? allData.length + " items"
+      : "1 item"
+    : null;
+
   [...allData]
     /* ^ this doesn't destructively manipulate the original list,
   and the products can later be sorted by date */
@@ -166,7 +167,7 @@ clearButton.addEventListener("click", event => {
 
 const removeItemFromList = removeUrl => {
   const newArray = [...allData].filter(ring => ring.url !== removeUrl);
-  chrome.storage.sync.set({ rings: newArray }, b4setup);
+  chrome.storage.sync.set({ rings: newArray }, getRingsAndSetup);
 };
 
 /**
@@ -233,7 +234,7 @@ const editData = data => {
         : ring;
     });
     chrome.storage.sync.set({ rings: newArray }, () => {
-      b4setup();
+      getRingsAndSetup();
       modal.style.display = "none";
     });
   };
@@ -293,7 +294,7 @@ const dynamicSort = sortProperty => {
 dropdown.onchange = e => {
   sortProperty = e.target.value;
   ul.innerHTML = "";
-  setup(allData);
+  setup();
 };
 
 /**
@@ -302,7 +303,7 @@ dropdown.onchange = e => {
 search.oninput = e => {
   searchValue = e.target.value;
   ul.innerHTML = "";
-  setup(allData);
+  setup();
 };
 
 const capDescriptionLength = description => {
