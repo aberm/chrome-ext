@@ -181,7 +181,8 @@ const junkEmailFIXME = (() => {
 
   const emailForm = document.createElement("div");
   emailForm.innerHTML = `<input id="email-input" type="text" placeholder="email" />`;
-  const cancelEmail = document.createElement("button");
+  const cancelEmail = document.createElement("a");
+  cancelEmail.href = "#";
   cancelEmail.innerText = "cancel";
   const submitEmail = document.createElement("button");
   submitEmail.innerText = "submit";
