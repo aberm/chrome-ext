@@ -133,6 +133,9 @@ const turnDataIntoHtml = data => {
         : `<p><span>Price:</span>  &nbsp; $${data.price}</p>`
     }
     </div>
+    <a href="${data.url}" rel="nofollow" target="_blank">
+    <div class="center">View Product</div>
+    </a>
     `;
 
   const li = document.createElement("li");
@@ -141,6 +144,7 @@ const turnDataIntoHtml = data => {
   li.innerHTML = div;
 
   const edit = document.createElement("button");
+  edit.className = "edit";
   edit.innerText = "edit";
   edit.style.float = "left";
   li.appendChild(edit);
@@ -162,13 +166,50 @@ const turnDataIntoHtml = data => {
   return li;
 };
 
-const clearButton = document.getElementById("clear");
+// const clearButton = document.getElementById("clear");
+//
+// clearButton.addEventListener("click", event => {
+//   console.log("clear button clicked");
+//   chrome.storage.sync.clear(); // Geeez why didn't I think of this...
+//   location.reload();
+// });
 
-clearButton.onclick = event => {
-  console.log("clear button clicked");
-  chrome.storage.sync.clear(); // Geeez why didn't I think of this...
-  location.reload();
-};
+const junkEmailFIXME = (() => {
+  const email = document.createElement("button");
+  email.innerText = "Email List";
+  email.className = "clear";
+
+  const emailForm = document.createElement("div");
+  emailForm.innerHTML = `<input id="email-input" type="text" placeholder="email" />`;
+  const cancelEmail = document.createElement("button");
+  cancelEmail.innerText = "cancel";
+  const submitEmail = document.createElement("button");
+  submitEmail.innerText = "submit";
+
+  cancelEmail.onclick = e => {
+    emailBox.appendChild(email);
+    emailBox.removeChild(emailForm);
+  };
+
+  submitEmail.onclick = e => {
+    const theEmail = document.getElementById("email-input");
+    console.log("emailed: ", theEmail.value);
+    theEmail.value = "";
+    emailBox.appendChild(email);
+    emailBox.removeChild(emailForm);
+  };
+
+  emailForm.appendChild(cancelEmail);
+  emailForm.appendChild(submitEmail);
+
+  email.onclick = e => {
+    emailBox.appendChild(emailForm);
+    emailBox.removeChild(email);
+  };
+
+  const emailBox = document.getElementById("email-box");
+  emailBox.appendChild(email);
+})();
 
 const removeItemFromList = removeUrl => {
   const newArray = [...allData].filter(ring => ring.url !== removeUrl);
@@ -198,6 +239,12 @@ const editData = data => {
 
   window.onclick = event => {
     if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  window.onkeydown = e => {
+    if (event.key === "Escape") {
       modal.style.display = "none";
     }
   };

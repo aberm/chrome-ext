@@ -128,7 +128,7 @@ nav {
   margin-right: 30px;
 }
 
-#clear {
+.clear {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -144,13 +144,13 @@ nav {
   outline: none;
 }
 
-#clear:hover,
+.clear:hover,
 .card-remove:hover {
   cursor: pointer;
   background-color: #fe6656;
 }
 
-#clear:active,
+.clear:active,
 .card-remove:active {
   box-shadow: none;
   outline: none;
