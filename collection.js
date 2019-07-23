@@ -123,7 +123,7 @@ const turnDataIntoHtml = data => {
     <div class="card-desc">
       <p>${data.description}</p>
     </div>
-    <div>
+    <div class="card-desc">
     ${data.notes.trim() === "" ? "" : `<h4>Notes: </h4><p>${data.notes}</p>`}
     </div>
     <div class="card-cost">
