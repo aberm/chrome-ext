@@ -157,6 +157,10 @@ nav {
   transform: translateY(1px);
 }
 
+.view {
+  text-decoration: none;
+}
+
 /***** END: Sorting Bar *****/
 
 /***** START: Content *****/

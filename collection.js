@@ -133,8 +133,8 @@ const turnDataIntoHtml = data => {
         : `<p><span>Price:</span>  &nbsp; $${data.price}</p>`
     }
     </div>
-    <a href="${data.url}" rel="nofollow" target="_blank">
-    <div class="center">View Product</div>
+    <a href="${data.url}" rel="nofollow" target="_blank" class="view">
+    <div class="clear">View Product</div>
     </a>
     `;
 
