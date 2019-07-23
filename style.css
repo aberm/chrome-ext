@@ -1,8 +1,28 @@
+h1 {
+  display: inline;
+}
+
+.email {
+  float: right;
+}
+
+.email-box {
+  display: inline;
+}
+
 #total {
   font-style: italic;
   font-size: 18px;
   /* text-align: center; */
   padding-left: 15px;
+}
+
+.center {
+  text-align: center;
+}
+
+.edit {
+  margin: 5px;
 }
 
 footer {

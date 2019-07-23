@@ -6,25 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Collection</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <style>
-      h1 {
-        display: inline;
-      }
-      .clearbutton {
-        float: right;
-      }
-    </style>
   </head>
   <body>
     <h1>Welcome to your jewellery collection!</h1>
-    <button id="clear" class="clearbutton">Clear List</button>
+    <!-- <button id="clear" class="clearbutton">Clear List</button> -->
+    <div id="email-box" class="email">
+      <!-- <button id="email">Email List</button> -->
+    </div>
     <div id="sort" style="text-align: center; display: block">
       <strong>Sort by: </strong>
       <select id="sort-by">
         <option value="date-first">Date Added (first to last)</option>
         <option value="date-last">Date Added (last to first)</option>
-        <option value="price-low">Price, Low to High</option>
-        <option value="price-high">Price, High to Low</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
         <option value="title">Title, Alphabetically</option>
       </select>
     </div>

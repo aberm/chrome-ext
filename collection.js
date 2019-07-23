@@ -111,21 +111,34 @@ const setup = () => {
  * Takes JS Object of data and creates item card and remove button
  */
 const turnDataIntoHtml = data => {
-  const div = `<div>
-    <a href="${data.url}" rel="nofollow" target="_blank">
-    <h4>${data.title}</h4>
-    </a>
-    <img src="${
-      data.image
-    }" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
-    <p>${data.description}</p>
+  const div = `
+    <div class="card-img">
+      <img src="${
+        data.image
+      }" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+    </div>
+    <div class="card-title">
+      <a href="${data.url}" rel="nofollow" target="_blank">
+        <h3>${data.title}</h3>
+      </a>
+    </div>
+    <div class="card-desc">
+      <p>${data.description}</p>
+    </div>
+    <div>
+    ${data.notes.trim() === "" ? "" : `<h4>Notes: </h4><p>${data.notes}</p>`}
+    </div>
+    <div class="card-cost">
     ${
       data.price === undefined
-        ? "<h4>Price unavailable. Visit product link for more details.</h4>"
-        : `<h4>Price: $${data.price}</h4>`
+        ? `<p><span>Price unavailable. Visit product link for more details.</span></p>`
+        : `<p><span>Price:</span>  &nbsp; $${data.price}</p>`
     }
-    ${data.notes.trim() === "" ? "" : `<h4>Notes: </h4><p>${data.notes}</p>`}
-    </div>`;
+    </div>
+    <a href="${data.url}" rel="nofollow" target="_blank">
+    <div class="center">View Product</div>
+    </a>
+    `;
 
   const li = document.createElement("li");
   li.style.width = "22%";
@@ -136,6 +149,7 @@ const turnDataIntoHtml = data => {
   li.innerHTML = div;
 
   const edit = document.createElement("button");
+  edit.className = "edit";
   edit.innerText = "edit";
   edit.style.float = "left";
   li.appendChild(edit);
@@ -157,13 +171,49 @@ const turnDataIntoHtml = data => {
   return li;
 };
 
-const clearButton = document.getElementById("clear");
+// const clearButton = document.getElementById("clear");
+//
+// clearButton.addEventListener("click", event => {
+//   console.log("clear button clicked");
+//   chrome.storage.sync.clear(); // Geeez why didn't I think of this...
+//   location.reload();
+// });
 
-clearButton.addEventListener("click", event => {
-  console.log("clear button clicked");
-  chrome.storage.sync.clear(); // Geeez why didn't I think of this...
-  location.reload();
-});
+const junkEmailFIXME = (() => {
+  const email = document.createElement("button");
+  email.innerText = "Email List";
+
+  const emailForm = document.createElement("div");
+  emailForm.innerHTML = `<input id="email-input" type="text" placeholder="email" />`;
+  const cancelEmail = document.createElement("button");
+  cancelEmail.innerText = "cancel";
+  const submitEmail = document.createElement("button");
+  submitEmail.innerText = "submit";
+
+  cancelEmail.onclick = e => {
+    emailBox.appendChild(email);
+    emailBox.removeChild(emailForm);
+  };
+
+  submitEmail.onclick = e => {
+    const theEmail = document.getElementById("email-input");
+    console.log("emailed: ", theEmail.value);
+    theEmail.value = "";
+    emailBox.appendChild(email);
+    emailBox.removeChild(emailForm);
+  };
+
+  emailForm.appendChild(cancelEmail);
+  emailForm.appendChild(submitEmail);
+
+  email.onclick = e => {
+    emailBox.appendChild(emailForm);
+    emailBox.removeChild(email);
+  };
+
+  const emailBox = document.getElementById("email-box");
+  emailBox.appendChild(email);
+})();
 
 const removeItemFromList = removeUrl => {
   const newArray = [...allData].filter(ring => ring.url !== removeUrl);
@@ -193,6 +243,12 @@ const editData = data => {
 
   window.onclick = event => {
     if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  window.onkeydown = e => {
+    if (event.key === "Escape") {
       modal.style.display = "none";
     }
   };
