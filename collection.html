@@ -36,7 +36,15 @@
 
       <div class="items-container">
         <p id="total" class="item-amt"></p>
-        <div id="email-box" class="email"></div>
+        <div class="email">
+          <button id="emailButton" class="clear">Email List</button>
+          <div id="email-form">
+            <label for="email-input">Email</label>
+            <input id="email-input" type="text" />
+            <a id="cancelEmail" href="#">Cancel</a>
+            <button id="submitEmail">Submit</button>
+          </div>
+        </div>
       </div>
     </div>
     <br />
@@ -51,6 +59,7 @@
       <div class="modal-content">
         <span id="closeEditModal" class="close">&times;</span>
         <form id="edit-form">
+          <img src="" id="edit-display-image" />
           <button id="resetFields">Reset fields</button>
           <p><label for="url-edit">URL</label> <span id="url-edit"></span></p>
           <p>
