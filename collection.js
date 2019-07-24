@@ -165,7 +165,10 @@ const turnDataIntoHtml = data => {
   li.appendChild(remove);
 
   remove.onclick = e => {
-    removeItemFromList(data.url);
+    const yes = confirm(`Are you sure you want to remove ${data.title}?`);
+    if (yes) {
+      removeItemFromList(data.url);
+    }
   };
 
   return li;
@@ -179,40 +182,31 @@ const turnDataIntoHtml = data => {
 //   location.reload();
 // });
 
-const junkEmailFIXME = (() => {
-  const email = document.createElement("button");
-  email.innerText = "Email List";
+const emailFunction = (() => {
+  const emailButton = document.getElementById("emailButton");
+  const emailForm = document.getElementById("email-form");
+  const emailInput = document.getElementById("email-input");
+  const cancelEmail = document.getElementById("cancelEmail");
+  const submitEmail = document.getElementById("submitEmail");
 
-  const emailForm = document.createElement("div");
-  emailForm.innerHTML = `<input id="email-input" type="text" placeholder="email" />`;
-  const cancelEmail = document.createElement("button");
-  cancelEmail.innerText = "cancel";
-  const submitEmail = document.createElement("button");
-  submitEmail.innerText = "submit";
-
-  cancelEmail.onclick = e => {
-    emailBox.appendChild(email);
-    emailBox.removeChild(emailForm);
+  emailButton.onclick = e => {
+    emailForm.style.display = "block";
+    emailButton.style.display = "none";
   };
 
   submitEmail.onclick = e => {
-    const theEmail = document.getElementById("email-input");
-    console.log("emailed: ", theEmail.value);
-    theEmail.value = "";
-    emailBox.appendChild(email);
-    emailBox.removeChild(emailForm);
+    console.log(emailInput.value);
+    // send export email
+    emailInput.value = "";
+    emailForm.style.display = "none";
+    emailButton.style.display = "block";
   };
 
-  emailForm.appendChild(cancelEmail);
-  emailForm.appendChild(submitEmail);
-
-  email.onclick = e => {
-    emailBox.appendChild(emailForm);
-    emailBox.removeChild(email);
+  cancelEmail.onclick = e => {
+    emailInput.value = "";
+    emailForm.style.display = "none";
+    emailButton.style.display = "block";
   };
-
-  const emailBox = document.getElementById("email-box");
-  emailBox.appendChild(email);
 })();
 
 const removeItemFromList = removeUrl => {
@@ -228,6 +222,7 @@ const editData = data => {
   const form = document.getElementById("edit-form");
 
   document.getElementById("url-edit").innerText = data.url;
+  document.getElementById("edit-display-image").src = data.image;
   form.elements["title"].value = data.title;
   form.elements["image"].value = data.image;
   form.elements["description"].value = data.description;

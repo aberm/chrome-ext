@@ -10,6 +10,14 @@ h1 {
   display: inline;
 }
 
+#emailButton {
+  display: block;
+}
+
+#email-form {
+  display: none;
+}
+
 #total {
   font-style: italic;
   font-size: 18px;
@@ -22,7 +30,14 @@ h1 {
 }
 
 .edit {
-  margin: 5px;
+  margin: 25px;
+}
+
+#edit-display-image {
+  width: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 footer {
