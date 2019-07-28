@@ -11,4 +11,4 @@ document.getElementById("add").addEventListener("click", e => {
   });
 });
 
-// chrome.storage.sync.get & chrome.storage.sync.set are asynchronous
+// chrome.storage.local.get & chrome.storage.local.set are asynchronous
