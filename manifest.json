@@ -2,21 +2,15 @@
   "manifest_version": 2,
   "name": "Wish List Extension",
   "version": "1.0.1",
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
-    }
-  ],
   "permissions": ["tabs", "storage", "contextMenus"],
   "browser_action": {
-    "default_icon": "engagement-ring-wish-list-16.png",
-    "default_popup": "menu.html"
+    "default_icon": "icons/engagement-ring-wish-list-16.png",
+    "default_popup": "popup.html"
   },
   "icons": {
-    "16": "engagement-ring-wish-list-16.png",
-    "48": "engagement-ring-wish-list-48.png",
-    "128": "engagement-ring-wish-list-128.png"
+    "16": "icons/engagement-ring-wish-list-16.png",
+    "48": "icons/engagement-ring-wish-list-48.png",
+    "128": "icons/engagement-ring-wish-list-128.png"
   },
   "background": {
     "scripts": ["background.js"]

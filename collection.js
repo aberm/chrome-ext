@@ -10,16 +10,6 @@ let sortProperty = dropdown.options[dropdown.selectedIndex].value;
 
 let allData;
 
-// url added
-// url received, check storage of objects for matching object.url
-
-// scrape url
-// add to storage
-// HTML-setup all objects
-// add editable functions for objects
-
-// initial setup, fetching, and saving data to variables
-
 chrome.storage.local.get("rings", result => {
   chrome.storage.local.get("newUrl", res => {
     console.log("collection.js -> last ringUrl: ", res.newUrl);
@@ -28,11 +18,11 @@ chrome.storage.local.get("rings", result => {
       // rings data array exists
       if (result.rings.map(ring => ring.url).includes(res.newUrl)) {
         // newUrl already added
-        console.log("hi");
+        console.log("newUrl already added");
         getRingsAndSetup();
       } else if (!!res.newUrl) {
         // newUrl new
-        console.log("heyhey--");
+        console.log("newUrl new");
         const x = new Scraper(res.newUrl);
         x.scrape().then(res => {
           chrome.storage.local.set(
@@ -55,7 +45,7 @@ chrome.storage.local.get("rings", result => {
       }
     } else if (!!res.newUrl) {
       // rings data array empty
-      console.log("heyhey");
+      console.log("rings data array empty");
       const x = new Scraper(res.newUrl);
       x.scrape().then(res => {
         chrome.storage.local.set(
@@ -167,14 +157,6 @@ const turnDataIntoHtml = data => {
 
   return li;
 };
-
-// const clearButton = document.getElementById("clear");
-//
-// clearButton.addEventListener("click", event => {
-//   console.log("clear button clicked");
-//   chrome.storage.local.clear(); // Geeez why didn't I think of this...
-//   location.reload();
-// });
 
 const emailFunction = (() => {
   const emailButton = document.getElementById("emailButton");
@@ -316,7 +298,7 @@ const dynamicSort = sortProperty => {
     };
   } else if (sortProperty === "date-first") {
     return function(a, b) {
-      return 1; // reverses array
+      return 1;
     };
   } else {
     return function(a, b) {
