@@ -8,7 +8,7 @@
       "js": ["content.js"]
     }
   ],
-  "permissions": ["tabs", "storage"],
+  "permissions": ["tabs", "storage", "contextMenus"],
   "browser_action": {
     "default_icon": "engagement-ring-wish-list-16.png",
     "default_popup": "menu.html"

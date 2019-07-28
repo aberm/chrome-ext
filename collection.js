@@ -20,8 +20,8 @@ let allData;
 
 // initial setup, fetching, and saving data to variables
 
-chrome.storage.sync.get("rings", result => {
-  chrome.storage.sync.get("newUrl", res => {
+chrome.storage.local.get("rings", result => {
+  chrome.storage.local.get("newUrl", res => {
     console.log("collection.js -> last ringUrl: ", res.newUrl);
     console.log("collection.js -> current rings: ", result.rings);
     if (result.rings && result.rings.length) {
@@ -35,7 +35,7 @@ chrome.storage.sync.get("rings", result => {
         console.log("heyhey--");
         const x = new Scraper(res.newUrl);
         x.scrape().then(res => {
-          chrome.storage.sync.set(
+          chrome.storage.local.set(
             {
               rings: [
                 ...result.rings,
@@ -58,7 +58,7 @@ chrome.storage.sync.get("rings", result => {
       console.log("heyhey");
       const x = new Scraper(res.newUrl);
       x.scrape().then(res => {
-        chrome.storage.sync.set(
+        chrome.storage.local.set(
           {
             rings: [
               {
@@ -72,13 +72,13 @@ chrome.storage.sync.get("rings", result => {
         );
       });
     }
-    chrome.storage.sync.set({ newUrl: null });
+    chrome.storage.local.set({ newUrl: null });
   });
 });
 
 const getRingsAndSetup = () => {
   ul.innerHTML = "";
-  chrome.storage.sync.get("rings", result => {
+  chrome.storage.local.get("rings", result => {
     allData = result.rings;
     setup();
   });
@@ -151,7 +151,6 @@ const turnDataIntoHtml = data => {
 
   edit.onclick = e => {
     editData(data);
-    // location.reload();
   };
 
   const remove = document.createElement("div");
@@ -173,7 +172,7 @@ const turnDataIntoHtml = data => {
 //
 // clearButton.addEventListener("click", event => {
 //   console.log("clear button clicked");
-//   chrome.storage.sync.clear(); // Geeez why didn't I think of this...
+//   chrome.storage.local.clear(); // Geeez why didn't I think of this...
 //   location.reload();
 // });
 
@@ -206,14 +205,13 @@ const emailFunction = (() => {
 
 const removeItemFromList = removeUrl => {
   const newArray = [...allData].filter(ring => ring.url !== removeUrl);
-  chrome.storage.sync.set({ rings: newArray }, getRingsAndSetup);
+  chrome.storage.local.set({ rings: newArray }, getRingsAndSetup);
 };
 
 /**
  * Appends edit form and fills it with editable data that can be saved or reset
  */
 const editData = data => {
-  console.log("loosh");
   const form = document.getElementById("edit-form");
 
   document.getElementById("url-edit").innerText = data.url;
@@ -259,7 +257,7 @@ const editData = data => {
 
   const submitHandler = e => {
     e.preventDefault();
-    console.log("loosharoo");
+
     const newTitle = document.getElementById("title-edit").value;
     const newImage = document.getElementById("image-edit").value;
     const newDescription = document.getElementById("description-edit").value;
@@ -279,7 +277,7 @@ const editData = data => {
           }
         : ring;
     });
-    chrome.storage.sync.set({ rings: newArray }, () => {
+    chrome.storage.local.set({ rings: newArray }, () => {
       getRingsAndSetup();
       modal.style.display = "none";
     });
