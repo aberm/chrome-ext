@@ -3,15 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <title>Document</title>
-    <link rel="stylesheet" href="menu.css" />
+    <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <div class="header">
-      <img class="logo" src="engagement-ring-wish-list-48.png" />
+      <img class="logo" src="icons/engagement-ring-wish-list-48.png" />
       <h2 class="header-text">Menu</h2>
     </div>
     <div class="dropdown">
       <div class="dropdown-content">
+        <p id="name"></p>
         <a id="add" class="add" href="#">Add to Collection</a>
         <a id="view" href="collection.html" rel="noreferrer" target="_blank"
           >View Collection</a
@@ -22,6 +23,7 @@
         <!-- <a id="export" href="#">Export my Collection</a> -->
       </div>
     </div>
-    <script src="menu.js"></script>
+    <script type="module" src="scraper.js"></script>
+    <script type="module" src="popup.js"></script>
   </body>
 </html>
