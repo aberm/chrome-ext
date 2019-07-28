@@ -2,7 +2,6 @@ class Scraper {
   constructor(url, debugMode = false) {
     this.url = url;
     this.debugMode = debugMode;
-    this.proxyurl = "https://cors-anywhere.herokuapp.com/";
   }
 
   scrape = async () => {
@@ -21,18 +20,15 @@ class Scraper {
   /**
    * fetch and parse a given url and return HTML Document
    */
-  fetchAndParseUrl = thisUrl => {
-    return fetch(thisUrl).then(res => {
+  fetchAndParseUrl = url => {
+    const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    return fetch(proxyurl + url).then(res => {
       if (res.ok) {
         return res.text().then(site => {
           const parser = new DOMParser();
           const htmlDocument = parser.parseFromString(site, "text/html");
           return htmlDocument;
         });
-      } else {
-        return thisUrl === this.proxyurl + url
-          ? null
-          : this.fetchAndParseUrl(this.proxyurl + url);
       }
     });
   };
