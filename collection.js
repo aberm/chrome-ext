@@ -61,6 +61,20 @@ chrome.storage.local.get("rings", result => {
           getRingsAndSetup
         );
       });
+    } else {
+      // empty array, no newUrl
+
+      // TODO: elements briefly visible
+      document.querySelector("div.email").style.display = "none";
+      document.querySelector("#search-container").style.display = "none";
+      document.querySelector("#sort").style.display = "none";
+
+      ul.innerHTML = `<h3 id="empty-list">Add a ring to get started. Need help? Click <a
+        rel="nofollow"
+        target="_blank"
+        href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension"
+        >here</a
+      ></h3>`;
     }
     chrome.storage.local.set({ newUrl: null });
   });
@@ -68,6 +82,7 @@ chrome.storage.local.get("rings", result => {
 
 const getRingsAndSetup = () => {
   ul.innerHTML = "";
+
   chrome.storage.local.get("rings", result => {
     allData = result.rings;
     setup();
@@ -80,6 +95,14 @@ const getRingsAndSetup = () => {
  */
 const setup = () => {
   console.log(allData);
+
+  document.querySelector(
+    "#search-container"
+  ).style.display = document.querySelector(
+    "#sort"
+  ).style.display = document.querySelector(
+    "div.email"
+  ).style.display = allData.length ? "block" : "none";
 
   total.innerText = allData.length
     ? allData.length > 1
