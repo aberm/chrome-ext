@@ -107,12 +107,8 @@ nav {
 
 .sort-title {
   padding-right: 1rem;
-}
-
-#sort label {
-  align-self: center;
-  padding: 0 1.5rem 0 0.25rem;
-  font-size: 0.8rem;
+  font-weight: bold;
+  font-size: 1.75em;
 }
 
 .items-container {
@@ -277,14 +273,18 @@ nav {
   text-align: center;
   font-size: 1.05rem;
   font-weight: 300;
-  color: #68828c;
+  /* color: #68828c; */
+  color: black;
   border-top: 1px solid rgba(100, 125, 135, 0.25);
   /* border-top: 1px solid #68828C; */
 }
 
+.unavailable,
 .card-cost p span {
   opacity: 0.7;
+  color: #68828c;
 }
+
 /***** END: Card *****/
 
 /***** END: Content *****/

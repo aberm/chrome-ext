@@ -119,7 +119,7 @@ const turnDataIntoHtml = data => {
     <div class="card-cost">
     ${
       data.price === undefined
-        ? `<p><span>Price unavailable. Visit product link for more details.</span></p>`
+        ? `<p><span class="unavailable">Price unavailable. Visit product link for more details.</span></p>`
         : `<p><span>Price:</span>  &nbsp; $${data.price}</p>`
     }
     </div>

@@ -46,7 +46,8 @@ textarea {
 }
 
 footer {
-  bottom: 10px;
+  margin-left: 3%;
+  margin-top: 25px;
 }
 
 /* The Modal (background) */
