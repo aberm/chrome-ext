@@ -305,23 +305,35 @@ const emailFunction = (() => {
 const dynamicSort = sortProperty => {
   if (sortProperty === "price-low") {
     return function(a, b) {
-      const result =
-        parseFloat(a["price"]) < parseFloat(b["price"])
-          ? -1
-          : parseFloat(a["price"]) > parseFloat(b["price"])
-          ? 1
-          : 0;
-      return result;
+      if (!!a.price && !!b.price) {
+        const result =
+          parseFloat(a["price"]) < parseFloat(b["price"])
+            ? -1
+            : parseFloat(a["price"]) > parseFloat(b["price"])
+            ? 1
+            : 0;
+        return result;
+      } else if (!!a.price) {
+        return -1;
+      } else if (!!b.price) {
+        return 1;
+      }
     };
   } else if (sortProperty === "price-high") {
     return function(a, b) {
-      const result =
-        parseFloat(a["price"]) < parseFloat(b["price"])
-          ? 1
-          : parseFloat(a["price"]) > parseFloat(b["price"])
-          ? -1
-          : 0;
-      return result;
+      if (!!a.price && !!b.price) {
+        const result =
+          parseFloat(a["price"]) < parseFloat(b["price"])
+            ? 1
+            : parseFloat(a["price"]) > parseFloat(b["price"])
+            ? -1
+            : 0;
+        return result;
+      } else if (!!a.price) {
+        return -1;
+      } else if (!!b.price) {
+        return 1;
+      }
     };
   } else if (sortProperty === "date-last") {
     return function(a, b) {
