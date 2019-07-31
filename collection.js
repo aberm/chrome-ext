@@ -109,7 +109,7 @@ const turnDataIntoHtml = data => {
   const div = `
     <div class="card-img">
     ${
-      data.price === undefined
+      data.image === undefined
         ? `<p class="unavailable">Image unavailable. Visit product link for more details.</p>`
         : `<img src="${data.image}">`
     }
