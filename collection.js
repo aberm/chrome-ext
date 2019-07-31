@@ -23,44 +23,16 @@ chrome.storage.local.get("rings", result => {
       } else if (!!res.newUrl) {
         // newUrl new
         console.log("newUrl new");
-        const x = new Scraper(res.newUrl);
-        x.scrape().then(res => {
-          chrome.storage.local.set(
-            {
-              rings: [
-                ...result.rings,
-                {
-                  ...res,
-                  description: capDescriptionLength(res.description),
-                  notes: ""
-                }
-              ]
-            },
-            getRingsAndSetup
-          );
-        });
+        addNewUrl(res.newUrl);
+        getRingsAndSetup();
       } else {
         // newUrl is null
         getRingsAndSetup();
       }
     } else if (!!res.newUrl) {
-      // rings data array empty
+      // rings data array empty, newUrl new
       console.log("rings data array empty");
-      const x = new Scraper(res.newUrl);
-      x.scrape().then(res => {
-        chrome.storage.local.set(
-          {
-            rings: [
-              {
-                ...res,
-                description: capDescriptionLength(res.description),
-                notes: ""
-              }
-            ]
-          },
-          getRingsAndSetup
-        );
-      });
+      addNewUrl(res.newUrl);
     } else {
       // empty array, no newUrl
 
@@ -120,15 +92,41 @@ const setup = () => {
     });
 };
 
+const addNewUrl = url => {
+  addLoading();
+
+  const x = new Scraper(url);
+  x.scrape().then(res => {
+    chrome.storage.local.set(
+      {
+        rings: [
+          ...(allData || []),
+          {
+            ...res,
+            description: capDescriptionLength(res.description),
+            notes: ""
+          }
+        ]
+      },
+      () => {
+        removeLoading();
+        getRingsAndSetup();
+      }
+    );
+  });
+};
+
 /**
  * Takes JS Object of data and creates item card and remove button
  */
 const turnDataIntoHtml = data => {
   const div = `
     <div class="card-img">
-      <img src="${
-        data.image
-      }" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+      ${
+        data.image === undefined
+          ? `<p class="unavailable">Image unavailable. Visit product link for more details.</p>`
+          : `<img src="${data.image}" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">`
+      }
     </div>
     <div class="card-title">
       <a href="${data.url}" rel="nofollow" target="_blank">
@@ -185,33 +183,6 @@ const turnDataIntoHtml = data => {
 
   return li;
 };
-
-const emailFunction = (() => {
-  const emailButton = document.getElementById("emailButton");
-  const emailForm = document.getElementById("email-form");
-  const emailInput = document.getElementById("email-input");
-  const cancelEmail = document.getElementById("cancelEmail");
-  const submitEmail = document.getElementById("submitEmail");
-
-  emailButton.onclick = e => {
-    emailForm.style.display = "block";
-    emailButton.style.display = "none";
-  };
-
-  submitEmail.onclick = e => {
-    console.log(emailInput.value);
-    // send export email
-    emailInput.value = "";
-    emailForm.style.display = "none";
-    emailButton.style.display = "block";
-  };
-
-  cancelEmail.onclick = e => {
-    emailInput.value = "";
-    emailForm.style.display = "none";
-    emailButton.style.display = "block";
-  };
-})();
 
 const removeItemFromList = removeUrl => {
   const newArray = [...allData].filter(ring => ring.url !== removeUrl);
@@ -296,6 +267,33 @@ const editData = data => {
   form.onsubmit = e => submitHandler(e);
 };
 
+const emailFunction = (() => {
+  const emailButton = document.getElementById("emailButton");
+  const emailForm = document.getElementById("email-form");
+  const emailInput = document.getElementById("email-input");
+  const cancelEmail = document.getElementById("cancelEmail");
+  const submitEmail = document.getElementById("submitEmail");
+
+  emailButton.onclick = e => {
+    emailForm.style.display = "block";
+    emailButton.style.display = "none";
+  };
+
+  submitEmail.onclick = e => {
+    console.log(emailInput.value);
+    // send export email
+    emailInput.value = "";
+    emailForm.style.display = "none";
+    emailButton.style.display = "block";
+  };
+
+  cancelEmail.onclick = e => {
+    emailInput.value = "";
+    emailForm.style.display = "none";
+    emailButton.style.display = "block";
+  };
+})();
+
 /**
  * Pretty much a sort function for when the sort buttons are clicked
  */
@@ -364,4 +362,45 @@ const capDescriptionLength = description => {
   return description.length > 400
     ? description.slice(0, 397) + "..."
     : description;
+};
+
+const emptyList = () => {
+  // TODO: elements briefly visible
+  document.querySelector("div.email").style.display = "none";
+  document.querySelector("#nav__search-container").style.display = "none";
+  document.querySelector(".sort-bar").style.display = "none";
+
+  ul.innerHTML = `<h3 id="empty-list">Add a ring to get started. Need help? Click <a
+    rel="nofollow"
+    target="_blank"
+    href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension"
+    >here</a
+  ></h3>`;
+};
+
+const addLoading = () => {
+  const loader = document.createElement("li");
+  loader.className = "card loading";
+  loader.id = "loading";
+  loader.innerHTML = `
+  <div class="sk-circle">
+    <div class="sk-circle1 sk-child"></div>
+    <div class="sk-circle2 sk-child"></div>
+    <div class="sk-circle3 sk-child"></div>
+    <div class="sk-circle4 sk-child"></div>
+    <div class="sk-circle5 sk-child"></div>
+    <div class="sk-circle6 sk-child"></div>
+    <div class="sk-circle7 sk-child"></div>
+    <div class="sk-circle8 sk-child"></div>
+    <div class="sk-circle9 sk-child"></div>
+    <div class="sk-circle10 sk-child"></div>
+    <div class="sk-circle11 sk-child"></div>
+    <div class="sk-circle12 sk-child"></div>
+  </div>
+`;
+  ul.appendChild(loader);
+};
+
+const removeLoading = () => {
+  document.getElementById("loading");
 };
