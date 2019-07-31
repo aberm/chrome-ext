@@ -23,8 +23,10 @@ chrome.storage.local.get("rings", result => {
       } else if (!!res.newUrl) {
         // newUrl new
         console.log("newUrl new");
+
+        // TODO: wrong order by of async, loading appended first
+
         addNewUrl(res.newUrl);
-        getRingsAndSetup();
       } else {
         // newUrl is null
         getRingsAndSetup();
@@ -55,9 +57,12 @@ chrome.storage.local.get("rings", result => {
 const getRingsAndSetup = () => {
   ul.innerHTML = "";
 
-  chrome.storage.local.get("rings", result => {
-    allData = result.rings;
-    setup();
+  return new Promise((res, rej) => {
+    chrome.storage.local.get("rings", async result => {
+      allData = result.rings;
+      setup();
+      res(allData);
+    });
   });
 };
 
@@ -93,7 +98,7 @@ const setup = () => {
 };
 
 const addNewUrl = url => {
-  addLoading();
+  getRingsAndSetup().then(addLoading);
 
   const x = new Scraper(url);
   x.scrape().then(res => {
@@ -379,6 +384,7 @@ const emptyList = () => {
 };
 
 const addLoading = () => {
+  console.log("adding loading animation now");
   const loader = document.createElement("li");
   loader.className = "card loading";
   loader.id = "loading";
