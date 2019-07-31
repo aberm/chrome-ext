@@ -285,6 +285,9 @@ nav {
 .card-cost p span {
   opacity: 0.7;
   color: #68828c;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 300;
 }
 
 /***** END: Card *****/
