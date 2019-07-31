@@ -3,7 +3,39 @@ h1 {
 }
 
 #ringsList {
-  min-height: 75vh;
+  min-height: 70vh;
+  margin-bottom: 40px;
+  padding-bottom: 150px;
+  border-bottom: 1px solid #68828c;
+}
+
+#promoted {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-gap: 1.2rem;
+  margin: 0 auto;
+  width: 80vw;
+}
+
+#promoted .clear {
+  margin-bottom: 17px;
+}
+
+#promoted .card-img {
+  padding: 0px;
+}
+
+#promoted .card-title {
+  padding-bottom: 0px;
+}
+
+#promoted .card-cost {
+  border-top: none;
+}
+
+#promoted .card-desc p {
+  padding-top: 30px;
+  padding-bottom: 0;
 }
 
 .email {
@@ -36,6 +68,7 @@ h1 {
 #empty-list {
   margin: auto;
   font-size: 24px;
+  font-family: Helvetica;
   color: grey;
 }
 

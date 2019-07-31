@@ -64,17 +64,7 @@ chrome.storage.local.get("rings", result => {
     } else {
       // empty array, no newUrl
 
-      // TODO: elements briefly visible
-      document.querySelector("div.email").style.display = "none";
-      document.querySelector("#nav__search-container").style.display = "none";
-      document.querySelector(".sort-bar").style.display = "none";
-
-      ul.innerHTML = `<h3 id="empty-list">Add a ring to get started. Need help? Click <a
-        rel="nofollow"
-        target="_blank"
-        href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension"
-        >here</a
-      ></h3>`;
+      emptyList();
     }
     chrome.storage.local.set({ newUrl: null });
   });
@@ -96,13 +86,9 @@ const getRingsAndSetup = () => {
 const setup = () => {
   console.log(allData);
 
-  document.querySelector(
-    "#search-container"
-  ).style.display = document.querySelector(
-    "#sort"
-  ).style.display = document.querySelector(
-    "div.email"
-  ).style.display = allData.length ? "block" : "none";
+  if (allData.length === 0) {
+    emptyList();
+  }
 
   total.innerText = allData.length
     ? allData.length > 1
@@ -136,7 +122,7 @@ const turnDataIntoHtml = data => {
     <div class="card-desc">
       <p>${data.description}</p>
     </div>
-    <div class="card-desc">
+    <div class="notes">
     ${data.notes.trim() === "" ? "" : `<h4>Notes: </h4><p>${data.notes}</p>`}
     </div>
     <div class="card-cost">
@@ -359,4 +345,18 @@ const capDescriptionLength = description => {
   return description.length > 400
     ? description.slice(0, 397) + "..."
     : description;
+};
+
+const emptyList = () => {
+  // TODO: elements briefly visible
+  document.querySelector("div.email").style.display = "none";
+  document.querySelector("#nav__search-container").style.display = "none";
+  document.querySelector(".sort-bar").style.display = "none";
+
+  ul.innerHTML = `<h3 id="empty-list">Add a ring to get started. Need help? Click <a
+    rel="nofollow"
+    target="_blank"
+    href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension"
+    >here</a
+  ></h3>`;
 };

@@ -235,7 +235,8 @@ nav {
   font-weight: 700;
 }
 
-.card-desc {
+.card-desc,
+.notes {
   display: flex;
   flex-direction: column;
   /* opacity: 0; */
@@ -253,7 +254,8 @@ nav {
   transition: 0.2s ease;
 }
 
-.card-desc p {
+.card-desc p,
+.notes p {
   font-size: 1rem;
   font-weight: 200;
   color: #333;
