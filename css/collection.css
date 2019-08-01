@@ -162,7 +162,7 @@ nav {
 /***** START: Content *****/
 #ringsList {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 0.33333fr));
   grid-gap: 1.2rem;
   margin: 0 auto;
   width: 80vw;
