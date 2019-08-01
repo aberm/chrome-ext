@@ -66,7 +66,10 @@ h1 {
 }
 
 #empty-list {
-  margin: 285px auto 75px;
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
   font-size: 24px;
   font-family: Helvetica;
   color: grey;
@@ -82,7 +85,8 @@ h1 {
 }
 
 .edit {
-  margin: 25px;
+  margin: 25px auto;
+  padding: 1px 7px 2px;
 }
 
 #edit-modal input,

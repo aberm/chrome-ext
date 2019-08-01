@@ -23,8 +23,8 @@ chrome.storage.local.get("rings", result => {
       } else if (!!res.newUrl) {
         // newUrl new
         console.log("newUrl new");
+        getRingsAndSetup().then(addLoading);
         addNewUrl(res.newUrl);
-        getRingsAndSetup();
       } else {
         // newUrl is null
         getRingsAndSetup();
@@ -32,10 +32,10 @@ chrome.storage.local.get("rings", result => {
     } else if (!!res.newUrl) {
       // rings data array empty, newUrl new
       console.log("rings data array empty");
+      addLoading();
       addNewUrl(res.newUrl);
     } else {
       // empty array, no newUrl
-
       emptyList();
     }
     chrome.storage.local.set({ newUrl: null });
@@ -45,9 +45,12 @@ chrome.storage.local.get("rings", result => {
 const getRingsAndSetup = () => {
   ul.innerHTML = "";
 
-  chrome.storage.local.get("rings", result => {
-    allData = result.rings;
-    setup();
+  return new Promise((res, rej) => {
+    chrome.storage.local.get("rings", async result => {
+      allData = result.rings;
+      setup();
+      res(allData);
+    });
   });
 };
 
@@ -56,9 +59,10 @@ const getRingsAndSetup = () => {
  * Appends HTML item cards to ul element.
  */
 const setup = () => {
+  ul.innerHTML = "";
   console.log(allData);
 
-  if (allData.length === 0) {
+  if (allData && allData.length === 0) {
     emptyList();
   }
 
@@ -79,8 +83,6 @@ const setup = () => {
 };
 
 const addNewUrl = url => {
-  addLoading();
-
   const x = new Scraper(url);
   x.scrape().then(res => {
     chrome.storage.local.set(
@@ -146,7 +148,6 @@ const turnDataIntoHtml = data => {
   const edit = document.createElement("button");
   edit.className = "edit";
   edit.innerText = "edit";
-  edit.style.float = "left";
   li.appendChild(edit);
 
   edit.onclick = e => {
@@ -170,7 +171,10 @@ const turnDataIntoHtml = data => {
 
 const removeItemFromList = removeUrl => {
   const newArray = [...allData].filter(ring => ring.url !== removeUrl);
-  chrome.storage.local.set({ rings: newArray }, getRingsAndSetup);
+  chrome.storage.local.set({ rings: newArray }, () => {
+    allData = newArray;
+    setup();
+  });
 };
 
 /**
