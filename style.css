@@ -103,8 +103,13 @@ textarea {
 }
 
 footer {
-  margin-left: 3%;
-  margin-top: 25px;
+  width: 80vw;
+  /* margin-left: 3%; */
+  margin: 25px auto;
+}
+
+span.right {
+  float: right;
 }
 
 /* The Modal (background) */

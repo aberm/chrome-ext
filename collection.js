@@ -111,7 +111,7 @@ const turnDataIntoHtml = data => {
   const div = `
     <div class="card-img">
     ${
-      data.image === undefined
+      data.image === undefined || data.image === ""
         ? `<p class="unavailable">Image unavailable. Visit product link for more details.</p>`
         : `<img src="${data.image}">`
     }
@@ -371,11 +371,11 @@ const emptyList = () => {
   document.querySelector("#nav__search-container").style.display = "none";
   document.querySelector(".sort-bar").style.display = "none";
 
-  ul.innerHTML = `<h3 id="empty-list">Add a ring to get started. Need help? Click <a
+  ul.innerHTML = `<h3 id="empty-list">Add a ring to get started. Need help? <a
     rel="nofollow"
     target="_blank"
     href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension"
-    >here</a
+    >Click here</a
   ></h3>`;
 };
 
@@ -403,5 +403,5 @@ const addLoading = () => {
 };
 
 const removeLoading = () => {
-  document.getElementById("loading");
+  document.getElementById("loading").remove();
 };

@@ -33,6 +33,10 @@ body {
   margin: auto;
 }
 
+#name {
+  text-align: center;
+}
+
 #add {
   background-color: #4caf50; /* Green */
   font-size: 18px;

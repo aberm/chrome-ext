@@ -1,7 +1,7 @@
 console.log("background running");
 
 chrome.contextMenus.create({
-  title: "Add This Page To Wish List",
+  title: "Add this Page to Wish List",
   contexts: ["page", "selection", "image", "link"], // link?
   onclick: function(e) {
     console.log(e.pageUrl);
