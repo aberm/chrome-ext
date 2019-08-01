@@ -18,7 +18,6 @@ Dark Green: #4D6873
 
 body {
   font-family: "Nunito Sans", sans-serif;
-  font-size: 62.5%;
   background-color: #f2f0eb;
   padding-bottom: 40px;
 }
@@ -74,7 +73,7 @@ nav {
   font-size: 1rem;
   border: 2px solid rgba(192, 211, 216, 0.35);
   background-color: rgba(192, 211, 216, 0.2);
-  transition-duration: 0.5s;
+  transition-duration: 0.25s;
 }
 
 #search:focus {
@@ -108,7 +107,7 @@ nav {
 .sort-title {
   padding-right: 1rem;
   font-weight: bold;
-  font-size: 1.75em;
+  font-size: 1.5em;
 }
 
 .items-container {

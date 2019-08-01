@@ -265,6 +265,7 @@ const emailFunction = (() => {
   emailButton.onclick = e => {
     emailForm.style.display = "block";
     emailButton.style.display = "none";
+    emailInput.focus();
   };
 
   submitEmail.onclick = e => {
