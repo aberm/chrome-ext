@@ -184,7 +184,7 @@ const editData = data => {
   const form = document.getElementById("edit-form");
 
   document.getElementById("url-edit").innerText = data.url;
-  document.getElementById("edit-display-image").src = data.image;
+  document.getElementById("edit-display-image").src = data.image || "";
   form.elements["title"].value = data.title;
   form.elements["image"].value = data.image;
   form.elements["description"].value = data.description;
