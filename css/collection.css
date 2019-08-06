@@ -19,7 +19,6 @@ Dark Green: #4D6873
 body {
   font-family: "Nunito Sans", sans-serif;
   background-color: #f2f0eb;
-  padding-bottom: 40px;
 }
 
 /***** START: Navigation Bar *****/
@@ -27,18 +26,9 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100vw;
   height: 70px;
   padding: 0px 30px;
-  background-color: #0d0d0d;
-}
-
-.nav__title-container {
-  display: flex;
-  flex-basis: 35%;
-  align-items: center;
-  height: 100%;
-  border-right: 1px solid rgba(192, 211, 216, 0.3);
+  /* background-color: #0d0d0d; */
 }
 
 .nav__title {
@@ -52,7 +42,6 @@ nav {
 #nav__search-container {
   flex-basis: 60%;
   margin: 0 auto;
-  padding-left: 30px;
   position: relative;
 }
 
@@ -81,11 +70,6 @@ nav {
   background-color: rgba(255, 255, 255, 1);
 }
 
-.color-bar {
-  background-color: #c1d4d9;
-  width: 100vw;
-  height: 4px;
-}
 /***** END: Navigation Bar *****/
 
 /***** START: Sorting Bar *****/
@@ -162,8 +146,9 @@ nav {
 /***** START: Content *****/
 #ringsList {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(32%, 0.33333fr));
-  grid-gap: 1.2rem;
+  grid-template-columns: repeat(auto-fit, minmax(30%, 0.33333fr));
+  /* grid-gap: 1.2rem; */
+  grid-gap: 2rem;
   margin: 0 auto;
   width: 80vw;
 }
@@ -175,7 +160,6 @@ nav {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
   /* padding: 30px; */
   list-style: none;
   /* border-radius: 4px; */

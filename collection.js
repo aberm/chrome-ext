@@ -146,7 +146,7 @@ const turnDataIntoHtml = data => {
   li.innerHTML = div;
 
   const edit = document.createElement("button");
-  edit.className = "edit";
+  edit.className = "edit normal-padding";
   edit.innerText = "edit";
   li.appendChild(edit);
 
@@ -183,7 +183,7 @@ const removeItemFromList = removeUrl => {
 const editData = data => {
   const form = document.getElementById("edit-form");
 
-  document.getElementById("url-edit").innerText = data.url;
+  document.getElementById("url-edit").value = data.url;
   document.getElementById("edit-display-image").src = data.image || "";
   form.elements["title"].value = data.title;
   form.elements["image"].value = data.image;

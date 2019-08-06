@@ -10,9 +10,6 @@
   </head>
   <body>
     <nav>
-      <div class="nav__title-container">
-        <h1 class="nav__title">Welcome to your Jewelry Collection!</h1>
-      </div>
       <div id="nav__search-container">
         <div class="nav__search-icon">
           <img src="img/magnify_glass.svg" alt="" />
@@ -20,8 +17,10 @@
         <input type="text" id="search" />
       </div>
     </nav>
+    <div id="logo">
+      <img src="img/Full-Sized-Logo.png" />
+    </div>
 
-    <div class="color-bar"></div>
     <div class="sort-bar">
       <div id="sort">
         <label for="sort-by" class="sort-title">Sort by:</label>
@@ -174,6 +173,7 @@
         href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension#feedback"
         >Feedback</a
       >
+      <span class="right">&copy; Engagement Ring Wish List 2019</span>
     </footer>
 
     <!-- The Modal -->
@@ -183,8 +183,13 @@
         <span id="closeEditModal" class="close">&times;</span>
         <form id="edit-form">
           <img src="" id="edit-display-image" />
-          <button id="resetFields">Reset fields</button>
-          <p><label for="url-edit">URL</label> <span id="url-edit"></span></p>
+          <button id="resetFields" class="center-button normal-padding">
+            Reset fields
+          </button>
+          <p>
+            <label for="url-edit">URL</label>
+            <input id="url-edit" name="url" type="text" disabled />
+          </p>
           <p>
             <label for="title-edit">Title</label>
             <textarea id="title-edit" name="title"></textarea>
@@ -215,7 +220,7 @@
             <label for="notes-edit">Notes</label>
             <textarea id="notes-edit" name="notes"></textarea>
           </p>
-          <button id="submit-edit">Submit</button>
+          <button id="submit-edit" class="center-button clear">Submit</button>
         </form>
       </div>
     </div>
