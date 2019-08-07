@@ -156,7 +156,7 @@ const turnDataIntoHtml = data => {
 
   const remove = document.createElement("div");
   remove.className = "card-remove";
-  remove.innerText = "X";
+  remove.innerHTML = "&times;";
   li.prepend(remove);
 
   remove.onclick = e => {

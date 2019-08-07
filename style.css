@@ -3,7 +3,7 @@ h1 {
 }
 
 #ringsList {
-  min-height: 75vh;
+  min-height: 70vh;
   margin-bottom: 40px;
   padding-bottom: 150px;
   border-bottom: 1px solid #68828c;
@@ -12,6 +12,7 @@ h1 {
 #logo img {
   margin: 0 auto;
   display: block;
+  width: 15%;
 }
 
 #promoted {

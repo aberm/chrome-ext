@@ -187,6 +187,7 @@ nav {
 }
 
 .card-remove {
+  font-size: 1.5em;
   text-align: right;
   width: 20px;
   height: 20px;
