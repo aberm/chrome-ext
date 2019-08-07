@@ -118,9 +118,7 @@ const turnDataIntoHtml = data => {
 
     </div>
     <div class="card-title">
-      <a href="${data.url}" rel="nofollow" target="_blank">
-        <h3>${data.title}</h3>
-      </a>
+      <h3>${data.title}</h3>
     </div>
     <div class="card-desc">
       <p>${data.description}</p>
@@ -137,6 +135,10 @@ const turnDataIntoHtml = data => {
     </div>
     <a href="${data.url}" rel="nofollow" target="_blank" class="view">
     <div class="clear">View Product</div>
+    </a>
+    <a class="overlay-link" href="${
+      data.url
+    }" rel="nofollow" target="_blank" class="view">
     </a>
     `;
 
