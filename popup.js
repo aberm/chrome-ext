@@ -14,13 +14,18 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
 });
 
 document.getElementById("add").addEventListener("click", e => {
-  if (!activeTab.url.startsWith("chrome")) {
-    chrome.storage.local.set({ newUrl: activeTab.url }, () =>
-      chrome.tabs.create({ url: "collection.html" })
-    );
-  } else {
-    chrome.tabs.create({ url: "collection.html" });
-  }
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {
+      txt: "pull_document"
+    });
+    if (!activeTab.url.startsWith("chrome")) {
+      chrome.storage.local.set({ newUrl: activeTab.url }, () =>
+        chrome.tabs.create({ url: "collection.html" })
+      );
+    } else {
+      chrome.tabs.create({ url: "collection.html" });
+    }
+  });
 });
 
 (function(i, s, o, g, r, a, m) {

@@ -47,7 +47,7 @@ const getRingsAndSetup = () => {
 
   return new Promise((res, rej) => {
     chrome.storage.local.get("rings", async result => {
-      allData = result.rings;
+      allData = await result.rings;
       setup();
       res(allData);
     });
@@ -58,6 +58,7 @@ const getRingsAndSetup = () => {
  * Main setup function. Called after every filter / sorting.
  * Appends HTML item cards to ul element.
  */
+
 const setup = () => {
   ul.innerHTML = "";
   console.log(allData);
@@ -83,24 +84,37 @@ const setup = () => {
 };
 
 const addNewUrl = url => {
-  const x = new Scraper(url);
-  x.scrape().then(res => {
-    chrome.storage.local.set(
-      {
-        rings: [
-          ...(allData || []),
+  chrome.storage.local.get("newDoc", nd => {
+    const newDoc = nd.newDoc;
+
+    const x = new Scraper(url, newDoc);
+    x.scrape().then(res => {
+      console.log("RES ", res);
+      if (res) {
+        // fetch successful
+        chrome.storage.local.set(
           {
-            ...res,
-            description: capDescriptionLength(res.description),
-            notes: ""
+            rings: [
+              // ...allData,
+              ...(allData || []),
+              {
+                ...res,
+                description: capDescriptionLength(res.description),
+                notes: ""
+              }
+            ]
+          },
+          () => {
+            removeLoading();
+            getRingsAndSetup();
           }
-        ]
-      },
-      () => {
+        );
+      } else {
+        // fetch failed
         removeLoading();
-        getRingsAndSetup();
       }
-    );
+    });
+    chrome.storage.local.set({ newDoc: null });
   });
 };
 

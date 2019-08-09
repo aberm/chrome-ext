@@ -3,6 +3,12 @@
   "name": "Engagement Ring Wish List",
   "version": "1.0.1",
   "permissions": ["tabs", "storage", "contextMenus"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
   "browser_action": {
     "default_icon": "icons/engagement-ring-wish-list-16.png",
     "default_popup": "popup.html"

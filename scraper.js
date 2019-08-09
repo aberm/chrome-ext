@@ -6,7 +6,10 @@ class Scraper {
   }
 
   scrape = async () => {
-    const res = await this.fetchAndParseUrl(this.url);
+    const res =
+      this.doc === undefined
+        ? await this.fetchAndParseUrl(this.url)
+        : this.parseDoc();
     this.doc = res;
     return this.scrapeInfo();
   };
@@ -20,6 +23,11 @@ class Scraper {
     const site = await res.text();
     const parser = new DOMParser();
     return parser.parseFromString(site, "text/html");
+  };
+
+  parseDoc = () => {
+    const parser = new DOMParser();
+    return parser.parseFromString(this.doc, "text/html");
   };
 
   /**
@@ -55,15 +63,15 @@ class Scraper {
     };
 
     return this.mostCommonItem([
-      ...(this.listRules("title") || [this.doc.title]),
       s(),
+      ...(this.listRules("title") || [this.doc.title]),
       ...this.jsonFieldScraper("title")
     ]);
   };
 
   getImage = () => {
     const s = () => {
-      const title = this.getTitle(this.doc);
+      const title = this.getTitle();
       const results = this.doc.querySelectorAll('img[alt*="' + title + '"]');
       if (results.length) {
         this.debugMode
@@ -77,8 +85,8 @@ class Scraper {
 
     return this.imagePrependHttp(
       this.mostCommonItem([
-        ...this.listRules("image"),
         s(),
+        ...this.listRules("image"),
         ...this.jsonFieldScraper("image")
       ])
     );
@@ -110,8 +118,8 @@ class Scraper {
 
     return this.priceRemoveCommasAnd$(
       this.mostCommonItem([
-        ...(this.listRules("price") || this.listRules("price:amount")),
         s(),
+        ...(this.listRules("price") || this.listRules("price:amount")),
         ...(this.jsonFieldScraper("price") ||
           this.jsonFieldScraper("price:amount"))
       ])
