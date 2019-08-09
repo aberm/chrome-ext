@@ -278,9 +278,9 @@ class Scraper {
     return !!src && src.startsWith("//") ? "http:" + src : src;
   };
 
-  priceRemoveCommas = price => {
+  priceRemoveCommasAnd$ = price => {
     return typeof price === "string" || price instanceof String
-      ? price.replace(/,/g, "")
+      ? price.replace(/[$,]/g, "")
       : price;
   };
 }
