@@ -376,8 +376,10 @@ search.oninput = e => {
 };
 
 const capDescriptionLength = description => {
-  return description.length > 400
-    ? description.slice(0, 397) + "..."
+  return !!description
+    ? description.length > 400
+      ? description.slice(0, 397) + "..."
+      : description
     : description;
 };
 
