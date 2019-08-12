@@ -28,7 +28,7 @@ document.getElementById("add").addEventListener("click", e => {
   });
 });
 
-(function(i, s, o, g, r, a, m) {
+const analytics = ((i, s, o, g, r, a, m) => {
   i["GoogleAnalyticsObject"] = r;
   (i[r] =
     i[r] ||
