@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Engagement Ring Wish List",
   "version": "1.0.1",
-  "permissions": ["tabs", "storage", "contextMenus"],
+  "permissions": ["http://*/", "https://*/", "tabs", "storage", "contextMenus"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

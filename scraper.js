@@ -18,8 +18,7 @@ class Scraper {
    * fetch and parse a given url and return HTML Document
    */
   fetchAndParseUrl = async url => {
-    const proxyurl = "https://cors-anywhere.herokuapp.com/";
-    const res = await fetch(proxyurl + url);
+    const res = await fetch(url);
     const site = await res.text();
     const parser = new DOMParser();
     return parser.parseFromString(site, "text/html");
