@@ -44,6 +44,10 @@ h1 {
   padding-bottom: 0;
 }
 
+.invisible {
+  display: none !important;
+}
+
 .email {
   float: right;
   margin: auto 0;

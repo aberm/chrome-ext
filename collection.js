@@ -65,6 +65,12 @@ const setup = () => {
 
   if (allData && allData.length === 0) {
     emptyList();
+  } else if (allData.length > 0) {
+    document.querySelector("div.items-container").classList.remove("invisible");
+    document
+      .querySelector("div#nav__search-container")
+      .classList.remove("invisible");
+    document.querySelector("div.sort-bar").classList.remove("invisible");
   }
 
   total.innerText = allData.length
@@ -384,10 +390,11 @@ const capDescriptionLength = description => {
 };
 
 const emptyList = () => {
-  // TODO: elements briefly visible
-  document.querySelector("div.email").style.display = "none";
-  document.querySelector("#nav__search-container").style.display = "none";
-  document.querySelector(".sort-bar").style.display = "none";
+  document.querySelector("div.items-container").classList.add("invisible");
+  document
+    .querySelector("div#nav__search-container")
+    .classList.add("invisible");
+  document.querySelector("div.sort-bar").classList.add("invisible");
 
   ul.innerHTML = `<h3 id="empty-list">Add a ring to get started. Need help? <a
     rel="nofollow"
