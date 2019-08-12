@@ -133,7 +133,7 @@ const turnDataIntoHtml = data => {
     ${
       data.image === undefined || data.image === ""
         ? `<p class="unavailable">Image unavailable. Visit product link for more details.</p>`
-        : `<img src="${data.image}">`
+        : `<img src="${data.image}" alt="${data.title}">`
     }
 
     </div>
