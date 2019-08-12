@@ -6,11 +6,10 @@ class Scraper {
   }
 
   scrape = async () => {
-    const res =
+    this.doc =
       this.doc === undefined
         ? await this.fetchAndParseUrl(this.url)
         : this.parseDoc();
-    this.doc = res;
     return this.scrapeInfo();
   };
 
@@ -30,7 +29,7 @@ class Scraper {
   };
 
   /**
-   * Scrape metadata from given HTML Document and return JS Object of data
+   * Returns JS Object of data
    */
   scrapeInfo = () => {
     if (this.doc === undefined) {
@@ -61,41 +60,68 @@ class Scraper {
       }
     };
 
-    return this.mostCommonItem([
+    const all = [
       s(),
       ...(this.listRules("title") || [this.doc.title]),
       ...this.jsonFieldScraper("title")
-    ]);
+    ];
+
+    if (this.debugMode) {
+      console.log("all titles: ", all);
+    }
+
+    return this.mostCommonItem(all);
   };
 
   getImage = () => {
     const s = () => {
-      const title = this.getTitle();
-      const results = this.doc.querySelectorAll('img[alt*="' + title + '"]');
-      if (results.length) {
+      const titles = this.getTitlesForAlt().filter(x => x);
+
+      const results = titles.map(title =>
+        this.doc.querySelectorAll(
+          `img[alt*="${title
+            .replace(/"/g, '\\"')
+            .replace(/'/g, "\\'")
+            .replace(/(\r\n|\n|\r)/g, " ")}"]`
+        )
+      );
+
+      const results2 = [...results].map(a => [...a].map(el => el.src)).flat();
+
+      if (results2.length) {
         this.debugMode
           ? console.log({
-              ['img[alt*="' + title + '"]']: [...results].map(el => el.src)
+              ['img[alt*="' + "titles" + '"]']: [...results2]
             })
           : null;
-        return [...results].map(el => el.src);
+        return this.tripleFlat(results2);
       }
     };
 
-    return this.imagePrependHttp(
-      this.mostCommonItem([
-        s(),
-        ...this.listRules("image"),
-        ...this.jsonFieldScraper("image")
-      ])
-    );
+    const all = [
+      s(),
+      ...this.listRules("image"),
+      ...this.jsonFieldScraper("image")
+    ];
+
+    if (this.debugMode) {
+      console.log("all images: ", all);
+    }
+
+    return this.imageHttp(this.mostCommonItem(this.sortImagesByHost(all)));
   };
 
   getDescription = () => {
-    const desc = this.mostCommonItem([
+    const all = [
       ...this.listRules("description"),
       ...this.jsonFieldScraper("description")
-    ]);
+    ];
+
+    if (this.debugMode) {
+      console.log("all descriptions: ", all);
+    }
+
+    const desc = this.sortDescriptionsByLongest(all)[0];
 
     return desc === undefined
       ? undefined
@@ -108,20 +134,46 @@ class Scraper {
       if (results.length) {
         this.debugMode
           ? console.log({
-              ['span[id*="price"]']: [...results].map(el => el.innerText.trim())
+              ['span[id*="price"] innerText']: [...results].map(el =>
+                el.innerText.trim()
+              )
+            })
+          : null;
+        return [...results].map(el => el.innerText.trim());
+      }
+    };
+    const p = () => {
+      const results = this.doc.querySelectorAll('span[itemprop="price"]');
+      if (results.length) {
+        this.debugMode
+          ? console.log({
+              ['span[itemprop="price"]']: [...results].map(el =>
+                el.innerText.trim()
+              )
             })
           : null;
         return [...results].map(el => el.innerText.trim());
       }
     };
 
+    const all = [
+      s(),
+      p(),
+      ...(this.listRules("price") || this.listRules("price:amount")),
+      ...(this.jsonFieldScraper("price") ||
+        this.jsonFieldScraper("price:amount"))
+    ];
+
+    if (this.debugMode) {
+      console.log("all prices: ", all);
+    }
+
     return this.priceRemoveCommasAnd$(
-      this.mostCommonItem([
-        s(),
-        ...(this.listRules("price") || this.listRules("price:amount")),
-        ...(this.jsonFieldScraper("price") ||
-          this.jsonFieldScraper("price:amount"))
-      ])
+      this.mostCommonItem(
+        this.tripleFlat(all)
+          .filter(x => /\d/.test(x))
+          .filter(x => parseFloat(x) !== 0)
+      )
     );
   };
 
@@ -149,6 +201,8 @@ class Scraper {
       ["content", "property", "meta", "twitter:"],
       ["content", "name", "meta", "og:"],
       ["content", "name", "meta", "twitter:"],
+      ["value", "name", "meta", "og:"],
+      ["value", "name", "meta", "twitter:"],
       ["content", "itemprop", "meta"],
       ["content", "name", "meta"],
       ["content", "itemprop", "span"]
@@ -171,14 +225,17 @@ class Scraper {
       this.doc
         .querySelectorAll('script[type="application/ld+json"]')
         .forEach(json => {
-          const a = [];
+          if (!!json.innerText.trim()) {
+            // not empty json
+            const a = [];
 
-          this.jsonFieldSearcher(JSON.parse(json.innerText), field, a);
-          arr.push(a);
+            this.jsonFieldSearcher(JSON.parse(json.innerText), field, a);
+            arr.push(a);
+          }
         });
       this.debugMode
         ? console.log({
-            'script[type="application/ld+json"]': arr
+            ['script[type="application/ld+json"] ' + field]: arr
               .filter(item => item.length)
               .flat()
           })
@@ -189,17 +246,13 @@ class Scraper {
     }
   };
 
-  /**
-   * Function for scraping HTML Document to find LD-JSON metadata.
-   * Returns array of found data.
-   */
   jsonFieldSearcher = (json, field, array) => {
     // if (array.length < 1) {
     // comment this line to get multiple results
     if (
       field in json &&
       // json["@type"] === "Product" &&
-      typeof json[field] == "string"
+      (typeof json[field] == "string" || typeof json[field] == "number")
     ) {
       // success
       array.push(json[field]);
@@ -213,11 +266,8 @@ class Scraper {
   };
 
   mostCommonItem = arr => {
-    const cnts = arr
-      .filter(x => x) // remove undefined, null
-      .flat()
-      .flat()
-      .flat()
+    const cnts = this.tripleFlat(arr.filter(x => x)) // remove undefined, null
+      .filter(x => x)
       .reduce((obj, val) => {
         obj[val] = (obj[val] || 0) + 1;
         return obj;
@@ -230,20 +280,81 @@ class Scraper {
     return sorted[0];
   };
 
+  getTitlesForAlt = () => {
+    const s = () => {
+      const results = this.doc.querySelectorAll("h1");
+      if (results.length) {
+        this.debugMode
+          ? console.log({
+              ["h1"]: [...results].map(el => el.innerText.trim())
+            })
+          : null;
+        return [...results].map(el => el.innerText.trim());
+      }
+    };
+
+    const all = [
+      s(),
+      ...(this.listRules("title") || [this.doc.title]),
+      ...this.jsonFieldScraper("title")
+    ];
+
+    return [...new Set(this.tripleFlat(all))];
+  };
+
   decodeHtmlEntities = str => {
     const txt = document.createElement("textarea");
     txt.innerHTML = str;
     return txt.value;
   };
 
-  imagePrependHttp = src => {
-    return !!src && src.startsWith("//") ? "http:" + src : src;
+  sortDescriptionsByLongest = arr => {
+    return arr
+      ? this.tripleFlat(arr)
+          .filter(x => x)
+          .sort((a, b) => b.length - a.length) // return longest first
+      : undefined;
+  };
+
+  sortImagesByHost = arr => {
+    const hostname = new URL(this.url).hostname;
+    const hn = [];
+    const notHn = [];
+    arr
+      ? this.tripleFlat(arr)
+          .filter(x => x)
+          .forEach(x => {
+            !x.startsWith("chrome-extension://" + chrome.runtime.id) &&
+            !x.startsWith("data:image/png;base64") // no base64
+              ? x.includes(hostname)
+                ? hn.push(x)
+                : notHn.push(x)
+              : null;
+          })
+      : undefined;
+    return hn.concat(notHn);
+  };
+
+  imageHttp = src => {
+    src = !!src && src.startsWith("//") ? "http:" + src : src;
+    src =
+      !!src && src.startsWith("chrome-extension://")
+        ? src.replace(/chrome-extension:/, "http:")
+        : src;
+    return src;
   };
 
   priceRemoveCommasAnd$ = price => {
     return typeof price === "string" || price instanceof String
       ? price.replace(/[$,]/g, "")
       : price;
+  };
+
+  tripleFlat = arr => {
+    return arr
+      .flat()
+      .flat()
+      .flat();
   };
 }
 
