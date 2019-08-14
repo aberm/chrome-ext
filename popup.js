@@ -8,7 +8,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   if (!activeTab.url.startsWith("chrome")) {
     const x = new Scraper(activeTab.url);
     x.scrape().then(res => {
-      document.getElementById("name").innerText = res.title;
+      !!res.title
+        ? (document.getElementById("name").innerText = res.title)
+        : null;
     });
   }
 });
