@@ -263,7 +263,7 @@ const editData = data => {
       form.elements["description"].value = capDescriptionLength(
         res.description
       );
-      form.elements["price"].value = res.price;
+      form.elements["price"].value = !!res.price && res.price;
     });
   };
 
