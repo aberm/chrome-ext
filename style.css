@@ -61,10 +61,6 @@ h1 {
   display: block;
 }
 
-#email-form {
-  display: none;
-}
-
 #total {
   font-style: italic;
   font-size: 18px;
@@ -147,6 +143,7 @@ span.right {
   position: fixed; /* Stay in place */
   z-index: 4; /* Sit on top */
   padding-top: 5%; /* Location of the box */
+  padding-bottom: 5%;
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -188,6 +185,40 @@ span.right {
   color: #000;
   text-decoration: none;
   cursor: pointer;
+}
+
+.modal-content label.unbold {
+  font-weight: normal;
+}
+
+#select-rings-email {
+  display: grid;
+  grid-template-columns: 2% 18% 80%;
+  grid-auto-rows: 100px;
+  padding-top: 25px;
+}
+
+#select-rings-email input[type="checkbox"] {
+  grid-column-start: 1;
+  margin: auto;
+}
+
+#select-rings-email img {
+  grid-column-start: 2;
+  margin: auto;
+}
+
+#select-rings-email label {
+  grid-column-start: 3;
+  margin: auto 0;
+}
+
+.email-ring-img {
+  vertical-align: middle;
+  padding: 5px;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
 }
 
 /* Loading animation */

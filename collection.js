@@ -279,29 +279,74 @@ const editData = data => {
 
 const emailFunction = (() => {
   const emailButton = document.getElementById("emailButton");
+  const emailModal = document.getElementById("email-modal");
   const emailForm = document.getElementById("email-form");
-  const emailInput = document.getElementById("email-input");
-  const cancelEmail = document.getElementById("cancelEmail");
-  const submitEmail = document.getElementById("submitEmail");
+  const cancelEmail = document.getElementById("closeEmailModal");
+  // const emailInput = document.getElementById("email-input");
+  // const submitEmail = document.getElementById("submitEmail");
+
+  const selectAll = document.getElementById("select-all");
+  const selectNone = document.getElementById("select-none");
+  const checkboxDiv = document.getElementById("select-rings-email");
 
   emailButton.onclick = e => {
-    emailForm.style.display = "block";
-    emailButton.style.display = "none";
-    emailInput.focus();
+    // do once on page load?
+    for (let i = 0; i < allData.length; i++) {
+      checkboxDiv.innerHTML += `<input type="checkbox" name="ring${i}" id="ring-${i}" value="${i}" />
+      <img ${allData[i].image ? "src=" + allData[i].image : ""} alt="${
+        allData[i].title
+      }" class="email-ring-img" />
+      <label class="unbold" for='ring-${i}'> ${allData[i].title}${
+        allData[i].price
+          ? "<span class='right'>" +
+            parseFloat(allData[i].price).toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD"
+            }) +
+            "</span>"
+          : "<span class='right'><i>no price</i></span>"
+      }</label>`;
+    }
+    emailModal.style.display = "block";
   };
 
-  submitEmail.onclick = e => {
-    console.log(emailInput.value);
-    // send export email
-    emailInput.value = "";
-    emailForm.style.display = "none";
-    emailButton.style.display = "block";
+  selectAll.onclick = e => {
+    e.preventDefault();
+    let checkboxes = document.querySelectorAll("[name*=ring]");
+    checkboxes.forEach(cbox => (cbox.checked = true));
+  };
+
+  selectNone.onclick = e => {
+    e.preventDefault();
+    let checkboxes = document.querySelectorAll("[name*=ring]");
+    checkboxes.forEach(cbox => (cbox.checked = false));
   };
 
   cancelEmail.onclick = e => {
-    emailInput.value = "";
-    emailForm.style.display = "none";
-    emailButton.style.display = "block";
+    // remove form data
+    emailModal.style.display = "none";
+    // emailButton.style.display = "block";
+  };
+
+  window.onclick = event => {
+    if (event.target === emailModal) {
+      // remove form data
+      emailModal.style.display = "none";
+    }
+  };
+
+  window.onkeydown = e => {
+    if (event.key === "Escape") {
+      // remove form data
+      emailModal.style.display = "none";
+    }
+  };
+
+  emailForm.onsubmit = e => {
+    e.preventDefault();
+    console.log(e);
+    // process form data
+    // remove form data
   };
 })();
 

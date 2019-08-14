@@ -37,12 +37,6 @@
         <p id="total" class="item-amt"></p>
         <div class="email">
           <button id="emailButton" class="clear">Email List</button>
-          <div id="email-form">
-            <label for="email-input">Email</label>
-            <input id="email-input" type="text" />
-            <a id="cancelEmail" href="#">Cancel</a>
-            <button id="submitEmail">Submit</button>
-          </div>
         </div>
       </div>
     </div>
@@ -184,7 +178,7 @@
       <span class="right">&copy; 2019 Engagement Ring Wish List</span>
     </footer>
 
-    <!-- The Modal -->
+    <!-- Edit Modal -->
     <div id="edit-modal" class="modal">
       <!-- Modal content -->
       <div class="modal-content">
@@ -235,6 +229,35 @@
             <textarea id="notes-edit" name="notes"></textarea>
           </p>
           <button id="submit-edit" class="center-button clear">Submit</button>
+        </form>
+      </div>
+    </div>
+    <!-- Email Modal -->
+    <div id="email-modal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span id="closeEmailModal" class="close">&times;</span>
+        <h1>email form</h1>
+        <form id="email-form">
+          <label for="from">From</label>
+          <input id="from" type="text" placeholder="your name" />
+          <label for="to">To</label>
+          <input id="to" type="text" placeholder="recipient's name" required />
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="recipient's email"
+            required
+          />
+          <textarea name="message" rows="8" cols="80">Message here</textarea>
+          <br /><br />
+          <button id="select-all" class="normal-padding">Select All</button>
+          <button id="select-none" class="normal-padding">Select None</button>
+          <div id="select-rings-email"></div>
+          <button type="submit" class="center-button normal-padding">
+            Send
+          </button>
         </form>
       </div>
     </div>
