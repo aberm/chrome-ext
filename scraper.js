@@ -51,11 +51,11 @@ class Scraper {
     const s = () => {
       const results = this.doc.querySelectorAll("h1");
       if (results.length) {
-        this.debugMode
-          ? console.log({
-              ["h1"]: [...results].map(el => el.innerText.trim())
-            })
-          : null;
+        this.debugMode &&
+          console.log({
+            ["h1"]: [...results].map(el => el.innerText.trim())
+          });
+
         return [...results].map(el => el.innerText.trim());
       }
     };
@@ -66,9 +66,7 @@ class Scraper {
       ...this.jsonFieldScraper("title")
     ];
 
-    if (this.debugMode) {
-      console.log("all titles: ", all);
-    }
+    this.debugMode && console.log("all titles: ", all);
 
     return this.mostCommonItem(all);
   };
@@ -89,11 +87,11 @@ class Scraper {
       const results2 = [...results].map(a => [...a].map(el => el.src)).flat();
 
       if (results2.length) {
-        this.debugMode
-          ? console.log({
-              ['img[alt*="' + "titles" + '"]']: [...results2]
-            })
-          : null;
+        this.debugMode &&
+          console.log({
+            ['img[alt*="' + "titles" + '"]']: [...results2]
+          });
+
         return this.tripleFlat(results2);
       }
     };
@@ -104,9 +102,7 @@ class Scraper {
       ...this.jsonFieldScraper("image")
     ];
 
-    if (this.debugMode) {
-      console.log("all images: ", all);
-    }
+    this.debugMode && console.log("all images: ", all);
 
     return this.imageHttp(this.mostCommonItem(this.sortImagesByHost(all)));
   };
@@ -117,9 +113,7 @@ class Scraper {
       ...this.jsonFieldScraper("description")
     ];
 
-    if (this.debugMode) {
-      console.log("all descriptions: ", all);
-    }
+    this.debugMode && console.log("all descriptions: ", all);
 
     const desc = this.sortDescriptionsByLongest(all)[0];
 
@@ -132,26 +126,26 @@ class Scraper {
     const s = () => {
       const results = this.doc.querySelectorAll('span[id*="price"]');
       if (results.length) {
-        this.debugMode
-          ? console.log({
-              ['span[id*="price"] innerText']: [...results].map(el =>
-                el.innerText.trim()
-              )
-            })
-          : null;
+        this.debugMode &&
+          console.log({
+            ['span[id*="price"] innerText']: [...results].map(el =>
+              el.innerText.trim()
+            )
+          });
+
         return [...results].map(el => el.innerText.trim());
       }
     };
     const p = () => {
       const results = this.doc.querySelectorAll('span[itemprop="price"]');
       if (results.length) {
-        this.debugMode
-          ? console.log({
-              ['span[itemprop="price"]']: [...results].map(el =>
-                el.innerText.trim()
-              )
-            })
-          : null;
+        this.debugMode &&
+          console.log({
+            ['span[itemprop="price"]']: [...results].map(el =>
+              el.innerText.trim()
+            )
+          });
+
         return [...results].map(el => el.innerText.trim());
       }
     };
@@ -164,9 +158,7 @@ class Scraper {
         this.jsonFieldScraper("price:amount"))
     ];
 
-    if (this.debugMode) {
-      console.log("all prices: ", all);
-    }
+    this.debugMode && console.log("all prices: ", all);
 
     return this.priceRemoveCommasAnd$(
       this.mostCommonItem(
@@ -182,13 +174,12 @@ class Scraper {
       `${tag}[${attribute}="${seo}${field}"]`
     );
     if (results.length) {
-      this.debugMode
-        ? console.log({
-            [`${tag}[${attribute}="${seo}${field}"]`]: [...results].map(
-              el => el[output]
-            )
-          })
-        : null;
+      this.debugMode &&
+        console.log({
+          [`${tag}[${attribute}="${seo}${field}"]`]: [...results].map(
+            el => el[output]
+          )
+        });
 
       return [...results].map(z => z.getAttribute(output));
     }
@@ -233,13 +224,13 @@ class Scraper {
             arr.push(a);
           }
         });
-      this.debugMode
-        ? console.log({
-            ['script[type="application/ld+json"] ' + field]: arr
-              .filter(item => item.length)
-              .flat()
-          })
-        : null;
+      this.debugMode &&
+        console.log({
+          ['script[type="application/ld+json"] ' + field]: arr
+            .filter(item => item.length)
+            .flat()
+        });
+
       return arr.filter(item => item.length);
     } else {
       return [];
@@ -284,11 +275,11 @@ class Scraper {
     const s = () => {
       const results = this.doc.querySelectorAll("h1");
       if (results.length) {
-        this.debugMode
-          ? console.log({
-              ["h1"]: [...results].map(el => el.innerText.trim())
-            })
-          : null;
+        this.debugMode &&
+          console.log({
+            ["h1"]: [...results].map(el => el.innerText.trim())
+          });
+
         return [...results].map(el => el.innerText.trim());
       }
     };
