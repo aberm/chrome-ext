@@ -241,10 +241,19 @@ const editData = data => {
     }
   };
 
-  document.getElementById("resetFields").onclick = e => {
+  const reset = document.getElementById("resetFields");
+  reset.onclick = e => {
     e.preventDefault(); // otherwise form submits
+
+    const spinner = document.getElementById("spinner");
+    reset.classList.add("invisible");
+    spinner.classList.remove("invisible");
+
     const x = new Scraper(data.url);
     x.scrape().then(res => {
+      reset.classList.remove("invisible");
+      spinner.classList.add("invisible");
+
       document.getElementById("url-edit").innerText = res.url;
       form.elements["title"].value = res.title;
       form.elements["image"].value = res.image;
