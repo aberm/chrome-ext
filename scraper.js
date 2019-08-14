@@ -160,12 +160,12 @@ class Scraper {
 
     this.debugMode && console.log("all prices: ", all);
 
-    return this.priceRemoveCommasAnd$(
+    return this.priceRemoveCommasAnd$AndLetters(
       this.mostCommonItem(
         this.tripleFlat(all)
           .filter(x => /\d/.test(x))
           .filter(x => parseFloat(x) !== 0)
-      ).replace(/[^\d.-]/g, "")
+      )
     );
   };
 
@@ -335,9 +335,9 @@ class Scraper {
     return src;
   };
 
-  priceRemoveCommasAnd$ = price => {
+  priceRemoveCommasAnd$AndLetters = price => {
     return typeof price === "string" || price instanceof String
-      ? price.replace(/[$,]/g, "")
+      ? price.replace(/[$,]/g, "").replace(/[^\d.-]/g, "")
       : price;
   };
 
