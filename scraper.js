@@ -173,7 +173,7 @@ class Scraper {
         this.tripleFlat(all)
           .filter(x => /\d/.test(x))
           .filter(x => parseFloat(x) !== 0)
-      )
+      ).replace(/[^\d.-]/g, "")
     );
   };
 
