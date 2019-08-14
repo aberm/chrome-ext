@@ -150,7 +150,12 @@ const turnDataIntoHtml = data => {
     ${
       data.price === undefined
         ? `<p><span class="unavailable">Price unavailable. Visit product link for more details.</span></p>`
-        : `<p><span>Price:</span>  &nbsp; $${data.price}</p>`
+        : `<p><span>Price:</span>  &nbsp; ${parseFloat(
+            data.price
+          ).toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD"
+          })}</p>`
     }
     </div>
     <a href="${data.url}" rel="nofollow" target="_blank" class="view">
