@@ -144,7 +144,11 @@ const turnDataIntoHtml = data => {
       <p>${data.description}</p>
     </div>
     <div class="notes">
-    ${data.notes.trim() === "" ? "" : `<h4>Notes: </h4><p>${data.notes}</p>`}
+    ${
+      data.notes.trim() === ""
+        ? ""
+        : `<h4>Notes: </h4><p>${data.notes.replace(/\n/g, "<br />")}</p>`
+    }
     </div>
     <div class="card-cost">
     ${
