@@ -4,6 +4,7 @@ const ul = document.getElementById("ringsList");
 const dropdown = document.getElementById("sort-by");
 const search = document.getElementById("search");
 const total = document.getElementById("total");
+const emailButton = document.getElementById("emailButton");
 
 let searchValue = "";
 let sortProperty = dropdown.options[dropdown.selectedIndex].value;
@@ -78,6 +79,8 @@ const setup = () => {
       ? allData.length + " items"
       : "1 item"
     : null;
+
+  setupEmailCheckboxes();
 
   [...allData]
     /* ^ this doesn't destructively manipulate the original list,
@@ -295,79 +298,6 @@ const editData = data => {
   form.onsubmit = e => submitHandler(e);
 };
 
-const emailFunction = (() => {
-  const emailButton = document.getElementById("emailButton");
-  const emailModal = document.getElementById("email-modal");
-  const emailForm = document.getElementById("email-form");
-  const cancelEmail = document.getElementById("closeEmailModal");
-  // const emailInput = document.getElementById("email-input");
-  // const submitEmail = document.getElementById("submitEmail");
-
-  const selectAll = document.getElementById("select-all");
-  const selectNone = document.getElementById("select-none");
-  const checkboxDiv = document.getElementById("select-rings-email");
-
-  emailButton.onclick = e => {
-    // do once on page load?
-    for (let i = 0; i < allData.length; i++) {
-      checkboxDiv.innerHTML += `<input type="checkbox" name="ring${i}" id="ring-${i}" value="${i}" />
-      <img ${allData[i].image ? "src=" + allData[i].image : ""} alt="${
-        allData[i].title
-      }" class="email-ring-img" />
-      <label class="unbold" for='ring-${i}'> ${allData[i].title}${
-        allData[i].price
-          ? "<span class='right'>" +
-            parseFloat(allData[i].price).toLocaleString("en-US", {
-              style: "currency",
-              currency: "USD"
-            }) +
-            "</span>"
-          : "<span class='right'><i>no price</i></span>"
-      }</label>`;
-    }
-    emailModal.style.display = "block";
-  };
-
-  selectAll.onclick = e => {
-    e.preventDefault();
-    let checkboxes = document.querySelectorAll("[name*=ring]");
-    checkboxes.forEach(cbox => (cbox.checked = true));
-  };
-
-  selectNone.onclick = e => {
-    e.preventDefault();
-    let checkboxes = document.querySelectorAll("[name*=ring]");
-    checkboxes.forEach(cbox => (cbox.checked = false));
-  };
-
-  cancelEmail.onclick = e => {
-    // remove form data
-    emailModal.style.display = "none";
-    // emailButton.style.display = "block";
-  };
-
-  window.onclick = event => {
-    if (event.target === emailModal) {
-      // remove form data
-      emailModal.style.display = "none";
-    }
-  };
-
-  window.onkeydown = e => {
-    if (event.key === "Escape") {
-      // remove form data
-      emailModal.style.display = "none";
-    }
-  };
-
-  emailForm.onsubmit = e => {
-    e.preventDefault();
-    console.log(e);
-    // process form data
-    // remove form data
-  };
-})();
-
 /**
  * Pretty much a sort function for when the sort buttons are clicked
  */
@@ -442,6 +372,94 @@ search.oninput = e => {
   searchValue = e.target.value;
   ul.innerHTML = "";
   setup();
+};
+
+emailButton.onclick = e => {
+  const emailModal = document.getElementById("email-modal");
+  const emailForm = document.getElementById("email-form");
+  const selectAll = document.getElementById("select-all");
+  const selectNone = document.getElementById("select-none");
+  const cancelEmail = document.getElementById("closeEmailModal");
+
+  emailModal.style.display = "block";
+
+  selectAll.onclick = e => {
+    e.preventDefault();
+    let checkboxes = document.querySelectorAll("#email-modal [name*=ring]");
+    checkboxes.forEach(cbox => (cbox.checked = true));
+  };
+
+  selectNone.onclick = e => {
+    e.preventDefault();
+    let checkboxes = document.querySelectorAll("#email-modal [name*=ring]");
+    checkboxes.forEach(cbox => (cbox.checked = false));
+  };
+
+  cancelEmail.onclick = e => {
+    // remove form data
+    emailModal.style.display = "none";
+  };
+
+  window.onclick = event => {
+    if (event.target === emailModal) {
+      // remove form data
+      emailModal.style.display = "none";
+    }
+  };
+
+  window.onkeydown = e => {
+    if (event.key === "Escape") {
+      // remove form data
+      emailModal.style.display = "none";
+    }
+  };
+
+  emailForm.onsubmit = e => {
+    e.preventDefault();
+    console.log(e);
+
+    // indexes of selected rings
+    const checkedArr = [
+      ...document.querySelectorAll(
+        '#email-form input[type="checkbox"][name*="ring"]:checked'
+      )
+    ].map(el => el.value);
+
+    console.log(checkedArr);
+
+    checkedArr.length === 0 && alert("Please select at least one ring.");
+    // process form data
+    // remove form data
+    // close modal
+  };
+};
+
+const setupEmailCheckboxes = () => {
+  const checkboxDiv = document.getElementById("select-rings-email");
+  checkboxDiv.innerHTML = allData
+    .map((item, i) => {
+      return `<input type="checkbox" name="ring${i}" id="ring-${i}" value="${i}" />
+    ${
+      item.image
+        ? "<img src='" +
+          item.image +
+          "' alt='" +
+          item.title +
+          "' class='email-ring-img'/>"
+        : "<i style='margin: auto'>image unavailable</i>"
+    }
+    <label class="unbold" for='ring-${i}'> ${item.title}${
+        item.price
+          ? "<span class='right'>" +
+            parseFloat(item.price).toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD"
+            }) +
+            "</span>"
+          : "<span class='right'><i>no price</i></span>"
+      }</label>`;
+    })
+    .join("");
 };
 
 const capDescriptionLength = description => {
