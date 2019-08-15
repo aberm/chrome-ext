@@ -99,7 +99,8 @@ const addNewUrl = url => {
     const x = new Scraper(url, newDoc);
     x.scrape().then(res => {
       console.log("RES ", res);
-      if (res) {
+      // no title cutoff
+      if (res && !!res.title) {
         // fetch successful
         chrome.storage.local.set(
           {
