@@ -439,7 +439,7 @@ const setupEmailCheckboxes = () => {
   const checkboxDiv = document.getElementById("select-rings-email");
   checkboxDiv.innerHTML = allData
     .map((item, i) => {
-      return `<input type="checkbox" name="ring${i}" id="ring-${i}" value="${i}" />
+      return `<input type="checkbox" name="ring${i}" id="ring-${i}" value="${i}" checked/>
     ${
       item.image
         ? "<img src='" +
