@@ -428,7 +428,7 @@ emailButton.onclick = e => {
 
     console.log(checkedArr);
 
-    checkedArr.length === 0 && alert("Please select at least one ring.");
+    checkedArr.length === 0 && alert("Please select at least one item.");
     // process form data
     // remove form data
     // close modal
