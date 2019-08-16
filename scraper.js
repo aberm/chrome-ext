@@ -95,9 +95,21 @@ class Scraper {
         return this.tripleFlat(results2);
       }
     };
+    const p = () => {
+      const results = this.doc.querySelectorAll("#landingImage");
+      if (results.length) {
+        this.debugMode &&
+          console.log({
+            ["#landingImage"]: [...results].map(el => el.src)
+          });
+
+        return [...results].map(el => el.src);
+      }
+    };
 
     const all = [
       s(),
+      p(),
       ...this.listRules("image"),
       ...this.jsonFieldScraper("image")
     ];
