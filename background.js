@@ -5,19 +5,16 @@ chrome.contextMenus.create({
   contexts: ["page", "selection", "image", "link"], // link?
   onclick: function(e) {
     if (!e.pageUrl.startsWith("chrome")) {
-      chrome.storage.local.set({ newUrl: e.pageUrl }, () =>
-        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-          chrome.tabs.sendMessage(
-            tabs[0].id,
-            {
-              txt: "pull_document"
-            },
-            res => {
-              chrome.tabs.create({ url: "collection.html" });
-            }
-          );
-        })
-      );
+      chrome.storage.local.set({ newUrl: e.pageUrl }, () => {
+        chrome.tabs.executeScript(
+          {
+            code: `chrome.storage.local.set({ newDoc: document.all[0].outerHTML });`
+          },
+          () => {
+            chrome.tabs.create({ url: "collection.html" });
+          }
+        );
+      });
     } else {
       chrome.tabs.create({ url: "collection.html" });
     }

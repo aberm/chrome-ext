@@ -1,33 +1,28 @@
 import Scraper from "./scraper.js";
 
-let activeTab;
-
-chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-  activeTab = tabs[0];
-
-  if (!activeTab.url.startsWith("chrome")) {
-    const x = new Scraper(activeTab.url);
-    x.scrape().then(res => {
-      !!res.title
-        ? (document.getElementById("name").innerText = res.title)
-        : null;
-    });
+chrome.tabs.executeScript(
+  {
+    code: `[window.location.href, document.all[0].outerHTML]`
+  },
+  result => {
+    !result[0][0].startsWith("chrome") &&
+      new Scraper(result[0][0], result[0][1]).scrape().then(res => {
+        !!res.title && (document.getElementById("name").innerText = res.title);
+      });
   }
-});
+);
 
 document.getElementById("add").addEventListener("click", e => {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {
-      txt: "pull_document"
-    });
-    if (!activeTab.url.startsWith("chrome")) {
-      chrome.storage.local.set({ newUrl: activeTab.url }, () =>
-        chrome.tabs.create({ url: "collection.html" })
-      );
-    } else {
-      chrome.tabs.create({ url: "collection.html" });
-    }
-  });
+  chrome.tabs.executeScript(
+    {
+      code: `if (!window.location.href.startsWith("chrome")) {
+        chrome.storage.local.set({ newUrl: window.location.href }, () => {
+          chrome.storage.local.set({ newDoc: document.all[0].outerHTML });
+        });
+      }`
+    },
+    () => chrome.tabs.create({ url: "collection.html" })
+  );
 });
 
 const analytics = ((i, s, o, g, r, a, m) => {
