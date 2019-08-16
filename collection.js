@@ -96,8 +96,7 @@ const addNewUrl = url => {
   chrome.storage.local.get("newDoc", nd => {
     const newDoc = nd.newDoc;
 
-    const x = new Scraper(url, newDoc);
-    x.scrape().then(res => {
+    new Scraper(url, newDoc).scrape().then(res => {
       console.log("RES ", res);
       // no title cutoff
       if (res && !!res.title) {
@@ -253,8 +252,7 @@ const editData = data => {
     reset.classList.add("invisible");
     spinner.classList.remove("invisible");
 
-    const x = new Scraper(data.url);
-    x.scrape().then(res => {
+    new Scraper(data.url).scrape().then(res => {
       reset.classList.remove("invisible");
       spinner.classList.add("invisible");
 

@@ -15,11 +15,10 @@ chrome.tabs.executeScript(
 document.getElementById("add").addEventListener("click", e => {
   chrome.tabs.executeScript(
     {
-      code: `if (!window.location.href.startsWith("chrome")) {
+      code: `!window.location.href.startsWith("chrome") &&
         chrome.storage.local.set({ newUrl: window.location.href }, () => {
           chrome.storage.local.set({ newDoc: document.all[0].outerHTML });
-        });
-      }`
+        });`
     },
     () => chrome.tabs.create({ url: "collection.html" })
   );
