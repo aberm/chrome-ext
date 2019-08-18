@@ -5,6 +5,7 @@ const dropdown = document.getElementById("sort-by");
 const search = document.getElementById("search");
 const total = document.getElementById("total");
 const emailButton = document.getElementById("emailButton");
+const snackbar = document.getElementById("snackbar");
 
 let searchValue = "";
 let sortProperty = dropdown.options[dropdown.selectedIndex].value;
@@ -20,6 +21,7 @@ chrome.storage.local.get("rings", result => {
       if (result.rings.map(ring => ring.url).includes(res.newUrl)) {
         // newUrl already added
         console.log("newUrl already added");
+        alreadyAddedSnackbar();
         getRingsAndSetup();
       } else if (!!res.newUrl) {
         // newUrl new
@@ -120,6 +122,7 @@ const addNewUrl = url => {
         );
       } else {
         // fetch failed
+        fetchFailedSnackbar();
         removeLoading();
       }
     });
@@ -430,6 +433,7 @@ emailButton.onclick = e => {
     // process form data
     // remove form data
     // close modal
+    emailSentSnackbar();
   };
 };
 
@@ -509,6 +513,39 @@ const addLoading = () => {
 
 const removeLoading = () => {
   document.getElementById("loading").remove();
+};
+
+const alreadyAddedSnackbar = () => {
+  snackbar.innerText = "This item has already been added.";
+  snackbar.style.backgroundColor = "#f4a03f";
+  snackbar.className = "show-added";
+  setTimeout(function() {
+    snackbar.classList.remove("show-added");
+  }, snackbar.innerText.length * 80);
+};
+
+const emailSentSnackbar = () => {
+  snackbar.innerText = "Email sent!";
+  snackbar.style.backgroundColor = "#48a047";
+  snackbar.className = "show-sent";
+  setTimeout(function() {
+    snackbar.classList.remove("show-sent");
+  }, snackbar.innerText.length * 150);
+};
+
+const fetchFailedSnackbar = () => {
+  snackbar.innerHTML = `That didn't work. Please try again or consider <a
+      rel="nofollow"
+      target="_blank"
+      href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension#feedback"
+      style="color: white"
+      >leaving feedback</a
+    > to let us know what went wrong and how we can improve.`;
+  snackbar.style.backgroundColor = "#d3312f";
+  snackbar.className = "show-failed";
+  setTimeout(function() {
+    snackbar.classList.remove("show-failed");
+  }, snackbar.innerText.length * 50);
 };
 
 const analytics = ((i, s, o, g, r, a, m) => {
