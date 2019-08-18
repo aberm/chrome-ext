@@ -102,7 +102,7 @@ nav {
 .item-amt {
   font-weight: 400;
   font-style: italic;
-  color: #4d6873;
+  color: black;
   font-size: 1rem;
   align-self: center;
   margin-right: 30px;
@@ -140,6 +140,7 @@ nav {
 .view {
   text-decoration: none;
   z-index: 2;
+  margin-bottom: 24px;
 }
 
 /***** END: Sorting Bar *****/
@@ -183,8 +184,7 @@ nav {
 
 .card-img img {
   width: 100%;
-  /* min-width: 200px; */
-  /* min-width: 100px; */
+  object-fit: contain;
 }
 
 .card-remove {
