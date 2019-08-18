@@ -110,7 +110,7 @@ const addNewUrl = url => {
               ...(allData || []),
               {
                 ...res,
-                description: capDescriptionLength(res.description),
+                description: capDescriptionLength(res.description, 400),
                 notes: ""
               }
             ]
@@ -263,7 +263,8 @@ const editData = data => {
       form.elements["title"].value = res.title;
       form.elements["image"].value = res.image;
       form.elements["description"].value = capDescriptionLength(
-        res.description
+        res.description,
+        400
       );
       form.elements["price"].value = !!res.price && res.price;
     });
@@ -451,24 +452,32 @@ const setupEmailCheckboxes = () => {
           "' class='email-ring-img'/>"
         : "<i style='margin: auto'>image unavailable</i>"
     }
-    <label class="unbold" for='ring-${i}'> ${item.title}${
-        item.price
-          ? "<span class='right'>" +
-            parseFloat(item.price).toLocaleString("en-US", {
-              style: "currency",
-              currency: "USD"
-            }) +
-            "</span>"
-          : "<span class='right'><i>no price</i></span>"
-      }</label>`;
+    <label class="unbold" for='ring-${i}'> ${item.title}
+    ${
+      item.notes
+        ? `<span class="email-notes">` +
+          capDescriptionLength(item.notes, 50) +
+          `</span>`
+        : `<span class="email-notes"><i>no notes</i></span>`
+    }
+    ${
+      item.price
+        ? "<div class='price-container'><span class='right'>" +
+          parseFloat(item.price).toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD"
+          }) +
+          "</span></div>"
+        : "<div class='price-container'><span class='right'><i>no price</i></span></div>"
+    }</label>`;
     })
     .join("");
 };
 
-const capDescriptionLength = description => {
+const capDescriptionLength = (description, len) => {
   return !!description
-    ? description.length > 400
-      ? description.slice(0, 397) + "..."
+    ? description.length > len
+      ? description.slice(0, len - 3) + "..."
       : description
     : description;
 };

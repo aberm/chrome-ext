@@ -211,6 +211,19 @@ span.right {
 #select-rings-email label {
   grid-column-start: 3;
   margin: auto 0;
+  display: grid;
+  grid-template-columns: 68% 18% 10%;
+  grid-column-gap: 2%;
+}
+
+#select-rings-email label span.email-notes {
+  grid-column-start: 2;
+  margin: auto;
+}
+
+#select-rings-email label div.price-container {
+  grid-column-start: 3;
+  margin: auto 0;
 }
 
 .email-ring-img {
