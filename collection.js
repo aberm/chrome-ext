@@ -182,9 +182,10 @@ const turnDataIntoHtml = data => {
 
   li.innerHTML = div;
 
-  const edit = document.createElement("button");
-  edit.className = "edit normal-padding";
-  edit.innerText = "edit";
+  const edit = document.createElement("div");
+  edit.className = "edit clear";
+  edit.innerHTML =
+    "<img src='img/edit-icon.png' class='edit-icon' /><span>Edit</span>";
   li.appendChild(edit);
 
   edit.onclick = e => {
