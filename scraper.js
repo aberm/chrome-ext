@@ -106,10 +106,22 @@ class Scraper {
         return [...results].map(el => el.src);
       }
     };
+    const q = () => {
+      const results = this.doc.querySelectorAll("#main-image-container img");
+      if (results.length) {
+        this.debugMode &&
+          console.log({
+            ["#main-image-container img"]: [...results].map(el => el.src)
+          });
+
+        return [...results].map(el => el.src);
+      }
+    };
 
     const all = [
       s(),
       p(),
+      q(),
       ...this.listRules("image"),
       ...this.jsonFieldScraper("image")
     ];
