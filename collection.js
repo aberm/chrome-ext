@@ -76,9 +76,13 @@ const setup = () => {
     document.querySelector("div.sort-bar").classList.remove("invisible");
   }
 
-  total.innerText = allData.length
-    ? allData.length > 1
-      ? allData.length + " items"
+  const x = allData.filter(data =>
+    data.title.toLowerCase().includes(searchValue)
+  );
+
+  total.innerText = x.length
+    ? x.length > 1
+      ? x.length + " items"
       : "1 item"
     : null;
 
