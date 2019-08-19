@@ -142,7 +142,7 @@ const addNewUrl = url => {
 const turnDataIntoHtml = data => {
   const div = `
     <div class="edit clear">
-      <img src="img/edit-icon.png" class="edit-icon"><span>Edit</span>
+      <img src="img/edit-icon.png" alt="edit" class="edit-icon"><span>Edit</span>
     </div>
     <div class="card-remove">×</div>
     <div class="card-img">
@@ -178,12 +178,13 @@ const turnDataIntoHtml = data => {
           })}</p>`
     }
     </div>
-    <a href="${data.url}" rel="nofollow" target="_blank" class="view">
+    <a href="${data.url}" rel="noreferrer" target="_blank" class="view">
     <div class="clear">View Product</div>
     </a>
     <a class="overlay-link" href="${
       data.url
-    }" rel="nofollow" target="_blank" class="view">
+    }" rel="noreferrer" target="_blank" class="view">
+    <span class="invisible">${data.title}</span>
     </a>
     `;
 

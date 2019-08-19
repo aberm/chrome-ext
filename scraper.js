@@ -128,7 +128,7 @@ class Scraper {
 
     this.debugMode && console.log("all images: ", all);
 
-    return this.imageHttp(this.mostCommonItem(this.sortImagesByHost(all)));
+    return this.imageHttps(this.mostCommonItem(this.sortImagesByHost(all)));
   };
 
   getDescription = () => {
@@ -350,12 +350,14 @@ class Scraper {
     return hn.concat(notHn);
   };
 
-  imageHttp = src => {
-    src = !!src && src.startsWith("//") ? "http:" + src : src;
+  imageHttps = src => {
+    src = !!src && src.startsWith("http://") && src.replace(/http:/, "https:");
+    src = !!src && src.startsWith("//") && "https:" + src;
     src =
-      !!src && src.startsWith("chrome-extension://")
-        ? src.replace(/chrome-extension:/, "http:")
-        : src;
+      !!src &&
+      src.startsWith("chrome-extension://") &&
+      src.replace(/chrome-extension:/, "https:");
+
     return src;
   };
 
