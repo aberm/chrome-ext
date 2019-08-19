@@ -6,6 +6,8 @@ const search = document.getElementById("search");
 const total = document.getElementById("total");
 const emailButton = document.getElementById("emailButton");
 const snackbar = document.getElementById("snackbar");
+const editModal = document.getElementById("edit-modal");
+const emailModal = document.getElementById("email-modal");
 
 let searchValue = "";
 let sortProperty = dropdown.options[dropdown.selectedIndex].value;
@@ -139,6 +141,10 @@ const addNewUrl = url => {
  */
 const turnDataIntoHtml = data => {
   const div = `
+    <div class="edit clear">
+      <img src="img/edit-icon.png" class="edit-icon"><span>Edit</span>
+    </div>
+    <div class="card-remove">×</div>
     <div class="card-img">
     ${
       data.image === undefined || data.image === ""
@@ -183,30 +189,9 @@ const turnDataIntoHtml = data => {
 
   const li = document.createElement("li");
   li.className = "card";
+  li.dataset.id = allData.findIndex(x => x.url === data.url);
 
   li.innerHTML = div;
-
-  const edit = document.createElement("div");
-  edit.className = "edit clear";
-  edit.innerHTML =
-    "<img src='img/edit-icon.png' class='edit-icon' /><span>Edit</span>";
-  li.appendChild(edit);
-
-  edit.onclick = e => {
-    editData(data);
-  };
-
-  const remove = document.createElement("div");
-  remove.className = "card-remove";
-  remove.innerHTML = "&times;";
-  li.prepend(remove);
-
-  remove.onclick = e => {
-    const yes = confirm(`Are you sure you want to remove ${data.title}?`);
-    if (yes) {
-      removeItemFromList(data.url);
-    }
-  };
 
   return li;
 };
@@ -217,6 +202,39 @@ const removeItemFromList = removeUrl => {
     allData = newArray;
     setup();
   });
+};
+
+window.onclick = e => {
+  // console.log(e.target);
+
+  // edit button clicked
+  (e.target.classList.contains("edit") ||
+    e.target.parentElement.classList.contains("edit")) &&
+    editData(allData[e.target.closest("li").dataset.id]);
+
+  // remove button clicked
+  e.target.classList.contains("card-remove") &&
+    confirm(
+      `Are you sure you want to remove ${allData[e.target.closest("li").dataset.id].title}?`
+    ) &&
+    removeItemFromList(allData[e.target.closest("li").dataset.id].url);
+
+  if (e.target === emailModal) {
+    // remove form data
+    emailModal.style.display = "none";
+  }
+
+  if (e.target === editModal) {
+    editModal.style.display = "none";
+  }
+};
+
+window.onkeydown = e => {
+  if (event.key === "Escape") {
+    // remove form data
+    emailModal.style.display = "none";
+    editModal.style.display = "none";
+  }
 };
 
 /**
@@ -233,23 +251,10 @@ const editData = data => {
   form.elements["price"].value = data.price;
   form.elements["notes"].value = data.notes;
 
-  const modal = document.getElementById("edit-modal");
-  modal.style.display = "block";
+  editModal.style.display = "block";
 
   document.getElementById("closeEditModal").onclick = () => {
-    modal.style.display = "none";
-  };
-
-  window.onclick = event => {
-    if (event.target === modal) {
-      modal.style.display = "none";
-    }
-  };
-
-  window.onkeydown = e => {
-    if (event.key === "Escape") {
-      modal.style.display = "none";
-    }
+    editModal.style.display = "none";
   };
 
   const reset = document.getElementById("resetFields");
@@ -299,7 +304,7 @@ const editData = data => {
     });
     chrome.storage.local.set({ rings: newArray }, () => {
       getRingsAndSetup();
-      modal.style.display = "none";
+      editModal.style.display = "none";
     });
   };
 
@@ -383,7 +388,6 @@ search.oninput = e => {
 };
 
 emailButton.onclick = e => {
-  const emailModal = document.getElementById("email-modal");
   const emailForm = document.getElementById("email-form");
   const selectAll = document.getElementById("select-all");
   const selectNone = document.getElementById("select-none");
@@ -406,20 +410,6 @@ emailButton.onclick = e => {
   cancelEmail.onclick = e => {
     // remove form data
     emailModal.style.display = "none";
-  };
-
-  window.onclick = event => {
-    if (event.target === emailModal) {
-      // remove form data
-      emailModal.style.display = "none";
-    }
-  };
-
-  window.onkeydown = e => {
-    if (event.key === "Escape") {
-      // remove form data
-      emailModal.style.display = "none";
-    }
   };
 
   emailForm.onsubmit = e => {
