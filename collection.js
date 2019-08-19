@@ -157,7 +157,7 @@ const turnDataIntoHtml = data => {
       <h3>${data.title}</h3>
     </div>
     <div class="card-desc">
-      <p>${data.description}</p>
+      <p>${!!data.description ? data.description : ""}</p>
     </div>
     <div class="notes">
     ${
@@ -247,9 +247,9 @@ const editData = data => {
   document.getElementById("url-edit").value = data.url;
   document.getElementById("edit-display-image").src = data.image || "";
   form.elements["title"].value = data.title;
-  form.elements["image"].value = data.image;
-  form.elements["description"].value = data.description;
-  form.elements["price"].value = data.price;
+  form.elements["image"].value = data.image || "";
+  form.elements["description"].value = data.description || "";
+  form.elements["price"].value = data.price || "";
   form.elements["notes"].value = data.notes;
 
   editModal.style.display = "block";
@@ -270,14 +270,11 @@ const editData = data => {
       reset.classList.remove("invisible");
       spinner.classList.add("invisible");
 
-      document.getElementById("url-edit").innerText = res.url;
-      form.elements["title"].value = res.title;
-      form.elements["image"].value = res.image;
-      form.elements["description"].value = capDescriptionLength(
-        res.description,
-        400
-      );
-      form.elements["price"].value = !!res.price && res.price;
+      form.elements["title"].value = res.title || "";
+      form.elements["image"].value = res.image || "";
+      form.elements["description"].value =
+        capDescriptionLength(res.description, 400) || "";
+      form.elements["price"].value = (!!res.price && res.price) || "";
     });
   };
 
