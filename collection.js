@@ -14,37 +14,35 @@ let sortProperty = dropdown.options[dropdown.selectedIndex].value;
 
 let allData;
 
-chrome.storage.local.get("rings", result => {
-  chrome.storage.local.get("newUrl", res => {
-    console.log("collection.js -> last ringUrl: ", res.newUrl);
-    console.log("collection.js -> current rings: ", result.rings);
-    if (result.rings && result.rings.length) {
-      // rings data array exists
-      if (result.rings.map(ring => ring.url).includes(res.newUrl)) {
-        // newUrl already added
-        console.log("newUrl already added");
-        alreadyAddedSnackbar();
-        getRingsAndSetup();
-      } else if (!!res.newUrl) {
-        // newUrl new
-        console.log("newUrl new");
-        getRingsAndSetup().then(addLoading);
-        addNewUrl(res.newUrl);
-      } else {
-        // newUrl is null
-        getRingsAndSetup();
-      }
-    } else if (!!res.newUrl) {
-      // rings data array empty, newUrl new
-      console.log("rings data array empty");
-      addLoading();
-      addNewUrl(res.newUrl);
+chrome.storage.local.get(["rings", "newUrl"], result => {
+  console.log("collection.js -> last ringUrl: ", result.newUrl);
+  console.log("collection.js -> current rings: ", result.rings);
+  if (result.rings && result.rings.length) {
+    // rings data array exists
+    if (result.rings.map(ring => ring.url).includes(result.newUrl)) {
+      // newUrl already added
+      console.log("newUrl already added");
+      alreadyAddedSnackbar();
+      getRingsAndSetup();
+    } else if (!!result.newUrl) {
+      // newUrl new
+      console.log("newUrl new");
+      getRingsAndSetup().then(addLoading);
+      addNewUrl(result.newUrl);
     } else {
-      // empty array, no newUrl
-      emptyList();
+      // newUrl is null
+      getRingsAndSetup();
     }
-    chrome.storage.local.set({ newUrl: null });
-  });
+  } else if (!!result.newUrl) {
+    // rings data array empty, newUrl new
+    console.log("rings data array empty");
+    addLoading();
+    addNewUrl(result.newUrl);
+  } else {
+    // empty array, no newUrl
+    emptyList();
+  }
+  chrome.storage.local.set({ newUrl: null });
 });
 
 const getRingsAndSetup = () => {
