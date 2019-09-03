@@ -351,6 +351,9 @@ class Scraper {
   };
 
   imageHttps = src => {
+    if (!!src && src.startsWith("https://")) {
+      return src;
+    }
     src = !!src && src.startsWith("http://") && src.replace(/http:/, "https:");
     src = !!src && src.startsWith("//") && "https:" + src;
     src =
