@@ -27,7 +27,7 @@ chrome.storage.local.get(["rings", "newUrl"], result => {
     } else if (!!result.newUrl) {
       // newUrl new
       console.log("newUrl new");
-      getRingsAndSetup().then(addLoading);
+      getRingsAndSetup().then(addLoadingCard);
       addNewUrl(result.newUrl);
     } else {
       // newUrl is null
@@ -36,7 +36,7 @@ chrome.storage.local.get(["rings", "newUrl"], result => {
   } else if (!!result.newUrl) {
     // rings data array empty, newUrl new
     console.log("rings data array empty");
-    addLoading();
+    addLoadingCard();
     addNewUrl(result.newUrl);
   } else {
     // empty array, no newUrl
@@ -120,14 +120,14 @@ const addNewUrl = url => {
             ]
           },
           () => {
-            removeLoading();
+            removeLoadingCard();
             getRingsAndSetup();
           }
         );
       } else {
         // fetch failed
         fetchFailedSnackbar();
-        removeLoading();
+        removeLoadingCard();
       }
     });
     chrome.storage.local.set({ newDoc: null });
@@ -492,7 +492,7 @@ const emptyList = () => {
   ></h3>`;
 };
 
-const addLoading = () => {
+const addLoadingCard = () => {
   const loader = document.createElement("li");
   loader.className = "card loading";
   loader.id = "loading";
@@ -515,7 +515,7 @@ const addLoading = () => {
   ul.appendChild(loader);
 };
 
-const removeLoading = () => {
+const removeLoadingCard = () => {
   document.getElementById("loading").remove();
 };
 
