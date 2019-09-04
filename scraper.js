@@ -273,7 +273,10 @@ class Scraper {
       array.push(json[field]);
     } else {
       for (let i = 0; i < Object.keys(json).length; i++) {
-        if (typeof json[Object.keys(json)[i]] == "object") {
+        if (
+          typeof json[Object.keys(json)[i]] == "object" &&
+          json[Object.keys(json)[i]] !== null
+        ) {
           this.jsonFieldSearcher(json[Object.keys(json)[i]], field, array);
         }
       }
