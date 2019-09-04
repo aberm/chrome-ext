@@ -422,6 +422,10 @@ emailButton.onclick = e => {
     console.log(checkedArr);
 
     checkedArr.length === 0 && alert("Please select at least one item.");
+
+    document.querySelector("#sendButton").remove();
+    emailForm.innerHTML += `<div class="loader">Loading...</div>`;
+
     // process form data
     // remove form data
     // close modal
