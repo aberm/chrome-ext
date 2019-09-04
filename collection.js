@@ -8,6 +8,7 @@ const emailButton = document.getElementById("emailButton");
 const snackbar = document.getElementById("snackbar");
 const editModal = document.getElementById("edit-modal");
 const emailModal = document.getElementById("email-modal");
+const name = document.querySelector("#name h2");
 
 let searchValue = "";
 let sortProperty = dropdown.options[dropdown.selectedIndex].value;
@@ -85,6 +86,10 @@ const setup = () => {
       ? x.length + " items"
       : "1 item"
     : null;
+
+  chrome.storage.local.get("listName", res => {
+    name.innerText = res.listName || "";
+  });
 
   setupEmailCheckboxes();
 
@@ -484,12 +489,54 @@ const emptyList = () => {
     .classList.add("invisible");
   document.querySelector("div.sort-bar").classList.add("invisible");
 
+  chrome.storage.local.get("listName", result => {
+    result.listName === undefined || result.listName === ""
+      ? chooseNewName()
+      : (name.innerText = result.listName || "");
+  });
+
   ul.innerHTML = `<h3 id="empty-list">Add a ring to get started. Need help? <a
     rel="nofollow"
     target="_blank"
     href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension"
     >Click here</a
   ></h3>`;
+};
+
+const chooseNewName = () => {
+  ul.innerHTML = `
+  <div id='choose-name'>
+      <form id='name-form'>
+        <label for="list-name">Choose a name for your Wish List:</label><br />
+        <div class='center'>
+          <input id='list-name' name='list-name' type='text' min='5' />
+          <button id='name-button' type='submit'>Create</button>
+        </div>
+      </form>
+    </div>
+    `;
+
+  document.getElementById("name-form").onsubmit = e => {
+    if (
+      document.getElementById("list-name").value.length < 4 ||
+      document.getElementById("list-name").value.length > 50 ||
+      document.getElementById("list-name").value.trim() === ""
+    ) {
+      e.preventDefault();
+      alert("Name must be at least 4 characters.");
+      document.getElementById("list-name").focus();
+      document.getElementById("name-form").reset();
+    } else {
+      e.preventDefault();
+      console.log(document.getElementById("list-name").value);
+
+      chrome.storage.local.set({
+        listName: document.getElementById("list-name").value
+      });
+
+      emptyList();
+    }
+  };
 };
 
 const addLoadingCard = () => {
