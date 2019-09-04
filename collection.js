@@ -140,7 +140,7 @@ const addNewUrl = url => {
 };
 
 /**
- * Takes JS Object of data and creates item card and remove button
+ * Takes JS Object of data and creates HTML markup
  */
 const turnDataIntoHtml = data => {
   const div = `
@@ -495,12 +495,13 @@ const emptyList = () => {
       : (name.innerText = result.listName || "");
   });
 
-  ul.innerHTML = `<h3 id="empty-list">Add a ring to get started. Need help? <a
-    rel="nofollow"
+  ul.innerHTML = `
+  <h3 id="empty-list">Add a ring to get started. Need help?
+  <a rel="nofollow"
     target="_blank"
     href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension"
-    >Click here</a
-  ></h3>`;
+    >Click here</a>
+  </h3>`;
 };
 
 const chooseNewName = () => {
