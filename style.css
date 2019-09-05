@@ -80,7 +80,7 @@ h1 {
 
 #empty-list {
   left: 50%;
-  top: 50%;
+  top: 40%;
   position: absolute;
   transform: translate(-50%, -50%);
   font-size: 24px;
@@ -90,11 +90,27 @@ h1 {
 
 #empty-list a {
   text-decoration: none;
-  color: grey;
+  /* color: grey; */
+  color: blue;
 }
 
-#empty-list a:hover {
-  color: blue;
+.empty-img1 {
+  height: 35%;
+  left: 30%;
+  top: 75%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border: 1px solid black;
+}
+
+.empty-img2 {
+  height: 35%;
+  object-fit: contain;
+  left: 70%;
+  top: 75%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border: 1px solid black;
 }
 
 .normal-padding {

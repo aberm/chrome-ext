@@ -525,8 +525,23 @@ const emptyList = () => {
     rel="nofollow"
     target="_blank"
     href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension"
-    >Click here</a>
-  </h3>`;
+    >Click here!</a>
+  </h3>
+  <br />
+  <div>
+  <a
+    rel="nofollow"
+    target="_blank"
+    href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension"
+    >
+  <img class='empty-img1' src="https://n2h4v7n8.stackpathcdn.com/wp-content/uploads/2019/08/Engagement-Ring-Wish-List-Right-Mouse.jpg" /></a>
+  <a
+    rel="nofollow"
+    target="_blank"
+    href="https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension"
+    ><img class='empty-img2' src="https://n2h4v7n8.stackpathcdn.com/wp-content/uploads/2019/08/Engagement-Ring-Wish-List-Extension-Sceenshot.jpg" /></a>
+  </div>
+  `;
 };
 
 const addLoadingCard = () => {
