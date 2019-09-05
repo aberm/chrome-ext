@@ -268,11 +268,15 @@ const editData = data => {
       reset.classList.remove("invisible");
       spinner.classList.add("invisible");
 
-      form.elements["title"].value = res.title || "";
-      form.elements["image"].value = res.image || "";
+      form.elements["title"].value =
+        res.title.length > 0 ? res.title : data.title;
+      form.elements["image"].value =
+        res.image.length > 0 ? res.image : data.image || "";
       form.elements["description"].value =
-        capDescriptionLength(res.description, 400) || "";
-      form.elements["price"].value = (!!res.price && res.price) || "";
+        res.description.length > 0
+          ? capDescriptionLength(res.description, 400)
+          : data.description || "";
+      form.elements["price"].value = !!res.price ? res.price || "" : data.price;
     });
   };
 
