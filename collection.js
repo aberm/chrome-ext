@@ -9,6 +9,8 @@ const snackbar = document.getElementById("snackbar");
 const editModal = document.getElementById("edit-modal");
 const emailModal = document.getElementById("email-modal");
 const name = document.querySelector("#name h2");
+const editListName = document.getElementById("editName");
+const listNameModal = document.getElementById("list-name-modal");
 
 let searchValue = "";
 let sortProperty = dropdown.options[dropdown.selectedIndex].value;
@@ -87,9 +89,13 @@ const setup = () => {
       : "1 item"
     : null;
 
-  chrome.storage.local.get("listName", res => {
-    name.innerText = res.listName || "";
-  });
+  displayListName();
+
+  // chrome.storage.local.get("listName", result => {
+  //   result.listName === undefined || result.listName === ""
+  //     ? chooseNewName()
+  //     : (name.innerText = `Welcome to ${result.listName}'s Wish List!` || "");
+  // });
 
   // setupEmailCheckboxes();
 
@@ -231,6 +237,10 @@ window.onclick = e => {
   if (e.target === editModal) {
     editModal.style.display = "none";
   }
+
+  if (e.target === listNameModal) {
+    listNameModal.style.display = "none";
+  }
 };
 
 window.onkeydown = e => {
@@ -238,6 +248,7 @@ window.onkeydown = e => {
     // remove form data
     emailModal.style.display = "none";
     editModal.style.display = "none";
+    listNameModal.style.display = "none";
   }
 };
 
@@ -392,6 +403,40 @@ search.oninput = e => {
   setup();
 };
 
+editListName.onclick = e => {
+  const listNameForm = document.getElementById("list-name-form");
+  const cancelListName = document.getElementById("closeListNameModal");
+  listNameModal.style.display = "block";
+  document.getElementById("list-name-edit").focus();
+
+  cancelListName.onclick = e => {
+    listNameModal.style.display = "none";
+    listNameForm.reset();
+  };
+
+  listNameForm.onsubmit = e => {
+    e.preventDefault();
+
+    if (
+      e.target["list-name"].value.length < 4 ||
+      e.target["list-name"].value.length > 30 ||
+      e.target["list-name"].value.trim() === ""
+    ) {
+      alert("List name must be between 4 and 30 characters.");
+    } else {
+      chrome.storage.local.set(
+        { listName: e.target["list-name"].value },
+        () => {
+          displayListName();
+
+          listNameModal.style.display = "none";
+          listNameForm.reset();
+        }
+      );
+    }
+  };
+};
+
 emailButton.onclick = e => {
   const emailForm = document.getElementById("email-form");
   const selectAll = document.getElementById("select-all");
@@ -533,7 +578,7 @@ const emptyList = () => {
   chrome.storage.local.get("listName", result => {
     result.listName === undefined || result.listName === ""
       ? chooseNewName()
-      : (name.innerText = result.listName || "");
+      : displayListName();
   });
 
   ul.innerHTML = `
@@ -566,7 +611,7 @@ const chooseNewName = () => {
       <form id='name-form'>
         <label for="list-name">Choose a name for your Wish List:</label><br />
         <div class='center'>
-          <input id='list-name' name='list-name' type='text' min='5' />
+          <input id='list-name' name='list-name' type='text' min='5' /><span>'s Wish List</span>
           <button id='name-button' type='submit'>Create</button>
         </div>
       </form>
@@ -576,11 +621,11 @@ const chooseNewName = () => {
   document.getElementById("name-form").onsubmit = e => {
     if (
       document.getElementById("list-name").value.length < 4 ||
-      document.getElementById("list-name").value.length > 50 ||
+      document.getElementById("list-name").value.length > 30 ||
       document.getElementById("list-name").value.trim() === ""
     ) {
       e.preventDefault();
-      alert("Name must be at least 4 characters.");
+      alert("Name must be between 4 and 30 characters.");
       document.getElementById("list-name").focus();
       document.getElementById("name-form").reset();
     } else {
@@ -654,6 +699,15 @@ const fetchFailedSnackbar = () => {
   setTimeout(function() {
     snackbar.classList.remove("show-failed");
   }, snackbar.innerText.length * 50);
+};
+
+const displayListName = () => {
+  chrome.storage.local.get("listName", res => {
+    if (res.listName !== undefined && res.listName !== "") {
+      name.innerText = `Welcome to ${res.listName}'s Wish List!`;
+      document.getElementById("name").classList.remove("invisible");
+    }
+  });
 };
 
 const analytics = ((i, s, o, g, r, a, m) => {

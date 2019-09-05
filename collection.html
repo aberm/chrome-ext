@@ -12,6 +12,11 @@
   </head>
   <body>
     <nav>
+      <div id="name" class="invisible">
+        <h2></h2>
+        <img id="editName" src="img/edit-icon.png" />
+      </div>
+
       <div id="nav__search-container" class="invisible">
         <div class="nav__search-icon">
           <img src="img/magnify_glass.svg" alt="search" />
@@ -22,9 +27,6 @@
     </nav>
     <div id="logo">
       <img src="img/Full-Sized-Logo.png" alt="Engagement Ring Wish List Logo" />
-    </div>
-    <div id="name" class="center">
-      <h2></h2>
     </div>
 
     <div class="sort-bar invisible">
@@ -274,6 +276,34 @@
           >
             Send
           </button>
+        </form>
+      </div>
+    </div>
+    <!-- Edit List Name Modal -->
+    <div id="list-name-modal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span id="closeListNameModal" class="close">&times;</span>
+        <form id="list-name-form">
+          <br />
+          <p>
+            <label for="list-name-edit"
+              >Choose a new name for your Wish List:</label
+            >
+          </p>
+          <div>
+            <input
+              type="text"
+              id="list-name-edit"
+              name="list-name"
+              min="5"
+            /><span>'s Wish List</span>
+          </div>
+          <input
+            type="submit"
+            id="submit-list-name"
+            class="center-button clear"
+          />
         </form>
       </div>
     </div>
