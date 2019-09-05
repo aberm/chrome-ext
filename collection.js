@@ -91,7 +91,7 @@ const setup = () => {
     name.innerText = res.listName || "";
   });
 
-  setupEmailCheckboxes();
+  // setupEmailCheckboxes();
 
   [...allData]
     /* ^ this doesn't destructively manipulate the original list,
@@ -426,15 +426,52 @@ emailButton.onclick = e => {
 
     console.log(checkedArr);
 
-    checkedArr.length === 0 && alert("Please select at least one item.");
+    if (checkedArr.length > 0) {
+      // make 'invisible'
+      // document.querySelector("#sendButton").classList.add("invisible");
+      // document.querySelector("div.loader").classList.remove("invisible");
 
-    document.querySelector("#sendButton").remove();
-    emailForm.innerHTML += `<div class="loader">Loading...</div>`;
+      // process form data
+      const sendRings = allData.filter((x, index) =>
+        checkedArr.includes(index.toString())
+      );
+      console.log(sendRings);
 
-    // process form data
-    // remove form data
-    // close modal
-    emailSentSnackbar();
+      // chrome.tabs.create(
+      //   {
+      //     url:
+      //       "https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension#input_1_1",
+      //     active: false
+      //   },
+      //   function(tab) {
+      //     console.log("Attempting to inject script into tab:", tab);
+      //     chrome.tabs.executeScript(
+      //       tab.id,
+      //       {
+      //         code: `
+      //           const x = document.getElementById('input_1_1'); x.innerHTML = "message here";
+      // `
+      //       },
+      //       function(results) {
+      //         //Now that we are done with processing, make the tab active. This will
+      //         //  close/destroy the popup.
+      //         chrome.tabs.update(tab.id, { active: true });
+      //       }
+      //     );
+      //   }
+      // );
+
+      // remove form data
+      emailForm.reset();
+
+      // close modal
+      // document.querySelector("div.loader").classList.add("invisible");
+      // document.querySelector("#sendButton").classList.remove("invisible");
+
+      emailSentSnackbar();
+    } else {
+      alert("Please select at least one item.");
+    }
   };
 };
 

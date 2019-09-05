@@ -69,6 +69,16 @@ h1 {
   padding-left: 15px;
 }
 
+.makebutton {
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+
+  text-decoration: none;
+  color: initial;
+  width: 42px;
+}
+
 .center {
   text-align: center;
 }
