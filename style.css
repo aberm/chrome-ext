@@ -3,7 +3,7 @@ h1 {
 }
 
 #ringsList {
-  min-height: 65vh;
+  min-height: 70vh;
   margin-bottom: 40px;
   padding-bottom: 150px;
   border-bottom: 1px solid #68828c;
@@ -13,11 +13,6 @@ h1 {
   margin: 0 auto;
   display: block;
   width: 15%;
-}
-
-#name h2 {
-  font-family: Helvetica;
-  font-size: 3em;
 }
 
 #promoted {
@@ -81,38 +76,6 @@ h1 {
 
 .center {
   text-align: center;
-}
-
-#choose-name {
-  left: 50%;
-  top: 50%;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  font-size: 24px;
-  font-family: Helvetica;
-}
-
-#choose-name div.center {
-  margin-top: 15px;
-}
-
-#list-name {
-  font-size: 20px;
-  width: 75%;
-  height: 35px;
-}
-
-#name-button {
-  vertical-align: middle;
-  width: 15%;
-  height: 34px;
-  background-color: #4caf50;
-  border-radius: 9px;
-  transform: translateY(-1px);
-}
-
-#name-button:hover {
-  background-color: green;
 }
 
 #empty-list {
