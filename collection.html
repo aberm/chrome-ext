@@ -44,7 +44,7 @@
       <div class="items-container invisible">
         <p id="total" class="item-amt"></p>
         <div class="email">
-          <button id="emailButton" class="clear invisible">Email List</button>
+          <button id="emailButton" class="clear">Email List</button>
         </div>
       </div>
     </div>
@@ -254,13 +254,20 @@
         <h2>email my list</h2>
         <form id="email-form">
           <label for="from">From</label>
-          <input id="from" type="text" placeholder="your name" />
+          <input id="from" type="text" name="from" placeholder="your name" />
           <label for="to">To</label>
-          <input id="to" type="text" placeholder="recipient's name" required />
+          <input
+            id="to"
+            type="text"
+            name="to"
+            placeholder="recipient's name"
+            required
+          />
           <label for="email">Email</label>
           <input
             id="email"
             type="email"
+            name="email"
             placeholder="recipient's email"
             required
           />
@@ -269,13 +276,13 @@
           <button id="select-all" class="normal-padding">Select All</button>
           <button id="select-none" class="normal-padding">Select None</button>
           <div id="select-rings-email"></div>
-          <button
+          <input
             id="sendButton"
             type="submit"
-            class="center-button normal-padding"
-          >
-            Send
-          </button>
+            class="makebutton center-button normal-padding"
+            value="Send"
+          />
+          <div class="loader invisible"></div>
         </form>
       </div>
     </div>

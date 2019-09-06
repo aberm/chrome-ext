@@ -97,7 +97,7 @@ const setup = () => {
   //     : (name.innerText = `Welcome to ${result.listName}'s Wish List!` || "");
   // });
 
-  // setupEmailCheckboxes();
+  setupEmailCheckboxes();
 
   [...allData]
     /* ^ this doesn't destructively manipulate the original list,
@@ -458,8 +458,8 @@ emailButton.onclick = e => {
   };
 
   cancelEmail.onclick = e => {
-    // remove form data
     emailModal.style.display = "none";
+    emailForm.reset();
   };
 
   emailForm.onsubmit = e => {
@@ -477,8 +477,8 @@ emailButton.onclick = e => {
 
     if (checkedArr.length > 0) {
       // make 'invisible'
-      // document.querySelector("#sendButton").classList.add("invisible");
-      // document.querySelector("div.loader").classList.remove("invisible");
+      document.querySelector("#sendButton").classList.add("invisible");
+      document.querySelector("div.loader").classList.remove("invisible");
 
       // process form data
       const sendRings = allData.filter((x, index) =>
