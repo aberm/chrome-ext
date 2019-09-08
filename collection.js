@@ -710,7 +710,7 @@ const fetchFailedSnackbar = () => {
 const displayListName = () => {
   chrome.storage.local.get("listName", res => {
     if (res.listName !== undefined && res.listName !== "") {
-      name.innerText = `Welcome to ${res.listName}'s Wish List!`;
+      name.innerText = `${res.listName}'s Wish List`;
       document.getElementById("name").classList.remove("invisible");
     }
   });
