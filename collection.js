@@ -463,8 +463,11 @@ emailButton.onclick = e => {
   };
 
   emailForm.onsubmit = e => {
+    const from = emailForm["from"].value;
+    const to = emailForm["to"].value;
+    // const message = emailForm["message"].value;
+
     e.preventDefault();
-    console.log(e);
 
     // indexes of selected rings
     const checkedArr = [
@@ -473,51 +476,54 @@ emailButton.onclick = e => {
       )
     ].map(el => el.value);
 
-    console.log(checkedArr);
-
     if (checkedArr.length > 0) {
-      // make 'invisible'
+      // loading animation
       document.querySelector("#sendButton").classList.add("invisible");
-      document.querySelector("div.loader").classList.remove("invisible");
+      document
+        .querySelector("#email-form div.loader")
+        .classList.remove("invisible");
 
       // process form data
       const sendRings = allData.filter((x, index) =>
         checkedArr.includes(index.toString())
       );
-      console.log(sendRings);
 
-      // chrome.tabs.create(
-      //   {
-      //     url:
-      //       "https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-extension#input_1_1",
-      //     active: false
-      //   },
-      //   function(tab) {
-      //     console.log("Attempting to inject script into tab:", tab);
-      //     chrome.tabs.executeScript(
-      //       tab.id,
-      //       {
-      //         code: `
-      //           const x = document.getElementById('input_1_1'); x.innerHTML = "message here";
-      // `
-      //       },
-      //       function(results) {
-      //         //Now that we are done with processing, make the tab active. This will
-      //         //  close/destroy the popup.
-      //         chrome.tabs.update(tab.id, { active: true });
-      //       }
-      //     );
-      //   }
-      // );
+      let fmt = "";
+
+      !!to.length
+        ? (fmt +=
+            "Dear " +
+            to +
+            ", %0D%0A%0D%0APlease find my Wish List below.%0D%0A%0D%0A")
+        : null;
+
+      // !!message.length ? (fmt += message + ", %0D%0A%0D%0A") : null;
+
+      sendRings.forEach(
+        x =>
+          (fmt += `${x.url}%0D%0A${x.title}%0D%0A$${x.price}%0D%0A${x.notes}%0D%0A%0D%0A`)
+      );
+
+      !!from.length ? (fmt += "From " + from) : null;
+
+      const mailto = document.createElement("a");
+      mailto.href = `mailto:${emailForm["email"].value}?subject=${name.innerText}&body=${fmt}`;
+
+      mailto.click();
 
       // remove form data
       emailForm.reset();
 
       // close modal
-      // document.querySelector("div.loader").classList.add("invisible");
-      // document.querySelector("#sendButton").classList.remove("invisible");
+      emailModal.style.display = "none";
 
-      emailSentSnackbar();
+      // close loading animation
+      document
+        .querySelector("#email-form div.loader")
+        .classList.add("invisible");
+      document.querySelector("#sendButton").classList.remove("invisible");
+
+      // emailSentSnackbar();
     } else {
       alert("Please select at least one item.");
     }
