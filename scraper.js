@@ -357,12 +357,15 @@ class Scraper {
     if (!!src && src.startsWith("https://")) {
       return src;
     }
-    src = !!src && src.startsWith("http://") && src.replace(/http:/, "https:");
-    src = !!src && src.startsWith("//") && "https:" + src;
-    src =
-      !!src &&
-      src.startsWith("chrome-extension://") &&
-      src.replace(/chrome-extension:/, "https:");
+    if (!!src && src.startsWith("http://")) {
+      src = src.replace(/http:/, "https:");
+    }
+    if (!!src && src.startsWith("//")) {
+      src = "https:" + src;
+    }
+    if (!!src && src.startsWith("chrome-extension://")) {
+      src = src.replace(/chrome-extension:/, "https:");
+    }
 
     return src;
   };
