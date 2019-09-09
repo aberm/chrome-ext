@@ -26,8 +26,9 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 30px;
-  /* background-color: #0d0d0d; */
+  padding: 10px 0px;
+  width: 80vw;
+  margin: 0 auto;
 }
 
 .nav__title {
@@ -39,8 +40,8 @@ nav {
 }
 
 #nav__search-container {
-  flex-basis: 60%;
-  margin: 0 auto;
+  flex-basis: 80%;
+  /* margin: 0 auto; */
   position: relative;
 }
 

@@ -8,7 +8,7 @@ const emailButton = document.getElementById("emailButton");
 const snackbar = document.getElementById("snackbar");
 const editModal = document.getElementById("edit-modal");
 const emailModal = document.getElementById("email-modal");
-const name = document.querySelector("#name h2");
+const name = document.querySelector("#name h3");
 const editListName = document.getElementById("editName");
 const listNameModal = document.getElementById("list-name-modal");
 
