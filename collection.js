@@ -500,11 +500,18 @@ emailButton.onclick = e => {
       // !!message.length ? (fmt += message + ", %0D%0A%0D%0A") : null;
 
       sendRings.forEach(
-        x =>
-          (fmt += `${x.url}%0D%0A${x.title}%0D%0A$${x.price}%0D%0A${x.notes}%0D%0A%0D%0A`)
+        (x, index) =>
+          (fmt += `${index + 1}.%0D%0A${x.url}%0D%0A${x.title}%0D%0A$${
+            x.price
+          }%0D%0A${x.notes}%0D%0A%0D%0A`)
       );
 
-      !!from.length ? (fmt += "From " + from) : null;
+      !!from.length
+        ? (fmt +=
+            "From " +
+            from +
+            `%0D%0A%0D%0A© Engagement Ring Wish List%0D%0AEstate Diamond Jewelry%0D%0Ahttps://www.estatediamondjewelry.com`)
+        : null;
 
       const mailto = document.createElement("a");
       mailto.href = `mailto:${emailForm["email"].value}?subject=${name.innerText}&body=${fmt}`;
