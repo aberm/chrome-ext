@@ -23,12 +23,13 @@ body {
 
 /***** START: Navigation Bar *****/
 nav {
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center; */
   padding: 10px 0px;
   width: 80vw;
   margin: 0 auto;
+  text-align: center;
 }
 
 .nav__title {
