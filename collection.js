@@ -136,7 +136,7 @@ const addNewUrl = url => {
           }
         );
       } else {
-        // fetch failed
+        // no title => fetch failed
         fetchFailedSnackbar();
         removeLoadingCard();
       }
@@ -259,10 +259,10 @@ const editData = data => {
   const form = document.getElementById("edit-form");
 
   document.getElementById("url-edit").value = data.url;
-  document.getElementById("edit-display-image").src = data.image || "";
+  document.getElementById("edit-display-image").src = data.image;
   form.elements["title"].value = data.title;
-  form.elements["image"].value = data.image || "";
-  form.elements["description"].value = data.description || "";
+  form.elements["image"].value = data.image;
+  form.elements["description"].value = data.description;
   form.elements["price"].value = data.price || "";
   form.elements["notes"].value = data.notes;
 
@@ -287,11 +287,11 @@ const editData = data => {
       form.elements["title"].value =
         res.title.length > 0 ? res.title : data.title;
       form.elements["image"].value =
-        res.image.length > 0 ? res.image : data.image || "";
+        res.image.length > 0 ? res.image : data.image;
       form.elements["description"].value =
         res.description.length > 0
           ? capDescriptionLength(res.description, 400)
-          : data.description || "";
+          : data.description;
       form.elements["price"].value = !!res.price ? res.price || "" : data.price;
     });
   };

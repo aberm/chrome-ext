@@ -39,8 +39,8 @@ class Scraper {
     const data = {
       url: this.url,
       title: this.getTitle(),
-      image: this.getImage(),
-      description: this.getDescription(),
+      image: this.getImage() || "",
+      description: this.getDescription() || "",
       price: this.getPrice()
     };
 
