@@ -91,12 +91,6 @@ const setup = () => {
 
   displayListName();
 
-  // chrome.storage.local.get("listName", result => {
-  //   result.listName === undefined || result.listName === ""
-  //     ? chooseNewName()
-  //     : (name.innerText = `Welcome to ${result.listName}'s Wish List!` || "");
-  // });
-
   setupEmailCheckboxes();
 
   [...allData]
@@ -215,8 +209,6 @@ const removeItemFromList = removeUrl => {
 };
 
 window.onclick = e => {
-  // console.log(e.target);
-
   // edit button clicked
   (e.target.classList.contains("edit") ||
     e.target.parentElement.classList.contains("edit")) &&
@@ -640,7 +632,6 @@ const chooseNewName = () => {
       document.getElementById("name-form").reset();
     } else {
       e.preventDefault();
-      console.log(document.getElementById("list-name").value);
 
       chrome.storage.local.set({
         listName: document.getElementById("list-name").value
