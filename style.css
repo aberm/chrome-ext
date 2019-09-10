@@ -163,7 +163,7 @@ h1 {
 .empty-img1 {
   height: 35%;
   left: 30%;
-  top: 75%;
+  top: 70%;
   position: absolute;
   transform: translate(-50%, -50%);
   border: 1px solid black;
@@ -173,7 +173,7 @@ h1 {
   height: 35%;
   object-fit: contain;
   left: 70%;
-  top: 75%;
+  top: 70%;
   position: absolute;
   transform: translate(-50%, -50%);
   border: 1px solid black;
