@@ -410,11 +410,12 @@ editListName.onclick = e => {
     e.preventDefault();
 
     if (
-      e.target["list-name"].value.length < 4 ||
-      e.target["list-name"].value.length > 30 ||
-      e.target["list-name"].value.trim() === ""
+      e.target["list-name"].value.trim().length < 4 ||
+      e.target["list-name"].value.trim().length > 30
     ) {
       alert("List name must be between 4 and 30 characters.");
+      listNameForm.reset();
+      document.getElementById("list-name-edit").focus();
     } else {
       chrome.storage.local.set(
         { listName: e.target["list-name"].value },
@@ -622,9 +623,8 @@ const chooseNewName = () => {
 
   document.getElementById("name-form").onsubmit = e => {
     if (
-      document.getElementById("list-name").value.length < 4 ||
-      document.getElementById("list-name").value.length > 30 ||
-      document.getElementById("list-name").value.trim() === ""
+      document.getElementById("list-name").value.trim().length < 4 ||
+      document.getElementById("list-name").value.trim().length > 30
     ) {
       e.preventDefault();
       alert("Name must be between 4 and 30 characters.");
