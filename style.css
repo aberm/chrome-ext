@@ -26,9 +26,9 @@ h1 {
 }
 
 #editName {
-  width: 2em;
+  width: 1.35em;
   /* display: inline; */
-  padding-left: 12px;
+  padding-left: 6px;
   filter: brightness(0) invert(0.65);
 }
 
