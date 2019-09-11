@@ -16,6 +16,7 @@ let searchValue = "";
 let sortProperty = dropdown.options[dropdown.selectedIndex].value;
 
 let allData;
+let isEmptyList;
 
 chrome.storage.local.get(["rings", "newUrl"], result => {
   console.log("collection.js -> last ringUrl: ", result.newUrl);
@@ -39,6 +40,7 @@ chrome.storage.local.get(["rings", "newUrl"], result => {
   } else if (!!result.newUrl) {
     // rings data array empty, newUrl new
     console.log("rings data array empty");
+    isEmptyList = true;
     addLoadingCard();
     addNewUrl(result.newUrl);
   } else {
@@ -133,6 +135,7 @@ const addNewUrl = url => {
         // no title => fetch failed
         fetchFailedSnackbar();
         removeLoadingCard();
+        isEmptyList && emptyList();
       }
     });
     chrome.storage.local.set({ newDoc: null });
