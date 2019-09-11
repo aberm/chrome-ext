@@ -19,7 +19,7 @@ let allData;
 let isEmptyList;
 
 chrome.storage.local.get(["rings", "newUrl"], result => {
-  console.log("collection.js -> last ringUrl: ", result.newUrl);
+  console.log("collection.js -> newUrl: ", result.newUrl);
   console.log("collection.js -> current rings: ", result.rings);
   if (result.rings && result.rings.length) {
     // rings data array exists
@@ -623,6 +623,8 @@ const chooseNewName = () => {
       </form>
     </div>
     `;
+
+  document.getElementById("list-name").focus();
 
   document.getElementById("name-form").onsubmit = e => {
     if (
