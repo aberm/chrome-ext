@@ -384,4 +384,4 @@ class Scraper {
   };
 }
 
-export default Scraper;
+export { Scraper as default };

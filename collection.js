@@ -102,6 +102,8 @@ const setup = () => {
     .filter(data => data.title.toLowerCase().includes(searchValue))
     .forEach(data => {
       ul.appendChild(turnDataIntoHtml(data));
+      const wrapper = document.querySelector('[name="wrap"]');
+      wrapper.replaceWith(...wrapper.childNodes);
     });
 };
 
@@ -147,6 +149,7 @@ const addNewUrl = url => {
  */
 const turnDataIntoHtml = data => {
   const div = `
+  <div name="wrap">
     <div class="edit clear">
       <img src="img/edit-icon.png" alt="edit" class="edit-icon"><span>Edit</span>
     </div>
@@ -192,13 +195,23 @@ const turnDataIntoHtml = data => {
     }" rel="noreferrer" target="_blank" class="view">
     <span class="invisible">${data.title}</span>
     </a>
+    <div>
     `;
 
   const li = document.createElement("li");
   li.className = "card";
   li.dataset.id = allData.findIndex(x => x.url === data.url);
 
-  li.innerHTML = div;
+  // li.innerHTML = div;
+
+  const parser = new DOMParser();
+  const parsed = parser.parseFromString(div, `text/html`);
+  const tags = parsed.getElementsByName(`wrap`);
+
+  li.innerHTML = ``;
+  for (const tag of tags) {
+    li.appendChild(tag);
+  }
 
   return li;
 };
@@ -532,9 +545,11 @@ emailButton.onclick = e => {
 
 const setupEmailCheckboxes = () => {
   const checkboxDiv = document.getElementById("select-rings-email");
-  checkboxDiv.innerHTML = allData
+  checkboxDiv.innerHTML = "";
+  let checkboxes = allData
     .map((item, i) => {
-      return `<input type="checkbox" name="ring${i}" id="ring-${i}" value="${i}" checked/>
+      return `
+      <input type="checkbox" name="ring${i}" id="ring-${i}" value="${i}" checked/>
     ${
       item.image
         ? "<img src='" +
@@ -561,9 +576,23 @@ const setupEmailCheckboxes = () => {
           }) +
           "</span></div>"
         : "<div class='price-container'><span class='right'><i>no price</i></span></div>"
-    }</label>`;
+    }</label>
+    `;
     })
     .join("");
+
+  checkboxes = "<div name='wrapper'>" + checkboxes + "</div>";
+  const parser = new DOMParser();
+  const parsed = parser.parseFromString(checkboxes, `text/html`);
+  const tags = parsed.getElementsByName(`wrapper`);
+
+  for (const tag of tags) {
+    checkboxDiv.appendChild(tag);
+  }
+  const wrapper = checkboxDiv.querySelector('div[name="wrapper"]');
+  wrapper.replaceWith(...wrapper.childNodes);
+
+  // checkboxDiv.innerHTML = checkboxes;
 };
 
 const capDescriptionLength = (description, len) => {
