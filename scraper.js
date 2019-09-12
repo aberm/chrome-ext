@@ -5,33 +5,33 @@ class Scraper {
     this.debugMode = debugMode;
   }
 
-  scrape = async () => {
+  async scrape() {
     this.doc =
       this.doc === undefined
         ? await this.fetchAndParseUrl(this.url)
         : this.parseDoc();
     return this.scrapeInfo();
-  };
+  }
 
   /**
    * fetch and parse a given url and return HTML Document
    */
-  fetchAndParseUrl = async url => {
+  async fetchAndParseUrl(url) {
     const res = await fetch(url);
     const site = await res.text();
     const parser = new DOMParser();
     return parser.parseFromString(site, "text/html");
-  };
+  }
 
-  parseDoc = () => {
+  parseDoc() {
     const parser = new DOMParser();
     return parser.parseFromString(this.doc, "text/html");
-  };
+  }
 
   /**
    * Returns JS Object of data
    */
-  scrapeInfo = () => {
+  scrapeInfo() {
     if (this.doc === undefined) {
       console.error("fetch failed: " + this.url);
       return;
@@ -45,9 +45,9 @@ class Scraper {
     };
 
     return data;
-  };
+  }
 
-  getTitle = () => {
+  getTitle() {
     const s = () => {
       const results = this.doc.querySelectorAll("h1");
       if (results.length) {
@@ -69,9 +69,9 @@ class Scraper {
     this.debugMode && console.log("all titles: ", all);
 
     return this.mostCommonItem(all);
-  };
+  }
 
-  getImage = () => {
+  getImage() {
     const s = () => {
       const titles = this.getTitlesForAlt().filter(x => x);
 
@@ -129,9 +129,9 @@ class Scraper {
     this.debugMode && console.log("all images: ", all);
 
     return this.imageHttps(this.mostCommonItem(this.sortImagesByHost(all)));
-  };
+  }
 
-  getDescription = () => {
+  getDescription() {
     const all = [
       ...this.listRules("description"),
       ...this.jsonFieldScraper("description")
@@ -144,9 +144,9 @@ class Scraper {
     return desc === undefined
       ? undefined
       : this.decodeHtmlEntities(desc).trim();
-  };
+  }
 
-  getPrice = () => {
+  getPrice() {
     const s = () => {
       const results = this.doc.querySelectorAll('span[id*="price"]');
       if (results.length) {
@@ -191,9 +191,9 @@ class Scraper {
           .filter(x => parseFloat(x) !== 0)
       )
     );
-  };
+  }
 
-  singleRuleScraper = (field, output, attribute = "", tag = "", seo = "") => {
+  singleRuleScraper(field, output, attribute = "", tag = "", seo = "") {
     const results = this.doc.querySelectorAll(
       `${tag}[${attribute}="${seo}${field}"]`
     );
@@ -207,9 +207,9 @@ class Scraper {
 
       return [...results].map(z => z.getAttribute(output));
     }
-  };
+  }
 
-  listRules = field => {
+  listRules(field) {
     const list = [
       ["content", "itemprop"],
       ["content", "property", "meta", "og:"],
@@ -230,9 +230,9 @@ class Scraper {
     }
 
     return list.map(rule => this.singleRuleScraper(field, ...rule));
-  };
+  }
 
-  jsonFieldScraper = field => {
+  jsonFieldScraper(field) {
     if (
       this.doc.querySelectorAll('script[type="application/ld+json"]').length
     ) {
@@ -259,9 +259,9 @@ class Scraper {
     } else {
       return [];
     }
-  };
+  }
 
-  jsonFieldSearcher = (json, field, array) => {
+  jsonFieldSearcher(json, field, array) {
     // if (array.length < 1) {
     // comment this line to get multiple results
     if (
@@ -281,9 +281,9 @@ class Scraper {
         }
       }
     }
-  };
+  }
 
-  mostCommonItem = arr => {
+  mostCommonItem(arr) {
     const cnts = this.tripleFlat(arr.filter(x => x)) // remove undefined, null
       .filter(x => x)
       .reduce((obj, val) => {
@@ -296,9 +296,9 @@ class Scraper {
     });
 
     return sorted[0];
-  };
+  }
 
-  getTitlesForAlt = () => {
+  getTitlesForAlt() {
     const s = () => {
       const results = this.doc.querySelectorAll("h1");
       if (results.length) {
@@ -318,23 +318,35 @@ class Scraper {
     ];
 
     return [...new Set(this.tripleFlat(all))];
-  };
+  }
 
-  decodeHtmlEntities = str => {
+  decodeHtmlEntities(str) {
     const txt = document.createElement("textarea");
-    txt.innerHTML = str;
-    return txt.value;
-  };
 
-  sortDescriptionsByLongest = arr => {
+    str = "<div name='wrapper'>" + str + "</div>";
+    const parser = new DOMParser();
+    const parsed = parser.parseFromString(str, `text/html`);
+    const tags = parsed.getElementsByName(`wrapper`);
+
+    for (const tag of tags) {
+      txt.appendChild(tag);
+    }
+    const wrapper = txt.querySelector('div[name="wrapper"]');
+    wrapper.replaceWith(...wrapper.childNodes);
+
+    // txt.innerHTML = str;
+    return txt.value;
+  }
+
+  sortDescriptionsByLongest(arr) {
     return arr
       ? this.tripleFlat(arr)
           .filter(x => x)
           .sort((a, b) => b.length - a.length) // return longest first
       : undefined;
-  };
+  }
 
-  sortImagesByHost = arr => {
+  sortImagesByHost(arr) {
     const hostname = new URL(this.url).hostname;
     const hn = [];
     const notHn = [];
@@ -351,9 +363,9 @@ class Scraper {
           })
       : undefined;
     return hn.concat(notHn);
-  };
+  }
 
-  imageHttps = src => {
+  imageHttps(src) {
     if (!!src && src.startsWith("https://")) {
       return src;
     }
@@ -368,20 +380,20 @@ class Scraper {
     }
 
     return src;
-  };
+  }
 
-  priceRemoveCommasAnd$AndLetters = price => {
+  priceRemoveCommasAnd$AndLetters(price) {
     return typeof price === "string" || price instanceof String
       ? price.replace(/[$,]/g, "").replace(/[^\d.-]/g, "")
       : price;
-  };
+  }
 
-  tripleFlat = arr => {
+  tripleFlat(arr) {
     return arr
       .flat()
       .flat()
       .flat();
-  };
+  }
 }
 
 export { Scraper as default };
