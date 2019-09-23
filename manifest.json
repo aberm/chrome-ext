@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Engagement Ring Wish List",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "The ultimate Wish List for choosing your dream ring.",
   "permissions": ["storage", "contextMenus", "activeTab"],
   "browser_action": {
@@ -18,7 +18,7 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "info@estatediamondjewelry.com"
+      "id": "estatediamondjewelry@gmail.com"
     }
   }
 }
