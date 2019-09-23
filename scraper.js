@@ -342,7 +342,7 @@ class Scraper {
       ? this.tripleFlat(arr)
           .filter(x => x)
           .forEach(x => {
-            !x.startsWith("chrome-extension://" + chrome.runtime.id) &&
+            !x.startsWith("ms-browser-extension://" + chrome.runtime.id) &&
             !x.startsWith("data:image/png;base64") // no base64
               ? x.includes(hostname)
                 ? hn.push(x)
@@ -363,8 +363,8 @@ class Scraper {
     if (!!src && src.startsWith("//")) {
       src = "https:" + src;
     }
-    if (!!src && src.startsWith("chrome-extension://")) {
-      src = src.replace(/chrome-extension:/, "https:");
+    if (!!src && src.startsWith("ms-browser-extension://")) {
+      src = src.replace(/ms-browser-extension:/, "https:");
     }
 
     return src;
