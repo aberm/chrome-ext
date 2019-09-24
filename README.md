@@ -10,14 +10,13 @@ Support: https://www.estatediamondjewelry.com/how-use-engagement-ring-wishlist-e
 To install from GitHub:
 
 - clone repo
-- open `chrome://extensions/` in Chrome
-- turn on Developer Mode in the top right-hand corner
-- click `Load unpacked`
-- select the repo directory
+- open `about:debugging#/runtime/this-firefox` in Firefox
+- click `Load Temporary Add-on`
+- open the repo directory and select any file
 
-Your extension should show up and it has been successfully installed.
+Your extension should show up, and will stay installed until you restart Firefox.
 
-Note: You must reload the extension (click the ↻) after every time you update the code.
+Note: You must reload the extension after every time you update the code.
 
 ---
 
